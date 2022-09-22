@@ -41,7 +41,7 @@
                      {{-- <td>{{$usuario->pivot}}</td> --}}
                      <td>
                         @foreach ($usuario->setores as $setor)
-                            {{$setor->nome_setor}}<br>
+                           {{$setor->nome_setor}}<br>
                         @endforeach
                      </td>
                      <td>
@@ -65,9 +65,8 @@
                            data-info="{{$usuario->id}}" 
                            title="Atribuir Setor">  
                            <i class="glyphicon glyphicon-list-alt"></i>
-                        </a> 
+                        </a>
                         @endif
-                        
                         <a
                            href="#"
                            id="btn_edita_usuario"
@@ -140,8 +139,7 @@
                            data-placement="bottom" 
                            title="Excluir Funcionario"> 
                            <i class="glyphicon glyphicon-remove "></i>
-                        </a> 
-                        
+                        </a>
                     </td>
                   </tr>
                @endforeach
