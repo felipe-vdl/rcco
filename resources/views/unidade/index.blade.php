@@ -4,9 +4,9 @@
 
 <div class="x_panel modal-content">
     <div class="x_title">
-       <h2>Unidades</h2>
-       <ul class="nav navbar-right panel_toolbox">
-          <a href="{{route('unidade.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Unidade"> Nova Unidade </a>
+         <h2>Unidades</h2>
+      <ul class="nav navbar-right panel_toolbox">
+         <a href="{{route('unidade.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Unidade"> Nova Unidade </a>
       </ul>
       <div class="clearfix"></div>
     </div>

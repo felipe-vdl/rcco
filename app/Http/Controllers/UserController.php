@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Setor;
+use App\Models\SetorUser;
+use App\Models\Unidade;
+use App\Models\UnidadeUser;
 
 
 
@@ -43,7 +47,7 @@ class UserController extends Controller
 			$user->name = $request->name;
 			$user->email = $request->email;
 			$user->nivel = $request->nivel;
-			$user->senha_padrao = 'pmm123456';
+			$senha_padrao = 'pmm123456';
 			$user->password = bcrypt($senha_padrao);
 			$user->save();
 	
@@ -157,5 +161,96 @@ class UserController extends Controller
 			dd($th);
 			return back()->with('erro', 'Houve um erro ao tentar resetar a senha.');
 		}
+	}
+
+	public function AtribuirSetorForm($id)
+	{
+		$usuario = User::find($id);
+		$relacoes = SetorUser::where('user_id', $id)->get();
+		
+		if(Auth::user()->nivel === "Admin") {
+			$checa_setor = Auth::user()->setores;
+		} else if (Auth::user()->nivel === "Super-Admin") {
+			$checa_setor = Setor::all();
+		}
+		
+		$setores = [];
+		foreach($checa_setor as $setor) {
+			$str = $setor;
+			array_push($setores, $str);
+		}
+
+		return view('user.atribuirsetor', compact('usuario', 'setores', 'relacoes'));
+	}
+
+	public function AtribuirSetor(Request $request, $id)
+	{
+		try {
+			DB::beginTransaction();
+			$usuario = User::find($id);
+			$setores = Setor::all();
+			
+			foreach($setores as $setor) {
+				if(isset($request->atribuicoes[$setor->id])) {
+					if ($request->atribuicoes[$setor->id] == $setor->id) {
+						// Se tem o valor do id, criar/manter relação.
+						if(SetorUser::where('setor_id', $setor->id)->where('user_id', $id)->exists()) {
+							// Se a relação já existe, não fazer nada
+							continue;
+						} else {
+							// Se não existe, criar.
+							$relacao = new SetorUser;
+							$relacao->user_id = $id;
+							$relacao->setor_id = $setor->id;
+							$relacao->save();
+						}
+
+					} else if ($request->atribuicoes[$setor->id] == "0") {
+						// Se o valor for 0, remover relação.
+						if(SetorUser::where('setor_id', $setor->id)->where('user_id', $id)->exists()) {
+							// Se existe, deletar relação.
+							SetorUser::where('setor_id', $setor->id)->where('user_id', $id)->delete();
+						} else {
+							// Se não existe, não fazer nada.
+							continue;
+						};
+					}
+				}
+			}
+
+			DB::commit();
+
+			return redirect()->route('user.index')->with('sucesso', 'Setores atribuídos com sucesso.');
+
+		} catch (Throwable $th) {
+			DB::rollback();
+			dd($th);
+			return back()->with('erro', 'Houve um erro ao tentar atribuir setores.');
+		}
+	}
+
+	public function AtribuirUnidadeForm($id) {
+		$usuario = User::find($id);
+		$setores = $usuario->setores;
+		$relacoes = UnidadeUser::where('user_id', $id)->get();
+
+		if(Auth::user()->nivel === "Admin") {
+			$checa_setor = Auth::user()->setores;
+		} else if (Auth::user()->nivel === "Super-Admin") {
+			$checa_setor = Setor::all();
+		}
+		
+		$setores_admin = [];
+		foreach($checa_setor as $setor) {
+			$str = $setor->id;
+			array_push($setores_admin, $str);
+		}
+
+		return view('user.atribuirunidade', compact('usuario', 'setores', 'setores_admin', 'relacoes'));
+	}
+
+	public function AtribuirUnidade(Request $request, $id) {
+		// Implementar função parecida com AtribuirSetor: comparar setor_id com index da array request->unidades (checar sua existência com isset, e criar/excluir as relações baseado nos IDs das unidades selecionadas pelo admin, que estarão contidas no respectivo index do request).
+		dd($id, $request->all());
 	}
 }

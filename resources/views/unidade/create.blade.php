@@ -21,7 +21,7 @@
                 <select id="setor" class="form-control" name="setor" required>
                   <option value="">Selecione...</option>
                   @if(Auth::user()->nivel === "Admin")
-                    @foreach (Auth::user()->usersetores as $setor)
+                    @foreach (Auth::user()->setores as $setor)
                       @foreach ($setores_usuario_logado as $setor)
                           <option value="{{$setor}}">{{$setor}}</option>
                       @endforeach

@@ -41,7 +41,7 @@
                      {{-- <td>{{$usuario->pivot}}</td> --}}
                      <td>
                         @foreach ($usuario->setores as $setor)
-                           {{$setor->nome_setor}}<br>
+                           {{$setor->nome}}<br>
                         @endforeach
                      </td>
                      <td>
@@ -64,6 +64,23 @@
                            data-placement="bottom" 
                            data-info="{{$usuario->id}}" 
                            title="Atribuir Setor">  
+                           <i class="glyphicon glyphicon-list-alt"></i>
+                        </a>
+                        @endif
+                        @if($usuario->nivel === 'User')
+                        <a
+                           id="btn_atribui_unidade"
+                           class="btn btn-info btn-xs action botao_acao " 
+                           data-toggle="tooltip"
+                           data-valor=
+                              @if(Auth::user()->nivel === "Super-Admin" OR Auth::user()->nivel  === "Admin")
+                                 ativo
+                              @else
+                                 desabilitado
+                              @endif
+                           data-placement="bottom" 
+                           data-info="{{$usuario->id}}" 
+                           title="Atribuir Unidade">
                            <i class="glyphicon glyphicon-list-alt"></i>
                         </a>
                         @endif
@@ -187,8 +204,23 @@
 					funcoes.notificationRight("top", "right", "danger", "Este usuário não tem permissão para executar esta ação!");
 					return
 				} else {
-               // $.get("{{ url('/user') }}/" + id + "/atribuir");
-               $(location).attr('href', "{{ url('/user') }}/" + id + "/atribuir");
+               $(location).attr('href', "{{ url('/user') }}/" + id + "/setor");
+            }
+			});
+
+         $("table#tb_user").on("click", "#btn_atribui_unidade",function(){
+			
+				let valor = $(this).data('valor');
+            let id = $(this).data('info');
+				let btn = $(this);
+				
+				if( valor == 'desabilitado' )
+				{
+					event.preventDefault();
+					funcoes.notificationRight("top", "right", "danger", "Este usuário não tem permissão para executar esta ação!");
+					return
+				} else {
+               $(location).attr('href', "{{ url('/user') }}/" + id + "/unidade");
             }
 			});
 

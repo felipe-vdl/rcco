@@ -21,6 +21,9 @@
   		
 		{{-- bootstrap-datetimepicker --}}
 		<link rel="stylesheet" href="{{ asset('bootstrap-datetimepicker/bootstrap-datetimepicker.css') }}">
+
+		<link rel="stylesheet" href="{{ asset('css/tom-select.bootstrap5.min.css') }}">
+		
 		<link rel="stylesheet" href="{{ asset('icheck/skins/all.css') }}">
 
 		<link rel="stylesheet" href="{{ url(mix('/css/app.css')) }}">
@@ -145,12 +148,11 @@
 		
 		{{-- icheck --}}
 		<script src="{{asset('icheck/icheck.min.js')}}"></script>
-		
-		
-		
+
 		<script src="{{ asset('/js/components.js')}}"></script>
 		{{-- <script src="https://cdn.jsdelivr.net/npm/timepicker@1.11.14/jquery.timepicker.min.js"></script> --}}
 		
+		<script src="{{ asset('js/tom-select.complete.min.js') }}"></script>
 
 		<script> 
 			
