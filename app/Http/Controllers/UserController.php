@@ -250,7 +250,38 @@ class UserController extends Controller
 	}
 
 	public function AtribuirUnidade(Request $request, $id) {
-		// Implementar função parecida com AtribuirSetor: comparar setor_id com index da array request->unidades (checar sua existência com isset, e criar/excluir as relações baseado nos IDs das unidades selecionadas pelo admin, que estarão contidas no respectivo index do request).
-		dd($id, $request->all());
+		// Função semelhante à AtribuirSetor: comparar setor_id com index da array request->unidades (checar sua existência com isset, e criar/excluir as relações baseado nos IDs das unidades selecionadas pelo admin no formulário, que estarão contidas no respectivo index do request).
+		// Objetivo do algoritmo: Garantir que os admins apenas possam remover/criar relações de unidade caso tenham o setor parente dessas unidades atribuído à eles.
+		DB::beginTransaction();
+		try {
+			$setores = Setor::all();
+			foreach($setores as $setor) {
+				/* if(isset($request->unidades[$setor->id]) OR $request->unidades[$setor->id] === null) { */
+				if(array_key_exists($setor->id, $request->unidades)) {
+					UnidadeUser::where('user_id', $id)->whereHas('unidade', function ($query) use ($setor) {
+						$query->where('setor_id', $setor->id);
+					})->delete();
+					
+					if (isset($request->unidades[$setor->id])) {
+						$unidades = explode(',', $request->unidades[$setor->id]);
+		
+						foreach($unidades as $unidade) {
+							$relacao = new UnidadeUser;
+							$relacao->user_id = $id;
+							$relacao->unidade_id = $unidade;
+							$relacao->save();
+						}
+					}
+				}
+			}
+
+			DB::commit();
+			return redirect()->route('user.index')->with('sucesso', 'Unidades atribuídos com sucesso.');
+
+		} catch (Throwable $th) {
+			DB::rollback();
+			dd($th);
+			return back()->with('erro', 'Houve um erro ao tentar atribuir unidades.');
+		}
 	}
 }
