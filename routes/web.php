@@ -19,8 +19,13 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/user/{id}/unidade', 			'UserController@AtribuirUnidade')->name('user.atribuirunidade');
 
 	Route::get('/home', 'HomeController@index')->name('home');
+
+	Route::get('/api/unidades',			'APIController@unidades');
+	Route::get('/api/topicos',			'APIController@topicos');
 	
 	Route::resource('setor', 'SetorController');
 	Route::resource('unidade', 'UnidadeController');
+	Route::resource('topico', 'TopicoController');
+	Route::resource('pergunta', 'PerguntaController');
 	Route::resource('user', 'UserController');
 });

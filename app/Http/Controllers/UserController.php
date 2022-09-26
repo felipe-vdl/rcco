@@ -30,7 +30,7 @@ class UserController extends Controller
 			$nome = $setor->nome;
 			array_push($setores_usuario_logado, $nome);
 		}
-
+		
 		return view('user.index', compact('usuarios', 'setores_usuario_logado'));
 	}
 

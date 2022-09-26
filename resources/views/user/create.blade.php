@@ -22,10 +22,15 @@
             <div class="form-group col-md-6 col-sm-6 col-xs-12">
                 <label class="control-label">Permissão do novo Usuario</label>
                 <select id="nivel" class="form-control" name="nivel" required>
-                  <option value="">Selecione...</option>                                 
-                  <option value="Super-Admin">Super Administrador</option>
-                  <option value="Admin">Administrador</option>
-                  <option value="User">Usuario</option>
+                  <option value="">Selecione...</option>
+									@if (Auth::user()->nivel === "Super-Admin")
+										<option value="Super-Admin">Super Administrador</option>
+										<option value="Admin">Administrador</option>
+										<option value="User">Usuario</option>
+										@elseif (Auth::user()->nivel === "Admin")
+										<option value="Admin">Administrador</option>
+                  	<option value="User">Usuario</option>
+									@endif
                 </select>
             </div>
 					</div>

@@ -4,17 +4,17 @@
 
    <div class="x_panel modal-content">
       <div class="x_title">
-         <h2>Nova Unidade</h2>
+         <h2>Novo Tópico</h2>
       <div class="clearfix"></div>
    </div>
    <div class="x_panel">
       <div class="x_content">
-         <form id="formulario_sala" class="form-horizontal form-label-left" method="post" action="{{ route('unidade.store') }}">
+         <form id="formulario_sala" class="form-horizontal form-label-left" method="post" action="{{ route('topico.store') }}">
             {{ csrf_field()}}
             <div  class="form-group row">
               <div class=" form-group col-md-6 col-sm-6 col-xs-12">
-                <label class="control-label" >Nome da Unidade</label>
-                <input type="text" id="nome_unidade" class="form-control " name="nome" minlength="4" maxlength="100" required>	
+                <label class="control-label" >Nome do Tópico</label>
+                <input type="text" id="nome_topico" class="form-control " name="nome" minlength="4" maxlength="100" required>	
               </div>
               <div class="form-group col-md-6 col-sm-6 col-xs-12">
                 <label class="control-label">Setor</label>

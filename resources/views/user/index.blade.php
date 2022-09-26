@@ -91,7 +91,7 @@
                            data-valor = 
                               @if(Auth::user()->nivel  == 'Admin') 
                                  @foreach ($usuario->setores as $setor) 
-                                    @if(in_array($setor->nome_setor, $setores_usuario_logado))
+                                    @if(in_array($setor->nome, $setores_usuario_logado))
                                        ativo
                                     @else
                                        desabilitado
@@ -115,7 +115,7 @@
                            data-valor = 
                               @if(Auth::user()->nivel  == 'Admin') 
                                  @foreach ($usuario->setores as $setor) 
-                                    @if(in_array($setor->nome_setor, $setores_usuario_logado)) 
+                                    @if(in_array($setor->nome, $setores_usuario_logado)) 
                                        ativo
                                     @else
                                        desabilitado
@@ -129,7 +129,7 @@
                               @endif
                            data-info="{{$usuario->id}}"
                            data-toggle="tooltip" 
-                           data-placement="bottom" 
+                           data-placement="bottom"
                            title="Resetar Senha">  
                            <i class='glyphicon glyphicon-envelope '></i>
                         </a>
@@ -139,7 +139,7 @@
                            data-valor = 
                               @if(Auth::user()->nivel  == 'Admin') 
                                  @foreach ($usuario->setores as $setor) 
-                                    @if(in_array($setor->nome_setor, $setores_usuario_logado)) 
+                                    @if(in_array($setor->nome, $setores_usuario_logado)) 
                                        ativo
                                     @else
                                        desabilitado
@@ -157,7 +157,7 @@
                            title="Excluir Funcionario"> 
                            <i class="glyphicon glyphicon-remove "></i>
                         </a>
-                    </td>
+                  </td>
                   </tr>
                @endforeach
             </tbody>

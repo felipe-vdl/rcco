@@ -4,30 +4,30 @@
 
 <div class="x_panel modal-content">
     <div class="x_title">
-         <h2>Unidades</h2>
+         <h2>Tópicos</h2>
       <ul class="nav navbar-right panel_toolbox">
-         <a href="{{route('unidade.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Unidade"> Nova Unidade </a>
+         <a href="{{route('topico.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo topico"> Novo Tópico </a>
       </ul>
       <div class="clearfix"></div>
     </div>
     <div class="x_panel">
        <div class="x_content">
-          <table id="tb_unidades" class="table table-hover table-striped compact">
+          <table id="tb_topicos" class="table table-hover table-striped compact">
             <thead>
                <tr>
-                  <th>Nome da Unidade</th>
+                  <th>Nome do Tópico</th>
                   <th>Setor</th>
                   <th>Criado por</th>
                   <th>Ações</th>
                </tr>
             </thead>
             <tbody>
-               @foreach ($unidades as $unidade)
-                  @if (in_array($unidade->setor->id, $setores_usuario_logado))
+               @foreach ($topicos as $topico)
+                  @if (in_array($topico->setor->id, $setores_usuario_logado, false))
                      <tr>
-                        <td>{{$unidade->nome}}</td>
-                        <td>{{$unidade->setor->nome}}</td>
-                        <td>{{$unidade->criador->name}}</td>
+                        <td>{{$topico->nome}}</td>
+                        <td>{{$topico->setor->nome}}</td>
+                        <td>{{$topico->criador->name}}</td>
                         <td></td>
                      </tr>
                   @endif
@@ -41,7 +41,7 @@
 @push('scripts')
   <script>
     $(document).ready(function(){
-        var tb_user = $("#tb_unidades").DataTable({
+        var tb_user = $("#tb_topicos").DataTable({
           language: {
                 'url' : '{{ asset('js/portugues.json') }}',
           "decimal": ",",

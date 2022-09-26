@@ -4,30 +4,30 @@
 
 <div class="x_panel modal-content">
     <div class="x_title">
-         <h2>Unidades</h2>
+         <h2>Perguntas</h2>
       <ul class="nav navbar-right panel_toolbox">
-         <a href="{{route('unidade.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Unidade"> Nova Unidade </a>
+         <a href="{{route('pergunta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Pergunta"> Nova Pergunta </a>
       </ul>
       <div class="clearfix"></div>
     </div>
     <div class="x_panel">
        <div class="x_content">
-          <table id="tb_unidades" class="table table-hover table-striped compact">
+          <table id="tb_perguntas" class="table table-hover table-striped compact">
             <thead>
                <tr>
-                  <th>Nome da Unidade</th>
-                  <th>Setor</th>
+                  <th>Título da Pergunta</th>
+                  <th>Tópico</th>
                   <th>Criado por</th>
                   <th>Ações</th>
                </tr>
             </thead>
             <tbody>
-               @foreach ($unidades as $unidade)
-                  @if (in_array($unidade->setor->id, $setores_usuario_logado))
+               @foreach ($perguntas as $pergunta)
+                  @if (in_array($pergunta->topico->setor->id, $setores_usuario_logado))
                      <tr>
-                        <td>{{$unidade->nome}}</td>
-                        <td>{{$unidade->setor->nome}}</td>
-                        <td>{{$unidade->criador->name}}</td>
+                        <td>{{$pergunta->nome}}</td>
+                        <td>{{$pergunta->topico->nome}}</td>
+                        <td>{{$pergunta->criador->name}}</td>
                         <td></td>
                      </tr>
                   @endif
@@ -41,7 +41,7 @@
 @push('scripts')
   <script>
     $(document).ready(function(){
-        var tb_user = $("#tb_unidades").DataTable({
+        var tb_user = $("#tb_perguntas").DataTable({
           language: {
                 'url' : '{{ asset('js/portugues.json') }}',
           "decimal": ",",
