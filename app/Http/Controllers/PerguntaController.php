@@ -131,7 +131,14 @@ class PerguntaController extends Controller
         return redirect()->back()->with('sucesso', 'Pergunta editada com sucesso.');
     }
 
-    public function setIndex() {
+    public function set_index(Request $request, $id) {
+        DB::beginTransaction();
+        
+        $pergunta = Pergunta::find($id);
+        $pergunta->index = $request->index;
+        $pergunta->save();
 
+        DB::commit();
+        return redirect()->back()->with('sucesso', 'Pergunta editada com sucesso.');
     }
 }

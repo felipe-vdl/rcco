@@ -14,16 +14,17 @@ Route::group(['middleware' => ['auth']], function () {
 	
 	Route::get('/user/{id}/setor', 			'UserController@AtribuirSetorForm');
 	Route::post('/user/{id}/setor', 			'UserController@AtribuirSetor')->name('user.atribuirsetor');
-
+	
 	Route::get('/user/{id}/unidade', 			'UserController@AtribuirUnidadeForm');
 	Route::post('/user/{id}/unidade', 			'UserController@AtribuirUnidade')->name('user.atribuirunidade');
-
+	
 	Route::get('/home', 'HomeController@index')->name('home');
-
+	
 	Route::get('/api/unidades',			'APIController@unidades');
 	Route::get('/api/topicos',			'APIController@topicos');
-
+	
 	Route::post('pergunta/is_enabled',		'PerguntaController@is_enabled')->name('pergunta.is_enabled');
+	Route::post('/pergunta/{id}/set_index', 			'PerguntaController@set_index')->name('pergunta.set_index');
 	
 	Route::resource('setor', 'SetorController');
 	Route::resource('unidade', 'UnidadeController');

@@ -6,7 +6,7 @@
     <div class="x_title">
          <h2>Perguntas</h2>
       <ul class="nav navbar-right panel_toolbox">
-         <a href="{{route('pergunta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Pergunta"> Nova Pergunta </a>
+         <a href="{{route('pergunta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="Nova Pergunta" data-original-title="Nova Pergunta"> Nova Pergunta </a>
       </ul>
       <div class="clearfix"></div>
     </div>
@@ -58,13 +58,24 @@
                            @endif
                            <td>{{$pergunta->criador->name}}</td>
                            <td>
+                              <form style="display: inline-block;" class="set_index" method="POST" action="{{route("pergunta.set_index", $pergunta->id)}}">
+                                 @csrf
+                                 <input type="hidden" name="pergunta_id" value="{{$pergunta->id}}">
+                                 <input type="hidden" name="index" value="">
+                                 <button
+                                       title="Atribuir index."
+                                       class="btn btn-primary btn-xs action botao_acao btn_excluir"
+                                    >
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                 </button>
+                              </form>
                               @if ($pergunta->is_enabled === 1)
-                                 <form class="desabilitar" method="POST" class="excluir" action="{{route("pergunta.is_enabled")}}">
+                                 <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("pergunta.is_enabled")}}">
                                     @csrf
                                     <input type="hidden" value="{{$pergunta->id}}" name="pergunta_id">
                                     <input type="hidden" value="0" name="is_enabled">
                                     <button
-                                       title="Desabilitar pergunta"
+                                       title="Desabilitar pergunta."
                                        class="btn btn-danger btn-xs action botao_acao btn_excluir"
                                     >
                                        <i class="glyphicon glyphicon-remove"></i>
@@ -77,7 +88,7 @@
                                        <input type="hidden" value="{{$pergunta->id}}" name="pergunta_id">
                                        <input type="hidden" value="1" name="is_enabled">
                                        <button
-                                          title="Habilitar pergunta"
+                                          title="Habilitar pergunta."
                                           class="btn btn-success btn-xs action botao_acao btn_excluir"
                                        >
                                           <i class="glyphicon glyphicon-ok"></i>
@@ -165,16 +176,57 @@
             });
          }
       }
+
+      const setIndexForms = document.querySelectorAll('.set_index');
+      // if (habilitarForms.length > 0) {
+      //    for(let form of setIndexForms) {
+      //       form.addEventListener('submit', evt => {
+      //          swal({
+      //          text: 'Número do Index',
+      //          content: "input",
+      //          button: {
+      //             text: "Enviar",
+      //             closeModal: false,
+      //          },
+      //          });
+      //    }
+      // }
+      if(setIndexForms.length > 0) {
+         for(let form of setIndexForms) {
+            form.addEventListener('submit', evt => {
+               evt.preventDefault();
+               swal({
+                  text: "Número do Index",
+                  content: {
+                     element: "input",
+                     attributes: {
+                        placeholder: "0",
+                        type: "number"
+                     }
+                  },
+                  button: {
+                     text: 'Confirmar',
+                     closeModal: true
+                  }
+               }).then((result) => {
+                  if(result) {
+                     form.elements["index"].value = result;
+                     form.submit();
+                  }
+               });
+            });
+         }
+      }
   </script>
   <script>
     $(document).ready(function(){
         var tb_user = $("#tb_perguntas").DataTable({
           language: {
-                'url' : '{{ asset('js/portugues.json') }}',
-          "decimal": ",",
-          "thousands": "."
+            'url' : '{{ asset('js/portugues.json') }}',
+            "decimal": ",",
+            "thousands": "."
           },
-          "order": [[0, "asc"]],
+          "order": [[3, "asc"], [0, "desc"]],
           stateSave: true,
           stateDuration: -1,
           responsive: true,
