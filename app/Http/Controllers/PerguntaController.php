@@ -9,6 +9,7 @@ use App\Models\Setor;
 use App\Models\Topico;
 use App\Models\Pergunta;
 use App\Models\PerguntaUnidade;
+use App\Models\LabelOption;
 
 class PerguntaController extends Controller
 {
@@ -61,5 +62,76 @@ class PerguntaController extends Controller
     {
         // TODO: Tipos de formato: text, textarea, checkbox, radio, dropdown.
         // LabelOption: checkbox, radio, dropdown.
+        try {
+            DB::beginTransaction();
+
+            $pergunta = new Pergunta;
+            $pergunta->nome             = $request->nome;
+            $pergunta->tipo             = $request->tipo;
+            $pergunta->formato          = $request->formato;
+            $pergunta->is_required      = $request->is_required;
+            $pergunta->is_enabled       = 1;
+            $pergunta->index            = 0;
+            $pergunta->user_id          = Auth::user()->id;
+            $pergunta->topico_id        = $request->topico_id;
+            $pergunta->save();
+
+            if ($request->formato === 'checkbox') {
+                foreach($request->checkboxvalue as $nome) {
+                    LabelOption::create([
+                        'pergunta_id' => $pergunta->id,
+                        'nome'        => $nome
+                    ]);
+                }
+
+            } else if ($request->formato === 'radio') {
+                foreach($request->radiovalue as $nome) {
+                    LabelOption::create([
+                        'pergunta_id' => $pergunta->id,
+                        'nome'        => $nome
+                    ]);
+                }
+
+            } else if ($request->formato === 'dropdown') {
+                foreach($request->dropdownvalue as $nome) {
+                    LabelOption::create([
+                        'pergunta_id' => $pergunta->id,
+                        'nome'        => $nome
+                    ]);
+                }
+            }
+
+            $unidades = explode(',', $request->unidades_id);
+            foreach ($unidades as $unidade_id) {
+                PerguntaUnidade::create([
+                    'pergunta_id' => $pergunta->id,
+                    'unidade_id'  => $unidade_id
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('pergunta.index')->with('sucesso', 'Pergunta criada com sucesso');
+
+        } catch (Throwable $th) {
+            DB::rollback();
+            dd($th);
+            return back()->withErrors('Houve um erro ao tentar criar uma pergunta.');
+        }
+    }
+
+    public function is_enabled(Request $request)
+    {
+        DB::beginTransaction();
+
+        $pergunta = Pergunta::where('id', $request->pergunta_id)->first();
+        $pergunta->is_enabled = $request->is_enabled;
+        $pergunta->update();
+
+        DB::commit();
+        return redirect()->back()->with('sucesso', 'Pergunta editada com sucesso.');
+    }
+
+    public function setIndex() {
+
     }
 }

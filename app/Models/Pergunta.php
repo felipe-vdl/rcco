@@ -9,6 +9,7 @@ class Pergunta extends Model
     protected $table = "perguntas";
 
     protected $fillable = [
+        "index",
         "nome",
         "formato",
         "tipo",
@@ -19,18 +20,18 @@ class Pergunta extends Model
     ];
 
     public function criador() {
-        $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 
     public function topico() {
-        $this->belongsTo('App\Models\Topico');
+        return $this->belongsTo('App\Models\Topico');
     }
     
     public function unidades() {
-        $this->belongsToMany('App\Models\Unidade');
+        return $this->belongsToMany('App\Models\Unidade');
     }
 
     public function label_options() {
-        $this->hasMany('App\Models\LabelOption');
+        return $this->hasMany('App\Models\LabelOption');
     }
 }

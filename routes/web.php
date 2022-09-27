@@ -22,6 +22,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::get('/api/unidades',			'APIController@unidades');
 	Route::get('/api/topicos',			'APIController@topicos');
+
+	Route::post('pergunta/is_enabled',		'PerguntaController@is_enabled')->name('pergunta.is_enabled');
 	
 	Route::resource('setor', 'SetorController');
 	Route::resource('unidade', 'UnidadeController');

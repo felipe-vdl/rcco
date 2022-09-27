@@ -15,11 +15,12 @@ class CreatePerguntasTable extends Migration
     {
         Schema::create('perguntas', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('index')->nullable()->default(0);
             $table->string('nome');
-            $table->enum('formato', ['text', 'textarea', 'checkbox', 'radio', 'tom-select']);
-            $table->enum('tipo', ['number', 'text']);
+            $table->enum('formato', ['text', 'textarea', 'checkbox', 'radio', 'dropdown']);
+            $table->enum('tipo', ['number', 'string']);
             $table->tinyInteger('is_required');
-            $table->tinyInteger('is_enabled');
+            $table->tinyInteger('is_enabled')->default(1);
             
             $table->bigInteger('topico_id') ->unsigned();
             $table->foreign('topico_id')->references('id')->on('topicos')->onDelete('cascade');

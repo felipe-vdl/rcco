@@ -15,7 +15,7 @@ class LabelOption extends Model
 
     public function pergunta()
     {
-        $this->belongsTo('App\Models\Pergunta');
+        return $this->belongsTo('App\Models\Pergunta');
     }
 
     // public function label_valors()

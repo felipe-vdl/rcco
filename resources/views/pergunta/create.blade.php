@@ -29,7 +29,7 @@
                 </div>
                 <div id="unidade_div" style="display: none;" class="form-group col-md-6 col-sm-6 col-xs-12">
                   <label class="control-label">Unidades</label>
-                  <input required id="tomselect_unidades" name="tomselect_unidades">
+                  <input required id="unidades_id" name="unidades_id">
                 </div>
               </div>
               <div class="form-group row">
@@ -48,7 +48,7 @@
                   <label class="control-label">Tipo de Dado</label>
                   <select id="tipo" name="tipo" class="form-control" required>
                     <option value="" disabled selected>Selecione o tipo de dado</option>
-                    <option value="text">Texto</option>
+                    <option value="string">Texto</option>
                     <option value="number">Número</option>
                   </select>
                 </div>
@@ -132,7 +132,7 @@
             direction: 'asc'
          }
       };
-      const unidadeSelect = new TomSelect('#tomselect_unidades', settings);
+      const unidadeSelect = new TomSelect('#unidades_id', settings);
    </script>
    <script>
       $("#formato").on('change', function(){

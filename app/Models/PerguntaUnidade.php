@@ -15,11 +15,11 @@ class PerguntaUnidade extends Model
 
     public function pergunta()
     {
-        $this->belongsTo('App\Models\Pergunta');
+        return $this->belongsTo('App\Models\Pergunta');
     }
     
     public function unidade()
     {
-        $this->belongsTo('App\Models\Unidade');
+        return $this->belongsTo('App\Models\Unidade');
     }
 }
