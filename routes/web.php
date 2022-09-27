@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/user/{id}/unidade', 			'UserController@AtribuirUnidade')->name('user.atribuirunidade');
 	
 	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/embreve', 'HomeController@embreve')->name('embreve');
 	
 	Route::get('/api/unidades',			'APIController@unidades');
 	Route::get('/api/topicos',			'APIController@topicos');
@@ -30,5 +31,6 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::resource('unidade', 'UnidadeController');
 	Route::resource('topico', 'TopicoController');
 	Route::resource('pergunta', 'PerguntaController');
+	Route::resource('resposta', 'RespostaController');
 	Route::resource('user', 'UserController');
 });

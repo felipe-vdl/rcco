@@ -16,7 +16,7 @@ class HomeController extends Controller
 		return view('home');
 	}
 
-	public function embreve($rotina)
+	public function embreve()
 	{
 		return view ('embreve');
 	}
