@@ -47,7 +47,7 @@
                      @if ($usuario->unidades->count() === 0)
                         <td></td>
                      @else
-                        <td title="@foreach($usuario->unidades as $unidade) {{$unidade->nome}} / @endforeach">{{$usuario->unidades->count()}}</td>
+                        <td title="@foreach($usuario->unidades as $unidade) @if($loop->last){{$unidade->nome}}@else {{$unidade->nome}} / @endif @endforeach">{{$usuario->unidades->count()}}</td>
                      @endif
                      <td class="actions text-right">
                         @if($usuario->nivel != 'Super-Admin')

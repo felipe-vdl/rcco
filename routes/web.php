@@ -23,9 +23,14 @@ Route::group(['middleware' => ['auth']], function () {
 	
 	Route::get('/api/unidades',			'APIController@unidades');
 	Route::get('/api/topicos',			'APIController@topicos');
+	Route::get('/api/tabela',			  'APIController@gerarTabela');
+	Route::get('/api/formulario',   'APIController@formulario');
 	
 	Route::post('pergunta/is_enabled',		'PerguntaController@is_enabled')->name('pergunta.is_enabled');
 	Route::post('/pergunta/{id}/set_index', 			'PerguntaController@set_index')->name('pergunta.set_index');
+
+	Route::post('/resposta/enviar', 'RespostaController@enviar')->name('resposta.enviar');
+	Route::post('/resposta/pdf', 'RespostaController@GerarPDF')->name('resposta.pdf');
 	
 	Route::resource('setor', 'SetorController');
 	Route::resource('unidade', 'UnidadeController');

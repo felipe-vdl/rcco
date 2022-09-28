@@ -28,8 +28,11 @@ class Unidade extends Model
     {
         return $this->belongsToMany('App\Models\User');
     }
-
-    // belongsToMany Pergunta
     
+    public function perguntas()
+    {
+        return $this->belongsToMany('App\Models\Pergunta');
+    }
+
     // hasMany Resposta
 }

@@ -10,9 +10,9 @@ class LabelValor extends Model
 
     protected $fillable = [
         'valor',
+        'label_option_id',
         'pergunta_id',
-        'resposta_id',
-        'label_option_id'
+        'resposta_id'
     ];
 
     public function resposta() {

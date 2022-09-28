@@ -3,81 +3,87 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+use DB;
+use PDF;
+use App\Models\Setor;
+use App\Models\Unidade;
+use App\Models\Pergunta;
+use App\Models\Resposta;
+use App\Models\LabelOption;
+use App\Models\LabelValor;
 
 class RespostaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return view('embreve');
+        $setores = Setor::get();
+        $setores_usuario_logado = [];
+
+        if (Auth::user()->nivel !== "Super-Admin") {
+            foreach(Auth::user()->setores as $setor) {
+                array_push($setores_usuario_logado, $setor);
+            }
+
+        } else if (Auth::user()->nivel === "Super-Admin") {
+            foreach ($setores as $setor) {
+                array_push($setores_usuario_logado, $setor);
+            }
+        }
+
+        return view('resposta.index', compact('setores_usuario_logado', 'setores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $setores = Setor::get();
+        $setores_usuario_logado = [];
+
+        if (Auth::user()->nivel !== "Super-Admin") {
+            foreach(Auth::user()->setores as $setor) {
+                array_push($setores_usuario_logado, $setor);
+            }
+
+        } else if (Auth::user()->nivel === "Super-Admin") {
+            foreach ($setores as $setor) {
+                array_push($setores_usuario_logado, $setor);
+            }
+        }
+
+        return view('resposta.create', compact('setores_usuario_logado'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
+    {
+        //
+    }
+
+    public function enviar(Request $request)
+    {
+
+    }
+
+    public function GerarPDF (Request $request)
     {
         //
     }
