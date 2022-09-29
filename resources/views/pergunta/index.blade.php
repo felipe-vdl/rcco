@@ -61,6 +61,7 @@
                               <form style="display: inline-block;" class="set_index" method="POST" action="{{route("pergunta.set_index", $pergunta->id)}}">
                                  @csrf
                                  <input type="hidden" name="pergunta_id" value="{{$pergunta->id}}">
+                                 <input type="hidden" name="index_atual" value="{{$pergunta->index}}">
                                  <input type="hidden" name="index" value="">
                                  <button
                                        title="Atribuir index."
@@ -201,6 +202,7 @@
                      element: "input",
                      attributes: {
                         placeholder: "0",
+                        value: form.elements["index_atual"].value,
                         type: "number"
                      }
                   },

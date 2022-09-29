@@ -187,17 +187,20 @@
 					if(pergunta.formato === 'text') {
 						const row = document.createElement('div');
 						row.classList.add('row');
+						row.style = "margin-top: 1rem";
 
 						const formGroup = document.createElement('div');
 						formGroup.classList.add('form-group', 'col-12', 'col-md-6');
+						formGroup.style = "padding: 0;"
 
-						const label = document.createElement('label');
-						label.classList.add('control-label');
+						const label = document.createElement('h2');
+						label.classList.add('col-12');
 						label.innerText = pergunta.nome;
 
 						const input = document.createElement('input');
 						input.type = pergunta.tipo === 'string' ? 'text' : 'number';
 						input.required = pergunta.is_required ? true : false;
+						input.style = "width: 100%;"
 						input.name = `topicos[${t}][textos_simples][${i}][valor]`;
 
 						const hidden = document.createElement('input');
@@ -219,12 +222,14 @@
 					} else if (pergunta.formato === 'textarea') {
 						const row = document.createElement('div');
 						row.classList.add('row');
+						row.style = "margin-top: 1rem";
 
 						const formGroup = document.createElement('div');
 						formGroup.classList.add('form-group', 'col-12');
+						formGroup.style = "padding: 0;"
 
-						const label = document.createElement('label');
-						label.classList.add('control-label');
+						const label = document.createElement('h2');
+						label.classList.add('col-12');
 						label.innerText = pergunta.nome;
 
 						const textArea = document.createElement('textarea');
@@ -251,6 +256,7 @@
 					} else if (pergunta.formato === 'radio') {
 						const row = document.createElement('div');
 						row.classList.add('row');
+						row.style = "margin-top: 1rem";
 
 						const formGroup = document.createElement('div');
 						formGroup.classList.add('form-group', 'col-12');
@@ -298,6 +304,7 @@
 					} else if (pergunta.formato === 'checkbox') {
 						const row = document.createElement('div');
 						row.classList.add('row');
+						row.style = "margin-top: 1rem";
 
 						const formGroup = document.createElement('div');
 						formGroup.classList.add('form-group', 'col-12');
@@ -356,12 +363,13 @@
 					} else if (pergunta.formato === 'dropdown') {
 						const row = document.createElement('div');
 						row.classList.add('row');
+						row.style = "margin-top: 1rem";
 
 						const formGroup = document.createElement('div');
 						formGroup.classList.add('form-group', 'col-12');
 
-						const label = document.createElement('label');
-						label.classList.add('control-label');
+						const label = document.createElement('h2');
+						label.classList.add('col-12');
 						label.innerText = pergunta.nome;
 
 						const input = document.createElement('input');
@@ -388,7 +396,7 @@
 
 						let settings = {
 							maxItems: 1,
-							plugins: ['clear_button'],
+							plugins: [],
 							options: options,
 							sortField: {
 									field: 'text',
@@ -400,9 +408,8 @@
 
 						n++;
 					}
-
-					t++;
 				}
+				t++;
 			}
 		}
 	</script>
