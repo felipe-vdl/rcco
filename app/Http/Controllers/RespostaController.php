@@ -56,6 +56,10 @@ class RespostaController extends Controller
     public function store(Request $request)
     {
         dd($request->all());
+        // 1. foreach topico { foreach (resposta) {new Resposta} };
+        // 2. data, unidade_id, pergunta_id, topico_id, user_id
+        // 3.1 if(formato === checkbox) { save(), foreach(checkboxvalues) {create LabelValor} }
+        // 3.2 else if(text/textarea/radio/dropdown) { valor, save() }
     }
 
     public function show($id)
