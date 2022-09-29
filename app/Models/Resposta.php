@@ -10,12 +10,13 @@ class Resposta extends Model
 
     protected $fillable = [
         'data',
-        'valor',
+        'unidade_id',
         'pergunta_id',
+        'topico_id',
+        'valor',
+        'user_id',
         'status',
         'data_envio',
-        'unidade_id',
-        'user_id'
     ];
 
     public function criador() {
@@ -28,6 +29,10 @@ class Resposta extends Model
 
     public function pergunta() {
         return $this->belongsTo('App\Models\Pergunta');
+    }
+
+    public function topico() {
+        return $this->belongsTo('App\Models\Topico');
     }
 
     public function label_valors() {

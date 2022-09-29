@@ -55,7 +55,7 @@ class RespostaController extends Controller
 
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     public function show($id)
@@ -73,14 +73,9 @@ class RespostaController extends Controller
         //
     }
 
-    public function destroy($id)
-    {
-        //
-    }
-
     public function enviar(Request $request)
     {
-
+        //
     }
 
     public function GerarPDF (Request $request)

@@ -28,4 +28,9 @@ class Topico extends Model
     {
         return $this->hasMany('App\Models\Pergunta');
     }
+
+    public function respostas()
+    {
+        return $this->hasMany('App\Models\Resposta');
+    }
 }

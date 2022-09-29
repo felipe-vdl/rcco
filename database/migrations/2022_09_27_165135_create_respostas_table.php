@@ -21,6 +21,9 @@ class CreateRespostasTable extends Migration
             $table->bigInteger('pergunta_id') ->unsigned();
             $table->foreign('pergunta_id')->references('id')->on('perguntas')->onDelete('cascade');
 
+            $table->bigInteger('topico_id') ->unsigned();
+            $table->foreign('topico_id')->references('id')->on('topicos')->onDelete('cascade');
+
             $table->tinyInteger('status')->default(0);
             $table->string('data_envio')->nullable();
 
