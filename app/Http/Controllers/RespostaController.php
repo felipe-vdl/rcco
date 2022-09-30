@@ -220,6 +220,21 @@ class RespostaController extends Controller
 
     public function GerarPDF (Request $request)
     {
-        //
+        $data = $request->data;
+        $id = $request->unidade_id;
+        $unidade = Unidade::find($id);
+
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data) {
+            $query->whereHas('unidade', function($q) use($id) {
+                $q->where('id', $id);
+            })->where('data', $data);
+        }, 'respostas.pergunta', 'respostas.label_valors'])->get();
+
+        foreach ($topicos as $topico) {
+            $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+        }
+
+        $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'data', 'unidade'));
+        return $pdf->stream('Relatório');
     }
 }
