@@ -18,7 +18,7 @@
           <div class="form-group col-md-6 col-sm-6 col-xs-12">
              <label class="control-label">Setor</label>
               <select onchange="getUnidades()" id="setor_id" name="setor_id" class="form-control" required>
-                  <option value="" disabled selected>Selecione o setor</option>
+                  <option value="" selected>Selecione o setor</option>
                   @foreach ($setores_usuario_logado as $setor)
                     <option value="{{$setor->id}}">{{$setor->nome}}</option>
                   @endforeach
@@ -67,48 +67,51 @@
     const tBody = document.getElementById('tb_resposta_body');
 
     const getUnidades = async () => {
-      // Desabilitar inputs durante o carregamento do request.
-      setorSelect.setAttribute('disabled', 'disabled');
-      unidadeSelect.setAttribute('disabled', 'disabled');
-      unidadeSelect.innerHTML = "";
-      const loading = document.createElement('option');
-      loading.value = "";
-      loading.innerText = "Carregando...";
-      unidadeSelect.append(loading);
-
-      try {
-        // Envio do request para API.
-        const response = await axios.get('/api/unidades', {
-          params: {
-              setor_id: setorSelect.value
-          }
-        });
-
-        const unidades = response.data;
+      if(setorSelect.value) {
+        // Desabilitar inputs durante o carregamento do request.
+        setorSelect.setAttribute('disabled', 'disabled');
+        unidadeSelect.setAttribute('disabled', 'disabled');
         unidadeSelect.innerHTML = "";
+        const loading = document.createElement('option');
+        loading.value = "";
+        loading.innerText = "Carregando...";
+        unidadeSelect.append(loading);
 
-        // Atribuir as opções
-        const selecione = document.createElement('option');
-        selecione.value = "";
-        selecione.innerText = "Selecione a unidade";
-        selecione.setAttribute('disabled', 'disabled');
-        selecione.setAttribute('selected', 'selected');
-        unidadeSelect.append(selecione);
+        try {
+          // Envio do request para API.
+          const response = await axios.get('/api/unidades', {
+            params: {
+                setor_id: setorSelect.value
+            }
+          });
 
-        for (let unidade of unidades) {
-          const newOption = document.createElement('option');
-          newOption.value = unidade.id;
-          newOption.innerText = unidade.nome;
-          unidadeSelect.append(newOption);
+          const unidades = response.data;
+          unidadeSelect.innerHTML = "";
+
+          // Atribuir as opções
+          const selecione = document.createElement('option');
+          selecione.value = "";
+          selecione.innerText = "Selecione a unidade";
+          selecione.setAttribute('disabled', 'disabled');
+          selecione.setAttribute('selected', 'selected');
+          unidadeSelect.append(selecione);
+
+          for (let unidade of unidades) {
+            const newOption = document.createElement('option');
+            newOption.value = unidade.id;
+            newOption.innerText = unidade.nome;
+            unidadeSelect.append(newOption);
+          }
+
+          // Liberar inputs
+          unidadeSelect.removeAttribute('disabled');
+          setorSelect.removeAttribute('disabled');
+
+        } catch (error) {
+          console.log(error);
+          unidadeSelect.removeAttribute('disabled');
+          setorSelect.removeAttribute('disabled');
         }
-
-        // Liberar inputs
-        unidadeSelect.removeAttribute('disabled');
-        setorSelect.removeAttribute('disabled');
-
-      } catch (error) {
-        unidadeSelect.removeAttribute('disabled');
-        setorSelect.removeAttribute('disabled');
       }
     }
 
@@ -147,6 +150,7 @@
             notFoundTR.classList.add('text-center');
             tBody.append(notFoundTR);
           } else {
+            console.log(tabela, user)
             //TODO: filtrar ações disponíveis por usuário e status do form
             for (let item of tabela) {
               const tr = document.createElement('tr');
@@ -158,7 +162,7 @@
               unidade.innerText = item.unidade.nome;
 
               const usuario = document.createElement('td');
-              usuario.innerText = item.user.name;
+              usuario.innerText = item.criador.name;
 
               const acoes = document.createElement('td');
               
@@ -344,7 +348,7 @@
                 acoes.append(enviado);
               }
 
-              tr.append(data, setor, unidade, usuario, acoes);
+              tr.append(data, unidade, usuario, acoes);
               tBody.append(tr);
             }
           }
@@ -398,6 +402,7 @@
           setorSelect.removeAttribute('disabled');
 
         } catch (error) {
+          console.log(error);
           funcoes.notificationRight("top", "right", "danger", "Ocorreu um erro.");
           unidadeSelect.removeAttribute('disabled');
           setorSelect.removeAttribute('disabled');
