@@ -57,11 +57,6 @@ class RespostaController extends Controller
 
     public function store(Request $request)
     {
-        // 1. foreach topico { foreach (resposta) {new Resposta} };
-        // 2. data, unidade_id, pergunta_id, topico_id, user_id
-        // 3.1 if(formato === checkbox) { save(), foreach(checkboxvalues) {create LabelValor} }
-        // 3.2 else if(text/textarea/radio/dropdown) { valor, save() }
-        // dd($request->all());
         DB::beginTransaction();
         try {
             foreach($request->topicos as $chave => $topico) {
@@ -166,7 +161,7 @@ class RespostaController extends Controller
                 }
             }
             DB::commit();
-            return redirect()->route('resposta.index')->with('sucesso', 'Formulário enviado com sucesso.');
+            return redirect()->route('resposta.index')->with('sucesso', 'Formulário criado com sucesso.');
 
         } catch (Throwable $th) {
             DB::rollback();

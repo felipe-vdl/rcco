@@ -60,8 +60,6 @@ class PerguntaController extends Controller
 
     public function store(Request $request)
     {
-        // TODO: Tipos de formato: text, textarea, checkbox, radio, dropdown.
-        // LabelOption: checkbox, radio, dropdown.
         try {
             DB::beginTransaction();
 
@@ -128,7 +126,7 @@ class PerguntaController extends Controller
         $pergunta->update();
 
         DB::commit();
-        return redirect()->back()->with('sucesso', 'Pergunta editada com sucesso.');
+        return redirect()->back()->with('sucesso', 'Operação efetuada com sucesso.');
     }
 
     public function set_index(Request $request, $id) {
@@ -139,6 +137,6 @@ class PerguntaController extends Controller
         $pergunta->save();
 
         DB::commit();
-        return redirect()->back()->with('sucesso', 'Pergunta editada com sucesso.');
+        return redirect()->back()->with('sucesso', 'Operação efetuada com sucesso.');
     }
 }
