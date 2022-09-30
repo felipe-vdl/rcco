@@ -189,9 +189,22 @@ class RespostaController extends Controller
         return view('resposta.show', compact('data', 'unidade', 'topicos'));
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        $data = $request->query('data');
+        $unidade = Unidade::find($id);
+
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data) {
+            $query->whereHas('unidade', function($q) use($id) {
+                $q->where('id', $id);
+            })->where('data', $data);
+        }, 'respostas.pergunta', 'respostas.label_valors'])->get();
+
+        foreach ($topicos as $topico) {
+            $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+        }
+
+        return view('resposta.edit', compact('data', 'unidade', 'topicos'));
     }
 
     public function update(Request $request, $id)
