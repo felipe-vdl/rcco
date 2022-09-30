@@ -15,13 +15,13 @@
           <table id="tb_perguntas" class="table table-hover table-striped compact">
             <thead>
                <tr>
-                  <th>Index</th>
-                  <th>Título da Pergunta</th>
-                  <th>Formato</th>
-                  <th>Tópico</th>
-                  <th>Unidades</th>
-                  <th>Criado por</th>
-                  <th>Ações</th>
+                  <th class="text-center">Index</th>
+                  <th class="text-center">Título da Pergunta</th>
+                  <th class="text-center">Formato</th>
+                  <th class="text-center">Tópico</th>
+                  <th class="text-center">Unidades</th>
+                  <th class="text-center">Criado por</th>
+                  <th class="text-center">Ações</th>
                </tr>
             </thead>
             <tbody>
@@ -103,6 +103,17 @@
                   @endif
                @endforeach
             </tbody>
+            <tfoot>
+               <tr>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+               </tr>
+           </tfoot>
           </table>
        </div>
     </div>
@@ -203,7 +214,8 @@
                      attributes: {
                         placeholder: "0",
                         value: form.elements["index_atual"].value,
-                        type: "number"
+                        type: "number",
+                        min: 0
                      }
                   },
                   button: {
@@ -222,7 +234,7 @@
   </script>
   <script>
     $(document).ready(function(){
-        var tb_user = $("#tb_perguntas").DataTable({
+        var myTable = $("#tb_perguntas").DataTable({
           language: {
             'url' : '{{ asset('js/portugues.json') }}',
             "decimal": ",",
@@ -232,7 +244,40 @@
           stateSave: true,
           stateDuration: -1,
           responsive: true,
-        })
+          initComplete: function () {
+            this.api()
+                .columns()
+                .every(function () {
+                  var column = this;
+                  var select = $('<select><option value=""></option></select>')
+                     .appendTo($(column.header()))
+                     .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                        column.search(val ? '^' + val + '$' : '', true, false).draw();
+                     });
+                  $( select ).click( function(e) {
+                        e.stopPropagation();
+                  });
+ 
+                  column
+                     .data()
+                     .unique()
+                     .sort()
+                     .each(function (d) {
+                        if(column.search() === '^'+d+'$'){
+                           select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
+                        } else {
+                           select.append( '<option value="'+d+'">'+d+'</option>' )
+                        }
+                     });
+                });
+         }
+        });
+        $('.filter-input').keyup(function() {
+         myTable.column( $(this).data('column') )
+         .search( $(this).val() )
+         .draw();
+      });
     });
   </script>
   @if (session()->has('success'))

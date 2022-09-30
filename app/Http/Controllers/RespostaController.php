@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use PDF;
+use Carbon\Carbon;
 use App\Models\Setor;
 use App\Models\Unidade;
 use App\Models\Pergunta;
 use App\Models\Resposta;
+use App\Models\Topico;
 use App\Models\LabelOption;
 use App\Models\LabelValor;
 
@@ -173,9 +175,23 @@ class RespostaController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $data = $request->query('data');
+        $unidade = Unidade::find($id);
+
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data) {
+            $query->whereHas('unidade', function($q) use($id) {
+                $q->where('id', $id);
+            })->where('data', $data);
+        }, 'respostas.pergunta', 'respostas.label_valors'])->get();
+
+        foreach ($topicos as $topico) {
+            $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+        }
+
+        //dd($id, $data, $topicos);
+        return view('resposta.show', compact('data', 'unidade', 'topicos'));
     }
 
     public function edit($id)
@@ -190,7 +206,16 @@ class RespostaController extends Controller
 
     public function enviar(Request $request)
     {
-        //
+        DB::beginTransaction();
+        $respostas = Resposta::where('unidade_id', $request->unidade_id)->where('data', $request->data)->get();
+        foreach($respostas as $resposta) {
+            $resposta->status = $request->envio_status;
+            $resposta->data_envio = Carbon::now('America/Sao_Paulo')->format('Y-m-d 12:00:00');
+            $resposta->update();
+        }
+
+        DB::commit();
+        return redirect()->back()->with('sucesso', 'Operação concluída com sucesso.');
     }
 
     public function GerarPDF (Request $request)
