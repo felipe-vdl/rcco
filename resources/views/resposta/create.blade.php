@@ -152,8 +152,8 @@
 
 			console.log(topicos);
 
+			let t = 0;
 			for(let topico of topicos) {
-				let t = 0;
 
 				let i = 0;
 				let j = 0;
