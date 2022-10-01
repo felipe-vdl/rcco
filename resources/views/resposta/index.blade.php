@@ -39,10 +39,10 @@
          <table id="tb_resposta" class="table table-hover table-striped compact" style="width: 100%;">
             <thead>
                <tr>
-                  <th>Data</th>
-                  <th>Unidade</th>
-                  <th>Preenchido por</th>
-                  <th>Ações</th>
+                  <th class="text-center">Data</th>
+                  <th class="text-center">Unidade</th>
+                  <th class="text-center">Preenchido por</th>
+                  <th class="text-center">Ações</th>
                </tr>
             </thead>   
             <tbody id="tb_resposta_body">

@@ -249,7 +249,7 @@
                 .columns()
                 .every(function () {
                   var column = this;
-                  var select = $('<select><option value=""></option></select>')
+                  var select = $('<br><select><option value=""></option></select>')
                      .appendTo($(column.header()))
                      .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -273,11 +273,6 @@
                 });
          }
         });
-        $('.filter-input').keyup(function() {
-         myTable.column( $(this).data('column') )
-         .search( $(this).val() )
-         .draw();
-      });
     });
   </script>
   @if (session()->has('success'))

@@ -209,7 +209,7 @@ class RespostaController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     public function enviar(Request $request)
