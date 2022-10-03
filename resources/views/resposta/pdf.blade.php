@@ -106,7 +106,7 @@ hr {
       <br>
       <div style="border: 1px solid black; padding: 5px;">
         <h3 style="text-align:center; color:rgb(66, 66, 66);">RELATÓRIO: {{$unidade->nome}}</h3>
-        <h3 style="text-align:center; color:rgb(66, 66, 66);">{{date('d/m/Y', strtotime($data))}}</h3>
+        <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($data))}}</h3>
       </div>
     </header>
     <main>
@@ -120,7 +120,7 @@ hr {
             </p>
             @elseif ($resposta->pergunta->formato === "textarea")
               <p>
-                <h4>{{$resposta->pergunta->nome}}</h4>
+                <h4>{{$resposta->pergunta->nome}}: </h4>
                 {{$resposta->valor}}
               </p>
             @elseif ($resposta->pergunta->formato === "dropdown")
@@ -133,7 +133,7 @@ hr {
               </p>
             @elseif ($resposta->pergunta->formato === "checkbox")
               <p>
-                <h4>{{$resposta->pergunta->nome}}</h4>
+                <h4>{{$resposta->pergunta->nome}}: </h4>
                 @foreach($resposta->label_valors as $label)
                 <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$label->valor ? 'Sim' : 'Não'}}</span>
                 @endforeach
