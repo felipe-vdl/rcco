@@ -164,8 +164,11 @@
               const usuario = document.createElement('td');
               usuario.innerText = item.criador.name;
 
-              const acoes = document.createElement('td');
-              
+              const acoesTd = document.createElement('td');
+              const acoes = document.createElement('div');
+              acoes.style.display = "flex";
+              acoesTd.append(acoes);
+
               if (item.status === 1 || user.nivel === "User") {
                 const viewBtn = document.createElement('a');
                 viewBtn.classList.add('btn', 'btn-info', 'btn-xs');
@@ -241,7 +244,7 @@
                 const devolverBtn = document.createElement('button');
                 devolverBtn.classList.add('btn', 'btn-xs', 'btn-warning');
                 devolverBtn.innerHTML = "<i class='glyphicon glyphicon-send'></i>";
-                devolverBtn.title = "Devolver formulário"
+                devolverBtn.title = "Devolver formulário";
                 
                 devolverForm.addEventListener('submit', evt => {
                   evt.preventDefault();
@@ -348,7 +351,7 @@
                 acoes.append(enviado);
               }
 
-              tr.append(data, unidade, usuario, acoes);
+              tr.append(data, unidade, usuario, acoesTd);
               tBody.append(tr);
             }
           }

@@ -112,20 +112,26 @@ hr {
 
     <main>
       <div>
-        {{-- @foreach($formularios as $formulario)
-          @if ($formulario->form_label_setor->tipo === "text")
-            text
-          @endif
-          @if ($formulario->form_label_setor->tipo === "textarea")
-            textarea
-          @endif
-          @if ($formulario->form_label_setor->tipo === "checkbox")
-            checkbox
-          @endif
-          @if ($formulario->form_label_setor->tipo === "radio")
-            radio
-          @endif
-        @endforeach --}}
+        @foreach($topicos as $topico)
+          <h3 style="text-align:center;">{{$topico->nome}}</h3>
+          @foreach($topico->respostas as $resposta)
+            @if ($resposta->pergunta->formato === "text")
+              text
+            @endif
+            @if ($resposta->pergunta->formato === "textarea")
+              textarea
+            @endif
+            @if ($resposta->pergunta->formato === "dropdown")
+              dropdown
+            @endif
+            @if ($resposta->pergunta->formato === "checkbox")
+              checkbox
+            @endif
+            @if ($resposta->pergunta->formato === "radio")
+              radio
+            @endif
+          @endforeach
+        @endforeach
         {{-- <table style="width: 100%;">
           <tr>
             <th>Nº</th>
