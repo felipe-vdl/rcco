@@ -106,14 +106,16 @@ hr {
         </table>
       </div>
       <br>
-      <h3 style="text-align:center; color:rgb(85, 85, 85);"><u>RELATÓRIO: {{$unidade->nome}}</u></h3>
-      <h3 style="text-align:center; color:rgb(85, 85, 85);"><u>{{date('d/m/Y', strtotime($data))}}</u></h3>
+      <div style="border: 1px solid black; padding: 5px;">
+        <h3 style="text-align:center; color:rgb(66, 66, 66);">RELATÓRIO: {{$unidade->nome}}</h3>
+        <h3 style="text-align:center; color:rgb(66, 66, 66);">{{date('d/m/Y', strtotime($data))}}</h3>
+      </div>
     </header>
 
     <main>
-      <div>
-        @foreach($topicos as $topico)
-          <h3 style="text-align:center;"><u>{{$topico->nome}}</u></h3>
+      @foreach($topicos as $topico)
+        <div>
+          <h3 style="text-align:center; border: 1px solid black; padding: 5px;">{{$topico->nome}}</h3>
           @foreach($topico->respostas as $resposta)
             @if ($resposta->pergunta->formato === "text")
             <p>
@@ -141,7 +143,8 @@ hr {
               </p><br>
             @endif
           @endforeach
-        @endforeach
+        </div>
+      @endforeach
         {{-- <table style="width: 100%;">
           <tr>
             <th>Nº</th>
@@ -173,7 +176,6 @@ hr {
             </tr>
           @endforeach
         </table> --}}
-      </div>
     </main>
     <footer id="footer" class="page-footer"><div class="page-number"></div></footer>
 	</body>
