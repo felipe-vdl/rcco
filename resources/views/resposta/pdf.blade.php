@@ -106,29 +106,39 @@ hr {
         </table>
       </div>
       <br>
-      <h3 style="text-align:center;"><u>RELATÓRIO: {{$unidade->nome}}</u></h3>
-      <h3 style="text-align:center;"><u>{{date('d/m/Y', strtotime($data))}}</u></h3>
+      <h3 style="text-align:center; color:rgb(85, 85, 85);"><u>RELATÓRIO: {{$unidade->nome}}</u></h3>
+      <h3 style="text-align:center; color:rgb(85, 85, 85);"><u>{{date('d/m/Y', strtotime($data))}}</u></h3>
     </header>
 
     <main>
       <div>
         @foreach($topicos as $topico)
-          <h3 style="text-align:center;">{{$topico->nome}}</h3>
+          <h3 style="text-align:center;"><u>{{$topico->nome}}</u></h3>
           @foreach($topico->respostas as $resposta)
             @if ($resposta->pergunta->formato === "text")
-              text
-            @endif
-            @if ($resposta->pergunta->formato === "textarea")
-              textarea
-            @endif
-            @if ($resposta->pergunta->formato === "dropdown")
-              dropdown
-            @endif
-            @if ($resposta->pergunta->formato === "checkbox")
-              checkbox
-            @endif
-            @if ($resposta->pergunta->formato === "radio")
-              radio
+            <p>
+              <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+            </p>
+            @elseif ($resposta->pergunta->formato === "textarea")
+              <p>
+                <h4>{{$resposta->pergunta->nome}}</h4>
+                {{$resposta->valor}}
+              </p>
+            @elseif ($resposta->pergunta->formato === "dropdown")
+              <p>
+                <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+              </p>
+            @elseif ($resposta->pergunta->formato === "radio")
+              <p>
+                <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+              </p>
+            @elseif ($resposta->pergunta->formato === "checkbox")
+              <p>
+                <h4>{{$resposta->pergunta->nome}}</h4>
+                @foreach($resposta->label_valors as $label)
+                <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$label->valor ? 'Sim' : 'Não'}}</span>
+                @endforeach
+              </p><br>
             @endif
           @endforeach
         @endforeach
