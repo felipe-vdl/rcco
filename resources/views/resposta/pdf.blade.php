@@ -93,11 +93,9 @@ hr {
 #watermark { position: fixed; bottom: 150px; width: 650px; height: 600px; opacity: .1; }
 </style>
 </head>
-
 	<body>
     <header>
       <div id="watermark"><img src="{{ asset("img/lgo2.png") }}" height="120%" width="110%"></div>
-      
       <div id="header">
         <table>
           <tr>
@@ -111,7 +109,6 @@ hr {
         <h3 style="text-align:center; color:rgb(66, 66, 66);">{{date('d/m/Y', strtotime($data))}}</h3>
       </div>
     </header>
-
     <main>
       @foreach($topicos as $topico)
         <div>
@@ -145,37 +142,6 @@ hr {
           @endforeach
         </div>
       @endforeach
-        {{-- <table style="width: 100%;">
-          <tr>
-            <th>Nº</th>
-            <th>Nome</th>
-            <th>Matrícula</th>
-            <th>E-mail</th>
-            <th>Direcionamento</th>
-            <th>Protocolo</th>
-            <th>Agendamento</th>
-            <th>Presença</th>
-          </tr>
-
-          @foreach ($relatorio as $item)
-            <tr>
-              <td>{{$i++}}</td>
-              <td>{{$item->nome}}</td>
-              <td>{{$item->matricula}}</td>
-              <td>{{$item->email}}</td>
-              <td>{{$item->direcionamento}}</td>
-              <td>{{$item->protocolo}}</td>
-              <td>{{substr(date('d/m/Y H:i', strtotime($item->data_agenda)), 0, 10).' às '.$item->hora_agenda.' horas'}}</td>
-              <td>
-              @if ($item->presenca == 0)
-              <a>Ausente</a>
-              @elseif ($item->presenca == 1)
-              <a>Presente</a>
-              @endif
-              </td>
-            </tr>
-          @endforeach
-        </table> --}}
     </main>
     <footer id="footer" class="page-footer"><div class="page-number"></div></footer>
 	</body>
