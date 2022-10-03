@@ -62,10 +62,10 @@
                         </div>
                       @endforeach
                     @elseif($resposta->pergunta->formato === "checkbox")
-                      <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][checkboxes]['.$loop->index.'][resposta_id]'}}" >
                       @foreach($resposta->label_valors as $label)
                         <div class="col-md-6 col-sm-6 col-xs-12" style="display: flex; align-items: center;">
                           <input type="hidden" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][label_valor_id]'}}" value="{{$label->id}}">
+                          <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][resposta_id]'}}" >
                           <input type="hidden" value="0" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][valor]'}}" >
                           <input @if($label->valor == 1) checked @endif type="checkbox" value="1" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][valor]'}}" >
                           <label class="form-check-label" style="margin: 0;">{{$label->label_option->nome}}</label>

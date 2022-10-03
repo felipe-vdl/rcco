@@ -209,7 +209,56 @@ class RespostaController extends Controller
 
     public function update(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->all());
+        DB::beginTransaction();
+        try {
+            foreach($request->topicos as $chave => $topico) {
+                if(isset($topico["textos_simples"])) {
+                    foreach($topico["textos_simples"] as $chave => $input) {
+                        $resposta = Resposta::find($input["resposta_id"]);
+                        $resposta->valor = $input["valor"];
+                        $resposta->save();
+                    }
+                }
+                if(isset($topico["textos_grandes"])) {
+                    foreach($topico["textos_grandes"] as $chave => $input) {
+                        $resposta = Resposta::find($input["resposta_id"]);
+                        $resposta->valor = $input["valor"];
+                        $resposta->save();
+                    }
+                }
+                if(isset($topico["radios"])) {
+                    foreach($topico["radios"] as $chave => $input) {
+                        $resposta = Resposta::find($input["resposta_id"]);
+                        $resposta->valor = $input["valor"];
+                        $resposta->save();
+                    }
+                }
+                if(isset($topico["dropdowns"])) {
+                    foreach($topico["dropdowns"] as $chave => $input) {
+                        $resposta = Resposta::find($input["resposta_id"]);
+                        $resposta->valor = $input["valor"];
+                        $resposta->save();
+                    }
+                }
+                if(isset($topico["checkboxes"])) {
+                    foreach($topico["checkboxes"] as $chave => $checkboxList) {
+                        foreach($checkboxList as $chave => $input) {
+                            $label_valor = LabelValor::find($input["label_valor_id"]);
+                            $label_valor->valor = $input["valor"];
+                            $label_valor->save();
+                        }
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()->route('resposta.index')->with('sucesso', 'Formulário editado com sucesso.');
+
+        } catch (Throwable $th) {
+            dd($th);
+            DB::rollback();
+            return back()->withErrors('Ocorreu um erro ao tentar atualizar as respostas.');
+        }
     }
 
     public function enviar(Request $request)
