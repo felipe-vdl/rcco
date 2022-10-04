@@ -94,11 +94,18 @@ class UserController extends Controller
 		DB::beginTransaction();
 		try {
 			$usuario = User::find($id);
+			if ($usuario->is_enabled == 1) {
+				$usuario->is_enabled = 0;
+			} else if ($usuario->is_enabled == 0) {
+				$usuario->is_enabled = 1;
+			}
 			
-			$usuario->delete();
-
+			$usuario->update();
 			DB::commit();
+			return back()->with('sucesso', 'Operação efetuada com sucesso.');
+
 		} catch (Throwable $th) {
+
 			DB::rollback();
 			dd($th);
 			return back()->with('erro', 'Houve um erro ao tentar excluir o usuário.');
