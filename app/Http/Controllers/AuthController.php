@@ -13,9 +13,9 @@ class AuthController extends Controller
 {
 	public function login()
 	{
-		if(Auth::user() && Auth::user()->is_enabled)
+		if(Auth::user())
 		{
-			return redirect()->intended('/home');
+			return redirect()->intended('home');
 		}
 		
 		return view('auth.login');
@@ -34,13 +34,12 @@ class AuthController extends Controller
       {
 				return redirect()->intended('home');
       } else {
-				return redirect()->back()->with('msg','Acesso negado.');
+				return redirect()->back()->with('msg', 'Acesso negado.');
       }
 	}
 
 	public function logout(Request $request) {
 		Auth::logout();
-		return redirect('/login');
+		return redirect()->route('login');
   }
 }
-

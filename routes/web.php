@@ -1,6 +1,6 @@
 <?php
 
-Route::get ('/', 					"AuthController@login")->name('login');
+Route::get ('/', 					"AuthController@login");
 Route::get ("/login", 		"AuthController@login")->name('login');
 Route::post('/login', 		"AuthController@entrar");
 Route::get ('/logout', 		'AuthController@logout')->name('logout');
