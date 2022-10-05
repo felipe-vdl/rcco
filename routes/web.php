@@ -1,6 +1,6 @@
 <?php
 
-Route::get ('/', 					"AuthController@login")->name('login');
+Route::get ('/', 					"AuthController@login");
 Route::get ("/login", 		"AuthController@login")->name('login');
 Route::post('/login', 		"AuthController@entrar");
 Route::get ('/logout', 		'AuthController@logout')->name('logout');
@@ -31,6 +31,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::post('/resposta/enviar', 'RespostaController@enviar')->name('resposta.enviar');
 	Route::post('/resposta/pdf', 'RespostaController@GerarPDF')->name('resposta.pdf');
+
+	Route::get('dashboard/semus', 		'DashboardController@dashsemus');
+	Route::get('dashboard/semed', 		'DashboardController@dashsemed');
+	Route::get('dashboard/semas', 		'DashboardController@dashsemas');
 	
 	Route::resource('setor', 'SetorController');
 	Route::resource('unidade', 'UnidadeController');

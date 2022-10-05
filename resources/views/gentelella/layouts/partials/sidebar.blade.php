@@ -2,7 +2,13 @@
 	<div class="menu_section">
 		<ul class="nav side-menu">
 			@if (Auth::user()->nivel == 'Super-Admin' OR Auth::user()->nivel == 'Admin')
-			<li><a href="{{ route('embreve')}}"><i class="fas fa-chart-pie"></i> Gráficos</a></li>
+			{{-- <li><a href="{{ route('embreve')}}"><i class="fas fa-chart-pie"></i> Gráficos</a></li> --}}
+			<li><a><i class="fas fa-chart-pie"></i>Gráficos <span class="fa fa-chevron-down"></span></a>
+				<ul class="nav child_menu">
+					<li><a href="{{ url("dashboard/semed") }}"><i class="fas fa-chart-pie"></i> SEMED</a></li>
+					<li><a href="{{ url("dashboard/semus") }}"><i class="fas fa-chart-pie"></i> SEMUS</a></li>
+					<li><a href="{{ url("dashboard/semas") }}"><i class="fas fa-chart-pie"></i> SEMAS</a></li>
+				</ul>
 			@endif
 			<li>
 				<a href="{{ route('resposta.index')}}"><i class="fas fa-list"></i> Formulários</a>

@@ -133,30 +133,57 @@
                            title="Resetar Senha">  
                            <i class='glyphicon glyphicon-envelope '></i>
                         </a>
-                        <a
-                           id="btn_exclui_funcionario"
-                           class="btn btn-danger btn-xs action botao_acao btn_excluir"
-                           data-valor = 
-                              @if(Auth::user()->nivel  == 'Admin') 
-                                 @foreach ($usuario->setores as $setor) 
-                                    @if(in_array($setor->nome, $setores_usuario_logado)) 
-                                       ativo
-                                    @else
-                                       desabilitado
-                                    @endif 
-                                 @endforeach 
-                              @endif
-                              @if (Auth::user()->nivel  == 'Admin')
-                                 desabilitado
-                              @elseif(Auth::user()->nivel  == 'Super-Admin')
-                                 ativo
-                              @endif
-                           data-toggle="tooltip" 
-                           data-funcionario = {{$usuario->id}}
-                           data-placement="bottom" 
-                           title="Excluir Funcionario"> 
-                           <i class="glyphicon glyphicon-remove "></i>
-                        </a>
+                        @if($usuario->is_enabled == 1)
+                           <a
+                              id="btn_exclui_funcionario"
+                              class="btn btn-danger btn-xs action botao_acao btn_excluir"
+                              data-valor = 
+                                 @if(Auth::user()->nivel  == 'Admin') 
+                                    @foreach ($usuario->setores as $setor) 
+                                       @if(in_array($setor->nome, $setores_usuario_logado) && $usuario->nivel === "User")
+                                          ativo
+                                       @else
+                                          desabilitado
+                                       @endif 
+                                    @endforeach 
+                                 @endif
+                                 @if (Auth::user()->nivel  == 'Admin')
+                                    desabilitado
+                                 @elseif(Auth::user()->nivel  == 'Super-Admin')
+                                    ativo
+                                 @endif
+                              data-toggle="tooltip" 
+                              data-funcionario = {{$usuario->id}}
+                              data-placement="bottom" 
+                              title="Desativar funcionário"> 
+                              <i class="glyphicon glyphicon-remove "></i>
+                           </a>
+                        @elseif ($usuario->is_enabled == 0)
+                           <a
+                              id="btn_exclui_funcionario"
+                              class="btn btn-success btn-xs action botao_acao btn_excluir"
+                              data-valor = 
+                                 @if(Auth::user()->nivel  == 'Admin') 
+                                    @foreach ($usuario->setores as $setor) 
+                                       @if(in_array($setor->nome, $setores_usuario_logado) && $usuario->nivel === "User")
+                                          ativo
+                                       @else
+                                          desabilitado
+                                       @endif 
+                                    @endforeach 
+                                 @endif
+                                 @if (Auth::user()->nivel  == 'Admin')
+                                    desabilitado
+                                 @elseif(Auth::user()->nivel  == 'Super-Admin')
+                                    ativo
+                                 @endif
+                              data-toggle="tooltip" 
+                              data-funcionario = {{$usuario->id}}
+                              data-placement="bottom" 
+                              title="Ativar funcionário"> 
+                              <i class="glyphicon glyphicon-check "></i>
+                           </a>
+                        @endif
                   </td>
                   </tr>
                @endforeach
@@ -305,7 +332,7 @@
 				let btn = $(this);
 				swal({
 					title: "Atenção!",
-					text: "Excluir permanentemente um usuário",
+					text: "Desativar/Ativar um funcionário.",
 					icon: "warning",
 					buttons: {
 							cancel: {

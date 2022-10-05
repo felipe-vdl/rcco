@@ -15,7 +15,7 @@ class AuthController extends Controller
 	{
 		if(Auth::user())
 		{
-			return redirect()->intended('/home');
+			return redirect()->intended('home');
 		}
 		
 		return view('auth.login');
@@ -30,19 +30,23 @@ class AuthController extends Controller
 
 		$credentials = ['email' => $request->email, 'password' => $request->password];
 
-		
 		if(Auth::attempt($credentials))
-        {
-			return redirect()->intended('home');
-			// dd($credentials);
-        }else{
-			return redirect()->back()->with('msg','Acesso Negado, Email ou senha invalida');
-        }
+		{
+			if(Auth::user()->is_enabled == 1)
+			{
+				return redirect()->intended('home');
+			}else{
+				Auth::logout();
+				return redirect()->back()->with('error','Você não tem permissão para acessar o sistema');
+			}
+
+		}else{
+			return redirect()->back()->with('error','Acesso Negado, Email ou senha invalida');
+		}
 	}
 
 	public function logout(Request $request) {
-        Auth::logout();
-        return redirect('/login');
-      }
+		Auth::logout();
+		return redirect()->route('login');
+  }
 }
-

@@ -36,6 +36,12 @@
 			<div class="cor_fundo_roxo" style="width:100%; height:150px; text-align: center;">
 				<img class="logo_topo" src="{{ asset("img/logoretangular.png") }}">
 			</div>
+			<div id="app">
+				@include('flash-message')
+		
+		
+				@yield('content')
+			</div>
 
 			{{-- <div class="login_wrapper"> --}}
 			<div class="logindiv">
