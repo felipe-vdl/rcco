@@ -68,13 +68,13 @@ class APIController extends Controller
         $topicos = Topico::with(['perguntas' => function($query) use ($unidade_id) {
                 $query->whereHas('unidades', function($q) use ($unidade_id) {
                     $q->where('unidades.id', $unidade_id);
-                })->orderBy('index', 'DESC')->orderBy('created_at', 'ASC');
+                })->where('is_enabled', '=', 1)->orderBy('index', 'DESC')->orderBy('created_at', 'ASC');
             }, 'setor', 'perguntas.unidades', 'perguntas.label_options'])
             ->whereHas('perguntas.unidades', function($query) use ($unidade_id) {
                 $query->where('unidades.id', $unidade_id);
             })->get();
 
-        // dd($topicos);
+        // dd($topicos[0]->perguntas);
         return json_encode($topicos);
     }
 }

@@ -37,68 +37,70 @@
 		</div>
 		<div id="topicos">
       @foreach($topicos as $topico)
-        <div class="x_panel">
-          <div class="x_content">
-            <div class="container">
-              <div class="row">
-                <h1 class="text-center">{{$topico->nome}}</h1>
-              </div>
-              @foreach ($topico->respostas as $resposta)
-                <div class="row" style="margin-top: 1rem;">
-                  <div class="form-group col-12" style="padding: 0;">
-                    <h2 class="col-12">{{$resposta->pergunta->nome}}</h2>
-                    @if($resposta->pergunta->formato === "text")
-                      <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][textos_simples]['.$loop->index.'][resposta_id]'}}">
-                      <input style="width: 50%;" @if ($resposta->pergunta->is_required) required @endif value="{{$resposta->valor}}" type="{{$resposta->pergunta->tipo === "string" ? "text" : "number"}}" name="{{'topicos['.$loop->parent->index.'][textos_simples]['.$loop->index.'][valor]'}}">
-                    @elseif($resposta->pergunta->formato === "textarea")
-                      <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][textos_grandes]['.$loop->index.'][resposta_id]'}}">
-                      <textarea style="width: 100%;" @if ($resposta->pergunta->is_required) required @endif name="{{'topicos['.$loop->parent->index.'][textos_grandes]['.$loop->index.'][valor]'}}">{{$resposta->valor}}</textarea>
-                    @elseif($resposta->pergunta->formato === "radio")
-                      <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][radios]['.$loop->index.'][resposta_id]'}}" >
-                      @foreach($resposta->pergunta->label_options as $label)
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="display: flex; align-items: center;">
-                          <input @if($label->nome === $resposta->valor) checked @endif type="radio" value="{{$label->nome}}"  @if ($resposta->pergunta->is_required) required @endif name="{{'topicos['.$loop->parent->parent->index.'][radios]['.$loop->parent->index.'][valor]'}}" >
-                          <label class="form-check-label" style="margin: 0;">{{$label->nome}}</label>
-                        </div>
-                      @endforeach
-                    @elseif($resposta->pergunta->formato === "checkbox")
-                      @foreach($resposta->label_valors as $label)
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="display: flex; align-items: center;">
-                          <input type="hidden" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][label_valor_id]'}}" value="{{$label->id}}">
-                          <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][resposta_id]'}}" >
-                          <input type="hidden" value="0" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][valor]'}}" >
-                          <input @if($label->valor == 1) checked @endif type="checkbox" value="1" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][valor]'}}" >
-                          <label class="form-check-label" style="margin: 0;">{{$label->label_option->nome}}</label>
-                        </div>
-                      @endforeach
-                    @elseif($resposta->pergunta->formato === "dropdown")
-                      <input type="hidden" name="{{'topicos['.$loop->parent->index.'][dropdowns]['.$loop->index.'][resposta_id]'}}" value="{{$resposta->id}}">
-                      <input name="{{'topicos['.$loop->parent->index.'][dropdowns]['.$loop->index.'][valor]'}}">
-                      @push('scripts')
-                        <script>
-                          new TomSelect(`input[name="{{'topicos['.$loop->parent->index.'][dropdowns]['.$loop->index.'][valor]'}}"]`, {
-                            maxItems: 1,
-                            plugins: [],
-                            options: [
-                              @foreach($resposta->pergunta->label_options as $label) {text: '{{$label->nome}}', value: '{{$label->nome}}'}, @endforeach
-                            ],
-                            items: [
-                              '{{$resposta->valor}}',
-                            ],
-                            sortField: {
-                              field: 'text',
-                              direction: 'asc'
-                            }
-                          });
-                        </script>
-                      @endpush
-                    @endif
-                  </div>
+        @if(count($topico->respostas) > 0)
+          <div class="x_panel">
+            <div class="x_content">
+              <div class="container">
+                <div class="row">
+                  <h1 class="text-center">{{$topico->nome}}</h1>
                 </div>
-              @endforeach
+                @foreach ($topico->respostas as $resposta)
+                  <div class="row" style="margin-top: 1rem;">
+                    <div class="form-group col-12" style="padding: 0;">
+                      <h2 class="col-12">{{$resposta->pergunta->nome}}</h2>
+                      @if($resposta->pergunta->formato === "text")
+                        <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][textos_simples]['.$loop->index.'][resposta_id]'}}">
+                        <input style="width: 50%;" @if ($resposta->pergunta->is_required) required @endif value="{{$resposta->valor}}" type="{{$resposta->pergunta->tipo === "string" ? "text" : "number"}}" name="{{'topicos['.$loop->parent->index.'][textos_simples]['.$loop->index.'][valor]'}}">
+                      @elseif($resposta->pergunta->formato === "textarea")
+                        <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][textos_grandes]['.$loop->index.'][resposta_id]'}}">
+                        <textarea style="width: 100%;" @if ($resposta->pergunta->is_required) required @endif name="{{'topicos['.$loop->parent->index.'][textos_grandes]['.$loop->index.'][valor]'}}">{{$resposta->valor}}</textarea>
+                      @elseif($resposta->pergunta->formato === "radio")
+                        <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->index.'][radios]['.$loop->index.'][resposta_id]'}}" >
+                        @foreach($resposta->pergunta->label_options as $label)
+                          <div class="col-md-6 col-sm-6 col-xs-12" style="display: flex; align-items: center;">
+                            <input @if($label->nome === $resposta->valor) checked @endif type="radio" value="{{$label->nome}}"  @if ($resposta->pergunta->is_required) required @endif name="{{'topicos['.$loop->parent->parent->index.'][radios]['.$loop->parent->index.'][valor]'}}" >
+                            <label class="form-check-label" style="margin: 0;">{{$label->nome}}</label>
+                          </div>
+                        @endforeach
+                      @elseif($resposta->pergunta->formato === "checkbox")
+                        @foreach($resposta->label_valors as $label)
+                          <div class="col-md-6 col-sm-6 col-xs-12" style="display: flex; align-items: center;">
+                            <input type="hidden" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][label_valor_id]'}}" value="{{$label->id}}">
+                            <input type="hidden" value="{{$resposta->id}}" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][resposta_id]'}}" >
+                            <input type="hidden" value="0" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][valor]'}}" >
+                            <input @if($label->valor == 1) checked @endif type="checkbox" value="1" name="{{'topicos['.$loop->parent->parent->index.'][checkboxes]['.$loop->parent->index.']['.$loop->index.'][valor]'}}" >
+                            <label class="form-check-label" style="margin: 0;">{{$label->label_option->nome}}</label>
+                          </div>
+                        @endforeach
+                      @elseif($resposta->pergunta->formato === "dropdown")
+                        <input type="hidden" name="{{'topicos['.$loop->parent->index.'][dropdowns]['.$loop->index.'][resposta_id]'}}" value="{{$resposta->id}}">
+                        <input name="{{'topicos['.$loop->parent->index.'][dropdowns]['.$loop->index.'][valor]'}}">
+                        @push('scripts')
+                          <script>
+                            new TomSelect(`input[name="{{'topicos['.$loop->parent->index.'][dropdowns]['.$loop->index.'][valor]'}}"]`, {
+                              maxItems: 1,
+                              plugins: [],
+                              options: [
+                                @foreach($resposta->pergunta->label_options as $label) {text: '{{$label->nome}}', value: '{{$label->nome}}'}, @endforeach
+                              ],
+                              items: [
+                                '{{$resposta->valor}}',
+                              ],
+                              sortField: {
+                                field: 'text',
+                                direction: 'asc'
+                              }
+                            });
+                          </script>
+                        @endpush
+                      @endif
+                    </div>
+                  </div>
+                @endforeach
+              </div>
             </div>
           </div>
-        </div>
+        @endif
       @endforeach
 		</div>
 		<div class="footer text-right">

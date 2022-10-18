@@ -111,36 +111,38 @@ hr {
     </header>
     <main>
       @foreach($topicos as $topico)
-        <div>
-          <h3 style="text-align:center; border: 1px solid black; padding: 5px;">{{$topico->nome}}</h3>
-          @foreach($topico->respostas as $resposta)
-            @if ($resposta->pergunta->formato === "text")
-            <p>
-              <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
-            </p>
-            @elseif ($resposta->pergunta->formato === "textarea")
-              <p>
-                <h4>{{$resposta->pergunta->nome}}: </h4>
-                {{$resposta->valor}}
-              </p>
-            @elseif ($resposta->pergunta->formato === "dropdown")
+        @if(count($topico->respostas) > 0)
+          <div>
+            <h3 style="text-align:center; border: 1px solid black; padding: 5px;">{{$topico->nome}}</h3>
+            @foreach($topico->respostas as $resposta)
+              @if ($resposta->pergunta->formato === "text")
               <p>
                 <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
               </p>
-            @elseif ($resposta->pergunta->formato === "radio")
-              <p>
-                <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
-              </p>
-            @elseif ($resposta->pergunta->formato === "checkbox")
-              <p>
-                <h4>{{$resposta->pergunta->nome}}: </h4>
-                @foreach($resposta->label_valors as $label)
-                <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$label->valor ? 'Sim' : 'Não'}}</span>
-                @endforeach
-              </p><br>
-            @endif
-          @endforeach
-        </div>
+              @elseif ($resposta->pergunta->formato === "textarea")
+                <p>
+                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  {{$resposta->valor}}
+                </p>
+              @elseif ($resposta->pergunta->formato === "dropdown")
+                <p>
+                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+                </p>
+              @elseif ($resposta->pergunta->formato === "radio")
+                <p>
+                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+                </p>
+              @elseif ($resposta->pergunta->formato === "checkbox")
+                <p>
+                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  @foreach($resposta->label_valors as $label)
+                  <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$label->valor ? 'Sim' : 'Não'}}</span>
+                  @endforeach
+                </p><br>
+              @endif
+            @endforeach
+          </div>
+        @endif
       @endforeach
     </main>
     <footer id="footer" class="page-footer"><div class="page-number"></div></footer>

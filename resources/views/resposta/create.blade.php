@@ -154,6 +154,9 @@
 
 			let t = 0;
 			for(let topico of topicos) {
+				if(topico.perguntas.length == 0) {
+					continue
+				}
 
 				let i = 0;
 				let j = 0;
