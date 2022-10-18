@@ -13,7 +13,7 @@ class DashboardController extends Controller
     public function dashsemas(){
        
         $metabaseSiteUrl = 'https://metabase.mesquita.rj.gov.br';
-        $metabaseSecretKey = 'e4c1378f92c00cd8aafde1f31f526f110e1c82aa60e6c336bf485a65f2e20a6c';
+        $metabaseSecretKey = env('METABASE_SECRET_KEY', '');
         
         $signer = new Sha256();
         $token = (new Builder())
@@ -31,8 +31,8 @@ class DashboardController extends Controller
     public function dashsemus(){
         
         $metabaseSiteUrl = 'https://metabase.mesquita.rj.gov.br';
-        $metabaseSecretKey = 'e4c1378f92c00cd8aafde1f31f526f110e1c82aa60e6c336bf485a65f2e20a6c';
-        
+        $metabaseSecretKey = env('METABASE_SECRET_KEY', '');
+
         $signer = new Sha256();
         $token = (new Builder())
         ->withClaim('resource', [
@@ -49,7 +49,7 @@ class DashboardController extends Controller
     public function dashsemed(){
         
         $metabaseSiteUrl = 'https://metabase.mesquita.rj.gov.br';
-        $metabaseSecretKey = 'e4c1378f92c00cd8aafde1f31f526f110e1c82aa60e6c336bf485a65f2e20a6c';
+        $metabaseSecretKey = env('METABASE_SECRET_KEY', '');
         
         $signer = new Sha256();
         $token = (new Builder())
