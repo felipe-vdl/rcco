@@ -126,7 +126,7 @@ class RespostaController extends Controller
                             if (isset($radio["valor"])) {
                                 $resposta->valor = $radio["valor"];
                             } else {
-                                $resposta->valor = 'Nada selecionado';
+                                $resposta->valor = '';
                             }
                             $resposta->status = 0;
                             $resposta->pergunta_id = $radio["pergunta_id"];
@@ -237,7 +237,7 @@ class RespostaController extends Controller
                         if (isset($input["valor"])) {
                             $resposta->valor = $input["valor"];
                         } else {
-                            $resposta->valor = 'Nada selecionado';
+                            $resposta->valor = '';
                         }
                         $resposta->save();
                     }
