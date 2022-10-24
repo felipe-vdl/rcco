@@ -123,7 +123,11 @@ class RespostaController extends Controller
                             $resposta = new Resposta;
                             $resposta->data = $request->data;
                             $resposta->unidade_id = $request->unidade_id;
-                            $resposta->valor = $radio["valor"];
+                            if (isset($radio["valor"])) {
+                                $resposta->valor = $radio["valor"];
+                            } else {
+                                $resposta->valor = 'Nada selecionado';
+                            }
                             $resposta->status = 0;
                             $resposta->pergunta_id = $radio["pergunta_id"];
                             $resposta->topico_id = $radio["topico_id"];
@@ -230,7 +234,11 @@ class RespostaController extends Controller
                 if(isset($topico["radios"])) {
                     foreach($topico["radios"] as $chave => $input) {
                         $resposta = Resposta::find($input["resposta_id"]);
-                        $resposta->valor = $input["valor"];
+                        if (isset($input["valor"])) {
+                            $resposta->valor = $input["valor"];
+                        } else {
+                            $resposta->valor = 'Nada selecionado';
+                        }
                         $resposta->save();
                     }
                 }
