@@ -117,20 +117,20 @@ hr {
             @foreach($topico->respostas as $resposta)
               @if ($resposta->pergunta->formato === "text")
               <p>
-                <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+                <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
               </p>
               @elseif ($resposta->pergunta->formato === "textarea")
                 <p>
                   <h4>{{$resposta->pergunta->nome}}: </h4>
-                  {{$resposta->valor}}
+                  @if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
                 </p>
               @elseif ($resposta->pergunta->formato === "dropdown")
                 <p>
-                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
                 </p>
               @elseif ($resposta->pergunta->formato === "radio")
                 <p>
-                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>{{$resposta->valor}}
+                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
                 </p>
               @elseif ($resposta->pergunta->formato === "checkbox")
                 <p>

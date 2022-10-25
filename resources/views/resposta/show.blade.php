@@ -59,13 +59,13 @@
                 @if($resposta->pergunta->formato === "radio")
                   <div style="padding: 0;" class="col-12">
                     <h4 style="margin: 0;">{{$resposta->pergunta->nome}}</h4>
-                    <p style="margin: 0; padding-left: 1rem;">{{$resposta->valor}}</p>
+                    <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p>
                   </div>
                 @endif
                 @if($resposta->pergunta->formato === "dropdown")
                   <div style="padding: 0;" class="col-12">
                     <h4 style="margin: 0;">{{$resposta->pergunta->nome}}</h4>
-                    <p style="margin: 0; padding-left: 1rem;">{{$resposta->valor}}</p>
+                    <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p>
                   </div>
                 @endif
               </div>
