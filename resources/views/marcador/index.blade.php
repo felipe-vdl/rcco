@@ -4,36 +4,36 @@
 
 <div class="x_panel modal-content">
     <div class="x_title">
-         <h2>Tópicos</h2>
+         <h2>Marcadores</h2>
       <ul class="nav navbar-right panel_toolbox">
-         <a href="{{route('topico.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo topico"> Novo Tópico </a>
+         <a href="{{route('marcador.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo marcador"> Novo Marcador </a>
       </ul>
       <div class="clearfix"></div>
     </div>
     <div class="x_panel">
        <div class="x_content">
-          <table id="tb_topicos" class="table table-hover table-striped compact">
+          <table id="tb_marcadors" class="table table-hover table-striped compact">
             <thead>
                <tr>
-                  <th>Nome do Tópico</th>
+                  <th>Nome do Marcador</th>
                   <th>Setor</th>
                   <th>Criado por</th>
                   <th>Ações</th>
                </tr>
             </thead>
             <tbody>
-               @foreach ($topicos as $topico)
-                  @if (in_array($topico->setor->id, $setores_usuario_logado, false))
-                     @if (($topico->is_enabled AND Auth::user()->nivel === "Admin") OR Auth::user()->nivel === "Super-Admin")
+               @foreach ($marcadores as $marcador)
+                  @if (in_array($marcador->setor->id, $setores_usuario_logado, false))
+                     @if (($marcador->is_enabled AND Auth::user()->nivel === "Admin") OR Auth::user()->nivel === "Super-Admin")
                         <tr>
-                           <td>{{$topico->nome}}</td>
-                           <td>{{$topico->setor->nome}}</td>
-                           <td>{{$topico->criador->name}}</td>
+                           <td>{{$marcador->nome}}</td>
+                           <td>{{$marcador->setor->nome}}</td>
+                           <td>{{$marcador->criador->name}}</td>
                            <td>
-                              @if ($topico->is_enabled === 1)
-                                 <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("topico.is_enabled")}}">
+                              @if ($marcador->is_enabled === 1)
+                                 <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("marcador.is_enabled")}}">
                                     @csrf
-                                    <input type="hidden" value="{{$topico->id}}" name="topico_id">
+                                    <input type="hidden" value="{{$marcador->id}}" name="marcador_id">
                                     <input type="hidden" value="0" name="is_enabled">
                                     <button
                                        title="Desabilitar tópico."
@@ -44,9 +44,9 @@
                                  </form>
                               @else
                                  @if (Auth::user()->nivel === "Super-Admin")
-                                    <form class="habilitar" method="POST" class="excluir" action="{{route("topico.is_enabled")}}">
+                                    <form class="habilitar" method="POST" class="excluir" action="{{route("marcador.is_enabled")}}">
                                        @csrf
-                                       <input type="hidden" value="{{$topico->id}}" name="topico_id">
+                                       <input type="hidden" value="{{$marcador->id}}" name="marcador_id">
                                        <input type="hidden" value="1" name="is_enabled">
                                        <button
                                           title="Habilitar tópico."
@@ -80,7 +80,7 @@
 
             swal({
                title: "Atenção!",
-               text: "Você está prestes a desabilitar um tópico",
+               text: "Você está prestes a desabilitar um marcador",
                icon: "warning",
                buttons: {
                   cancel: {
@@ -113,7 +113,7 @@
 
             swal({
                title: "Atenção!",
-               text: "Você está prestes a habilitar um tópico",
+               text: "Você está prestes a habilitar um marcador",
                icon: "warning",
                buttons: {
                   cancel: {
@@ -140,7 +140,7 @@
 </script>
   <script>
     $(document).ready(function(){
-        var tb_user = $("#tb_topicos").DataTable({
+        var tb_user = $("#tb_marcadors").DataTable({
           language: {
                 'url' : '{{ asset('js/portugues.json') }}',
           "decimal": ",",

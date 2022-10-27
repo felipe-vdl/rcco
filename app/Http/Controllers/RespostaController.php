@@ -11,6 +11,7 @@ use App\Models\Setor;
 use App\Models\Unidade;
 use App\Models\Pergunta;
 use App\Models\Resposta;
+use App\Models\Marcador;
 use App\Models\Topico;
 use App\Models\LabelOption;
 use App\Models\LabelValor;
@@ -74,6 +75,9 @@ class RespostaController extends Controller
                             $resposta->pergunta_id = $texto["pergunta_id"];
                             $resposta->topico_id = $texto["topico_id"];
                             $resposta->user_id = Auth::user()->id;
+                            if(isset($request->marcador_id)) {
+                                $resposta->marcador_id = $request->marcador_id;
+                            }
                             $resposta->save();
                         }
                     }
@@ -92,6 +96,9 @@ class RespostaController extends Controller
                             $resposta->pergunta_id = $texto["pergunta_id"];
                             $resposta->topico_id = $texto["topico_id"];
                             $resposta->user_id = Auth::user()->id;
+                            if(isset($request->marcador_id)) {
+                                $resposta->marcador_id = $request->marcador_id;
+                            }
                             $resposta->save();
                         }
                     }
@@ -110,6 +117,9 @@ class RespostaController extends Controller
                             $resposta->pergunta_id = $dropdown["pergunta_id"];
                             $resposta->topico_id = $dropdown["topico_id"];
                             $resposta->user_id = Auth::user()->id;
+                            if(isset($request->marcador_id)) {
+                                $resposta->marcador_id = $request->marcador_id;
+                            }
                             $resposta->save();
                         }
                     }
@@ -132,6 +142,9 @@ class RespostaController extends Controller
                             $resposta->pergunta_id = $radio["pergunta_id"];
                             $resposta->topico_id = $radio["topico_id"];
                             $resposta->user_id = Auth::user()->id;
+                            if(isset($request->marcador_id)) {
+                                $resposta->marcador_id = $request->marcador_id;
+                            }
                             $resposta->save();
                         }
                     }
@@ -150,6 +163,9 @@ class RespostaController extends Controller
                             $resposta->pergunta_id = $checkbox[0]["pergunta_id"];
                             $resposta->topico_id = $checkbox[0]["topico_id"];
                             $resposta->user_id = Auth::user()->id;
+                            if(isset($request->marcador_id)) {
+                                $resposta->marcador_id = $request->marcador_id;
+                            }
                             $resposta->save();
 
                             foreach($checkbox as $chave => $option) {
@@ -183,14 +199,23 @@ class RespostaController extends Controller
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
             })->where('data', $data);
-        }, 'respostas.pergunta', 'respostas.label_valors'])->get();
+        }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {
             $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
         }
 
+        $resposta = Resposta::with('marcador')->where('data', $data)->where('unidade_id', $id)->first();
+        $marcador;
+
+        if(isset($resposta->marcador)) {
+            $marcador = $resposta->marcador->nome;
+        } else {
+            $marcador = "";
+        }
+
         //dd($id, $data, $topicos);
-        return view('resposta.show', compact('data', 'unidade', 'topicos'));
+        return view('resposta.show', compact('data', 'unidade', 'topicos', 'marcador'));
     }
 
     public function edit(Request $request, $id)
@@ -202,13 +227,23 @@ class RespostaController extends Controller
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
             })->where('data', $data);
-        }, 'respostas.pergunta', 'respostas.label_valors'])->get();
+        }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {
             $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
         }
 
-        return view('resposta.edit', compact('data', 'unidade', 'topicos'));
+        $marcadores = Marcador::where('setor_id', $unidade->setor_id)->get();
+        $resposta = Resposta::with('marcador')->where('data', $data)->where('unidade_id', $id)->first();
+        $marcador_atual_id;
+
+        if(isset($resposta->marcador)) {
+            $marcador_atual_id = $resposta->marcador->id;
+        } else {
+            $marcador_atual_id = "";
+        }
+
+        return view('resposta.edit', compact('data', 'unidade', 'topicos', 'marcadores', 'marcador_atual_id'));
     }
 
     public function update(Request $request, $id)
@@ -221,6 +256,11 @@ class RespostaController extends Controller
                     foreach($topico["textos_simples"] as $chave => $input) {
                         $resposta = Resposta::find($input["resposta_id"]);
                         $resposta->valor = $input["valor"];
+                        if(isset($request->marcador_id)) {
+                            $resposta->marcador_id = $request->marcador_id;
+                        } else {
+                            $resposta->marcador_id = null;
+                        }
                         $resposta->save();
                     }
                 }
@@ -228,6 +268,11 @@ class RespostaController extends Controller
                     foreach($topico["textos_grandes"] as $chave => $input) {
                         $resposta = Resposta::find($input["resposta_id"]);
                         $resposta->valor = $input["valor"];
+                        if(isset($request->marcador_id)) {
+                            $resposta->marcador_id = $request->marcador_id;
+                        } else {
+                            $resposta->marcador_id = null;
+                        }
                         $resposta->save();
                     }
                 }
@@ -239,6 +284,11 @@ class RespostaController extends Controller
                         } else {
                             $resposta->valor = '';
                         }
+                        if(isset($request->marcador_id)) {
+                            $resposta->marcador_id = $request->marcador_id;
+                        } else {
+                            $resposta->marcador_id = null;
+                        }
                         $resposta->save();
                     }
                 }
@@ -246,11 +296,25 @@ class RespostaController extends Controller
                     foreach($topico["dropdowns"] as $chave => $input) {
                         $resposta = Resposta::find($input["resposta_id"]);
                         $resposta->valor = $input["valor"];
+                        if(isset($request->marcador_id)) {
+                            $resposta->marcador_id = $request->marcador_id;
+                        } else {
+                            $resposta->marcador_id = null;
+                        }
                         $resposta->save();
                     }
                 }
                 if(isset($topico["checkboxes"])) {
                     foreach($topico["checkboxes"] as $chave => $checkboxList) {
+                        
+                        $resposta = Resposta::find($input["resposta_id"]);
+                        if(isset($request->marcador_id)) {
+                            $resposta->marcador_id = $request->marcador_id;
+                        } else {
+                            $resposta->marcador_id = null;
+                        }
+                        $resposta->save();
+
                         foreach($checkboxList as $chave => $input) {
                             $label_valor = LabelValor::find($input["label_valor_id"]);
                             $label_valor->valor = $input["valor"];
@@ -293,13 +357,22 @@ class RespostaController extends Controller
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
             })->where('data', $data);
-        }, 'respostas.pergunta', 'respostas.label_valors'])->get();
+        }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {
             $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
         }
 
-        $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'data', 'unidade'));
+        $resposta = Resposta::with('marcador')->where('data', $data)->where('unidade_id', $id)->first();
+        $marcador;
+
+        if(isset($resposta->marcador)) {
+            $marcador = $resposta->marcador->nome;
+        } else {
+            $marcador = "";
+        }
+
+        $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'data', 'unidade', 'marcador'));
         return $pdf->stream('Relatório');
     }
 }

@@ -32,6 +32,17 @@
 							<input type="hidden" id="datecontainer" class="form-control" value="{{$data}}" name="data" required autocomplete="off">
 							<input type="text" value="{{date('d/m/Y', strtotime($data))}}" disabled id="data" class="form-control" required placeholder="dd/mm/aaaa" minlength="10" maxlength="10" required autocomplete="off">
 						</div>
+            @if (count($marcadores) > 0)
+              <div class="form-group col-md-6 col-sm-6 col-xs-12" id="marcador-div">
+                <label class="control-label">Marcador</label>
+                <select id="marcador-select" name="marcador_id" class="form-control" minlength="2">
+                  <option value="">Selecione o marcador</option>
+                  @foreach ($marcadores as $marcador)
+                    <option @if($marcador->id == $marcador_atual_id) selected @endif value="{{$marcador->id}}">{{$marcador->nome}}</option>
+                  @endforeach
+                </select>
+              </div>
+            @endif
 					</div>
 			</div>
 		</div>

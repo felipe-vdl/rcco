@@ -54,4 +54,16 @@ class UnidadeController extends Controller
 
         return redirect()->route('unidade.index')->with('sucesso','Unidade criada com sucesso.');
     }
+
+    public function is_enabled(Request $request)
+    {
+        DB::beginTransaction();
+
+        $unidade = Unidade::where('id', $request->unidade_id)->first();
+        $unidade->is_enabled = $request->is_enabled;
+        $unidade->update();
+
+        DB::commit();
+        return redirect()->back()->with('sucesso', 'Operação efetuada com sucesso.');
+    }
 }

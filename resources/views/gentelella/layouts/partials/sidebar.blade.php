@@ -21,6 +21,7 @@
 						<li><a href="{{ route("unidade.index") }}"><i class="fa fa-list"></i> Unidades</a></li>
 						<li><a href="{{ route("topico.index") }}"><i class="fa fa-list"></i> Tópicos</a></li>
 						<li><a href="{{ route("pergunta.index") }}"><i class="fa fa-list"></i> Perguntas</a></li>
+						<li><a href="{{ route("marcador.index") }}"><i class="fa fa-list"></i> Marcadores</a></li>
 					</ul>
 				</li>
 			@endif
@@ -31,6 +32,7 @@
 						<li><a href="{{ route("unidade.index") }}"><i class="fa fa-list"></i> Unidades</a></li>
 						<li><a href="{{ route("topico.index") }}"><i class="fa fa-list"></i> Tópicos</a></li>
 						<li><a href="{{ route("pergunta.index") }}"><i class="fa fa-list"></i> Perguntas</a></li>
+						<li><a href="{{ route("marcador.index") }}"><i class="fa fa-list"></i> Marcadores</a></li>
 					</ul>
 				</li>
 			@endif

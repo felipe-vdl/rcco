@@ -26,8 +26,15 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/api/tabela',			  'APIController@gerarTabela');
 	Route::get('/api/formulario',   'APIController@formulario');
 	
+	Route::post('topico/is_enabled',		'TopicoController@is_enabled')->name('topico.is_enabled');
+
+	Route::post('unidade/is_enabled',		'UnidadeController@is_enabled')->name('unidade.is_enabled');
+
+	
 	Route::post('pergunta/is_enabled',		'PerguntaController@is_enabled')->name('pergunta.is_enabled');
 	Route::post('/pergunta/{id}/set_index', 			'PerguntaController@set_index')->name('pergunta.set_index');
+	
+	Route::post('marcador/is_enabled',		'MarcadorController@is_enabled')->name('marcador.is_enabled');
 
 	Route::post('/resposta/enviar', 'RespostaController@enviar')->name('resposta.enviar');
 	Route::post('/resposta/pdf', 'RespostaController@GerarPDF')->name('resposta.pdf');
@@ -40,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::resource('unidade', 'UnidadeController');
 	Route::resource('topico', 'TopicoController');
 	Route::resource('pergunta', 'PerguntaController');
+	Route::resource('marcador', 'MarcadorController');
 	Route::resource('resposta', 'RespostaController');
 	Route::resource('user', 'UserController');
 });

@@ -22,6 +22,12 @@
             <h4>Data Correspondente</h4>
             <p>{{date('d/m/Y', strtotime($data))}}</p>
           </div>
+          @if($marcador)
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <h4>Marcador</h4>
+            <p>{{$marcador}}</p>
+          </div>
+          @endif
         </div>
     </div>
   </div>

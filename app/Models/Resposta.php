@@ -13,6 +13,7 @@ class Resposta extends Model
         'unidade_id',
         'pergunta_id',
         'topico_id',
+        'marcador_id',
         'valor',
         'user_id',
         'status',
@@ -29,6 +30,10 @@ class Resposta extends Model
 
     public function pergunta() {
         return $this->belongsTo('App\Models\Pergunta');
+    }
+
+    public function marcador() {
+        return $this->belongsTo('App\Models\Marcador');
     }
 
     public function topico() {

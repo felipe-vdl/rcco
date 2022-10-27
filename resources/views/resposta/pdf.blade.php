@@ -107,6 +107,7 @@ hr {
       <div style="border: 1px solid black; padding: 5px;">
         <h3 style="text-align:center; color:rgb(66, 66, 66);">RELATÓRIO: {{$unidade->nome}}</h3>
         <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($data))}}</h3>
+        @if($marcador) <h3 style="text-align:center; color:rgb(66, 66, 66);">MARCADOR: {{$marcador}}</h3> @endif
       </div>
     </header>
     <main>

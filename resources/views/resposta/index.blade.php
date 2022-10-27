@@ -41,6 +41,7 @@
                <tr>
                   <th class="text-center">Data</th>
                   <th class="text-center">Unidade</th>
+                  <th class="text-center">Marcador</th>
                   <th class="text-center">Preenchido por</th>
                   <th class="text-center">Ações</th>
                </tr>
@@ -160,6 +161,9 @@
 
               const unidade = document.createElement('td');
               unidade.innerText = item.unidade.nome;
+
+              const marcador = document.createElement('td');
+              marcador.innerText = item.marcador ? item.marcador.nome : '';
 
               const usuario = document.createElement('td');
               usuario.innerText = item.criador.name;
@@ -351,7 +355,7 @@
                 acoes.append(enviado);
               }
 
-              tr.append(data, unidade, usuario, acoesTd);
+              tr.append(data, unidade, marcador, usuario, acoesTd);
               tBody.append(tr);
             }
           }

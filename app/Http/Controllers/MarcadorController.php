@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\Topico;
+use App\Models\Marcador;
 use App\Models\Setor;
 
-class TopicoController extends Controller
+class MarcadorController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $setores = Setor::get();
@@ -26,26 +31,26 @@ class TopicoController extends Controller
             }
         }
         
-        $topicos = Topico::with('criador')->get();
-        return view('topico.index', compact('topicos', 'setores_usuario_logado'));
+        $marcadores = Marcador::with('criador')->get();
+        return view('marcador.index', compact('marcadores', 'setores_usuario_logado'));
     }
 
     public function create()
     {
         $setores = Setor::get();
-        return view('topico.create', compact('setores'));
+        return view('marcador.create', compact('setores'));
     }
-    
+
     public function store(Request $request)
     {
         DB::beginTransaction();
         try {
             $nome_maiusculo = mb_strtoupper($request->nome, 'UTF-8');
 
-            if (Topico::where('nome', $nome_maiusculo)->where('setor_id', $request->setor_id)->exists()) {
-                return back()->withErrors('Um tópico com o mesmo nome já existe.');
+            if (Marcador::where('nome', $nome_maiusculo)->where('setor_id', $request->setor_id)->exists()) {
+                return back()->withErrors('Um marcador com o mesmo nome já existe.');
             } else {
-                $setor = new Topico;
+                $setor = new Marcador;
                 
                 $setor->nome = $nome_maiusculo;
                 $setor->setor_id = $request->setor_id;
@@ -55,12 +60,12 @@ class TopicoController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('topico.index')->with('sucesso', 'Tópico criado com sucesso');
+            return redirect()->route('marcador.index')->with('sucesso', 'Marcador criado com sucesso');
 
         } catch (Throwable $th) {
             DB::rollback();
             dd($th);
-            return redirect()->route('topico.index')->with('error', 'Houve um erro ao tentar criar um tópico.');
+            return redirect()->route('marcador.index')->with('error', 'Houve um erro ao tentar criar um marcador.');
         }
     }
 
@@ -68,9 +73,9 @@ class TopicoController extends Controller
     {
         DB::beginTransaction();
 
-        $topico = Topico::where('id', $request->topico_id)->first();
-        $topico->is_enabled = $request->is_enabled;
-        $topico->update();
+        $marcador = Marcador::where('id', $request->marcador_id)->first();
+        $marcador->is_enabled = $request->is_enabled;
+        $marcador->update();
 
         DB::commit();
         return redirect()->back()->with('sucesso', 'Operação efetuada com sucesso.');

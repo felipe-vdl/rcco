@@ -19,6 +19,7 @@ class CreateUnidadesTable extends Migration
             $table->string('nome');
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('setor_id')->unsigned();
+            $table->tinyInteger('is_enabled')->default(1);
 
             $table->timestamps();
         });

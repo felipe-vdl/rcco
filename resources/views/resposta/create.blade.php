@@ -33,6 +33,13 @@
 							<input type="hidden" id="datecontainer" class="form-control" name="data" required autocomplete="off">
 							<input type="text" id="data" class="form-control" name="" required placeholder="dd/mm/aaaa" minlength="10" maxlength="10" required autocomplete="off" >	
 						</div>
+						<div class="form-group col-md-6 col-sm-6 col-xs-12" id="marcador-div" style="display: none;">
+							<label class="control-label">Marcador</label>
+							<select id="marcador-select" name="marcador_id" class="form-control" minlength="2" disabled>
+								<option value="" selected>Selecione a unidade para carregar as opções</option>
+								{{-- API --}}
+							</select>
+						</div>
 					</div>
 			</div>
 		</div>
@@ -132,8 +139,9 @@
 						},
 					});
 					
-					const dados = response.data;
-					renderFormulario(dados);
+					const topicos = response.data[0];
+					const marcadores = response.data[1];
+					renderFormulario(topicos, marcadores);
 
 					unidadeSelect.removeAttribute('disabled');
 					setorSelect.removeAttribute('disabled');
@@ -146,7 +154,34 @@
 			}
 		}
 
-		const renderFormulario = topicos => {
+		const renderFormulario = (topicos, marcadores) => {
+			const marcadorDiv = document.getElementById('marcador-div');
+			const marcadorSelect = document.getElementById('marcador-select');
+
+			marcadorDiv.style.display = "none";
+			marcadorSelect.innerHTML = "";
+			marcadorSelect.removeAttribute('required');
+
+			if (marcadores.length > 0) {
+				marcadorDiv.style.display = "";
+
+				const selecione = document.createElement('option');
+					selecione.innerText = "Selecione um marcador";
+					selecione.value = "";
+					marcadorSelect.append(selecione);
+
+				for (let marcador of marcadores) {
+					const option = document.createElement('option');
+					option.innerText = marcador.nome;
+					option.value = marcador.id;
+					marcadorSelect.append(option);
+				}
+
+				marcadorSelect.setAttribute('required', 'required');
+				marcadorSelect.removeAttribute('disabled');
+
+			}
+
 			const topicosDiv = document.getElementById('topicos');
 			topicosDiv.innerHTML = "";
 

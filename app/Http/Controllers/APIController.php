@@ -8,6 +8,7 @@ use App\Models\Unidade;
 use App\Models\Topico;
 use App\Models\Resposta;
 use App\Models\Pergunta;
+use App\Models\Marcador;
 use App\Models\User;
 
 class APIController extends Controller
@@ -23,7 +24,7 @@ class APIController extends Controller
 
         } else if (Auth::user()->nivel === "User") {
             foreach (Auth::user()->unidades as $unidade) {
-                if ($unidade->setor_id == (int)$request->query('setor_id')) {
+                if ($unidade->setor_id == (int)$request->query('setor_id') AND $unidade->is_enabled == 1) {
                     array_push($unidades, $unidade);
                 }
             }
@@ -45,7 +46,7 @@ class APIController extends Controller
 
     public function gerarTabela (Request $request)
     {
-        $respostas = Resposta::with('criador', 'unidade', 'pergunta', 'label_valors')
+        $respostas = Resposta::with('criador', 'unidade', 'marcador', 'pergunta', 'label_valors')
         ->where('unidade_id', $request->query('unidade_id'))
         ->groupBy('data')
         ->get();
@@ -72,9 +73,11 @@ class APIController extends Controller
             }, 'setor', 'perguntas.unidades', 'perguntas.label_options'])
             ->whereHas('perguntas.unidades', function($query) use ($unidade_id) {
                 $query->where('unidades.id', $unidade_id);
-            })->get();
+            })->where('is_enabled', '=', 1)->get();
+        
+        $marcadores = Marcador::where('setor_id', $setor_id)->get();
 
         // dd($topicos[0]->perguntas);
-        return json_encode($topicos);
+        return json_encode(array($topicos, $marcadores));
     }
 }

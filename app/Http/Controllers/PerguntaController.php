@@ -34,7 +34,9 @@ class PerguntaController extends Controller
             }
         }
         
-        $perguntas = Pergunta::with('criador', 'topico')->get();
+        $perguntas = Pergunta::with('criador', 'topico')->whereHas('topico', function($query) {
+            $query->where('is_enabled', '=', 1);
+        })->get();
         
         return view('pergunta.index', compact('perguntas', 'setores_usuario_logado'));
     }
