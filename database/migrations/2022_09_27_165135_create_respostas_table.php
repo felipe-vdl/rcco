@@ -24,7 +24,7 @@ class CreateRespostasTable extends Migration
             $table->bigInteger('topico_id') ->unsigned();
             $table->foreign('topico_id')->references('id')->on('topicos')->onDelete('cascade');
 
-            $table->bigInteger('marcador_id') ->unsigned();
+            $table->bigInteger('marcador_id') ->unsigned()->nullable();
             $table->foreign('marcador_id')->references('id')->on('marcadors')->onDelete('cascade');
 
             $table->tinyInteger('status')->default(0);
