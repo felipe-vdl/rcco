@@ -26,17 +26,20 @@
                   @if (in_array($marcador->setor->id, $setores_usuario_logado, false))
                      @if (($marcador->is_enabled AND Auth::user()->nivel === "Admin") OR Auth::user()->nivel === "Super-Admin")
                         <tr>
-                           <td>{{$marcador->nome}}</td>
+                           <td><span style="color: {{$marcador->color}};">{{$marcador->nome}}</span></td>
                            <td>{{$marcador->setor->nome}}</td>
                            <td>{{$marcador->criador->name}}</td>
                            <td>
+                              <a title="Editar marcador" style="display: inline-block" class="btn btn-warning btn-xs" href="/marcador/{{$marcador->id}}/edit">
+                                 <i class="glyphicon glyphicon-pencil"></i>
+                              </a>
                               @if ($marcador->is_enabled === 1)
-                                 <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("marcador.is_enabled")}}">
+                                 <form style="display: inline;" class="desabilitar" method="POST" class="excluir" action="{{route("marcador.is_enabled")}}">
                                     @csrf
                                     <input type="hidden" value="{{$marcador->id}}" name="marcador_id">
                                     <input type="hidden" value="0" name="is_enabled">
                                     <button
-                                       title="Desabilitar tópico."
+                                       title="Desabilitar marcador."
                                        class="btn btn-danger btn-xs action botao_acao btn_excluir"
                                     >
                                        <i class="glyphicon glyphicon-remove"></i>

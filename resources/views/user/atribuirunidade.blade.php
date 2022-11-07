@@ -47,6 +47,7 @@
 				<div class="clearfix"></div>
 				<div class="ln_solid"> </div>
 					<div class="footer text-right">
+						<input type="submit" hidden>
 						<button id="btn_voltar" class="botoes-acao btn btn-round btn-primary" >
 							<span class="icone-botoes-acao mdi mdi-backburger"></span>   
 							<span class="texto-botoes-acao"> CANCELAR </span>

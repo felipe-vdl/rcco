@@ -50,13 +50,14 @@ class MarcadorController extends Controller
             if (Marcador::where('nome', $nome_maiusculo)->where('setor_id', $request->setor_id)->exists()) {
                 return back()->withErrors('Um marcador com o mesmo nome já existe.');
             } else {
-                $setor = new Marcador;
+                $marcador = new Marcador;
                 
-                $setor->nome = $nome_maiusculo;
-                $setor->setor_id = $request->setor_id;
-                $setor->user_id = Auth::user()->id;
+                $marcador->nome = $nome_maiusculo;
+                $marcador->setor_id = $request->setor_id;
+                $marcador->color = $request->color;
+                $marcador->user_id = Auth::user()->id;
                 
-                $setor->save();
+                $marcador->save();
             }
 
             DB::commit();
@@ -67,6 +68,22 @@ class MarcadorController extends Controller
             dd($th);
             return redirect()->route('marcador.index')->with('error', 'Houve um erro ao tentar criar um marcador.');
         }
+    }
+
+    public function edit($id) {
+        $marcador = Marcador::find($id);
+        return view('marcador.edit', compact('marcador'));
+    }
+
+    public function update(Request $request, $id) {
+        DB::beginTransaction();
+        $marcador = Marcador::find($id);
+        $marcador->nome = $request->nome;
+        $marcador->color = $request->color;
+        $marcador->save();
+        DB::commit();
+
+        return redirect()->route('marcador.index')->with('sucesso', 'Marcador modificado com sucesso');
     }
 
     public function is_enabled(Request $request)

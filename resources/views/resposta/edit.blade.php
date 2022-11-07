@@ -38,7 +38,7 @@
                 <select id="marcador-select" name="marcador_id" class="form-control" minlength="2">
                   <option value="">Selecione o marcador</option>
                   @foreach ($marcadores as $marcador)
-                    <option @if($marcador->id == $marcador_atual_id) selected @endif value="{{$marcador->id}}">{{$marcador->nome}}</option>
+                    <option @if($marcador->id == $marcador_atual_id) style="color:{{$marcador->color}};" selected @endif value="{{$marcador->id}}">{{$marcador->nome}}</option>
                   @endforeach
                 </select>
               </div>
@@ -115,6 +115,7 @@
       @endforeach
 		</div>
 		<div class="footer text-right">
+      <input type="submit" hidden>
 			<button id="btn_cancelar" class="botoes-acao btn btn-round btn-primary" >
 				<span class="icone-botoes-acao mdi mdi-backburger"></span>   
 				<span class="texto-botoes-acao"> CANCELAR </span>

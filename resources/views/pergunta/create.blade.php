@@ -105,6 +105,7 @@
 				      <div class="ln_solid"> </div>
               <div class="footer text-right"> {{-- col-md-3 col-md-offset-9 --}}
                 <button id="btn_cancelar" class="botoes-acao btn btn-round btn-primary" >
+                  <input type="submit" hidden>
                   <span class="icone-botoes-acao mdi mdi-backburger"></span>   
                   <span class="texto-botoes-acao"> CANCELAR </span>
                   <div class="ripple-container"></div>

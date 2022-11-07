@@ -209,7 +209,7 @@ class RespostaController extends Controller
         $marcador;
 
         if(isset($resposta->marcador)) {
-            $marcador = $resposta->marcador->nome;
+            $marcador = $resposta->marcador;
         } else {
             $marcador = "";
         }
@@ -367,7 +367,7 @@ class RespostaController extends Controller
         $marcador;
 
         if(isset($resposta->marcador)) {
-            $marcador = $resposta->marcador->nome;
+            $marcador = $resposta->marcador;
         } else {
             $marcador = "";
         }
