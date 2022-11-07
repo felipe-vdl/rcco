@@ -25,7 +25,7 @@
           @if($marcador)
           <div class="col-md-6 col-sm-6 col-xs-12">
             <h4>Marcador</h4>
-            <p>{{$marcador}}</p>
+            <p><span style="color:{{$marcador->color}};">{{$marcador->nome}}</span></p>
           </div>
           @endif
         </div>

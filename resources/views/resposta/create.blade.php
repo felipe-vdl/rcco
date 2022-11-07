@@ -50,6 +50,7 @@
 			</div> --}}
 		</div>
 		<div class="footer text-right">
+			<input type="submit" hidden>
 			<button id="btn_cancelar" class="botoes-acao btn btn-round btn-primary" >
 				<span class="icone-botoes-acao mdi mdi-backburger"></span>   
 				<span class="texto-botoes-acao"> CANCELAR </span>
@@ -174,6 +175,7 @@
 					const option = document.createElement('option');
 					option.innerText = marcador.nome;
 					option.value = marcador.id;
+					option.style.color = marcador.color;
 					marcadorSelect.append(option);
 				}
 

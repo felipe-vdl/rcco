@@ -4,31 +4,27 @@
 
    <div class="x_panel modal-content">
       <div class="x_title">
-         <h2>Novo Tópico</h2>
+         <h2>Novo Marcador</h2>
       <div class="clearfix"></div>
    </div>
    <div class="x_panel">
       <div class="x_content">
-         <form id="formulario_sala" class="form-horizontal form-label-left" method="post" action="{{ route('topico.store') }}">
+         <form id="formulario_sala" class="form-horizontal form-label-left" method="post" action="{{ route('marcador.update', $marcador->id) }}">
             {{ csrf_field()}}
+            @method('PATCH')
             <div  class="form-group row">
-              <div class=" form-group col-md-6 col-sm-6 col-xs-12">
-                <label class="control-label" >Nome do Tópico</label>
-                <input type="text" id="nome_topico" class="form-control " name="nome" minlength="4" maxlength="100" required>	
+              <div class=" form-group col-md-4 col-sm-4 col-xs-12">
+                <label class="control-label" >Nome do Marcador</label>
+                <input type="text" id="nome_marcador" class="form-control " name="nome" minlength="4" maxlength="100" required value="{{$marcador->nome}}"">
               </div>
-              <div class="form-group col-md-6 col-sm-6 col-xs-12">
+              <div class=" form-group col-md-4 col-sm-4 col-xs-12">
+                <label class="control-label" >Cor do Marcador</label>
+                <input type="color" id="color" class="form-control" name="color" required value="{{$marcador->color}}">	
+              </div>
+              <div class="form-group col-md-4 col-sm-4 col-xs-12">
                 <label class="control-label">Setor</label>
-                <select id="setor" class="form-control" name="setor_id" required>
-                  <option value="">Selecione...</option>
-                  @if(Auth::user()->nivel === "Admin")
-                    @foreach (Auth::user()->setores as $setor)
-                      <option value="{{$setor->id}}">{{$setor->nome}}</option>
-                    @endforeach
-                  @elseif(Auth::user()->nivel === "Super-Admin")
-                    @foreach ($setores as $setor)
-                      <option value="{{$setor->id}}">{{$setor->nome}}</option>
-                    @endforeach
-                  @endif
+                <select id="setor" class="form-control" disabled>
+                  <option selected>{{$marcador->setor->nome}}</option>
                 </select>
               </div>
             </div>

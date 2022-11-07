@@ -16,6 +16,7 @@ class CreateMarcadorsTable extends Migration
         Schema::create('marcadors', function (Blueprint $table) {
             $table->id();
             $table->text('nome');
+            $table->string('color')->default('#000', 9);
             $table->tinyInteger('is_enabled')->default(1);
 
             $table->bigInteger('setor_id') ->unsigned();

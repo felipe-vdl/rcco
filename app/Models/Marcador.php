@@ -12,6 +12,7 @@ class Marcador extends Model
         "nome",
         "is_enabled",
         "setor_id",
+        "color",
         "user_id"
     ];
 
