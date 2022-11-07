@@ -228,7 +228,7 @@
             return {
               data_c: new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit', year:'numeric'}).format(new Date(i.data)),
               unidade: i.unidade.nome,
-              marcador: `<span style="color:${i.marcador.color};">${i.marcador.nome}</span>`,
+              marcador: `${(i.marcador) ? `<span style="color:${i.marcador.color};">${i.marcador.nome}</span>`: ''}`,
               criador: i.criador.name,
               actions: actions
             }

@@ -179,7 +179,7 @@
 					marcadorSelect.append(option);
 				}
 
-				marcadorSelect.setAttribute('required', 'required');
+				// marcadorSelect.setAttribute('required', 'required');
 				marcadorSelect.removeAttribute('disabled');
 
 			}
