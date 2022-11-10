@@ -58,45 +58,50 @@
                            @endif
                            <td>{{$pergunta->criador->name}}</td>
                            <td>
-                              <form style="display: inline-block;" class="set_index" method="POST" action="{{route("pergunta.set_index", $pergunta->id)}}">
-                                 @csrf
-                                 <input type="hidden" name="pergunta_id" value="{{$pergunta->id}}">
-                                 <input type="hidden" name="index_atual" value="{{$pergunta->index}}">
-                                 <input type="hidden" name="index" value="">
-                                 <button
-                                       title="Atribuir index."
-                                       class="btn btn-primary btn-xs action botao_acao btn_excluir"
-                                    >
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                 </button>
-                              </form>
-                              @if ($pergunta->is_enabled === 1)
-                                 <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("pergunta.is_enabled")}}">
+                              <div style="display: flex; gap: 0.5rem;">
+                                 <form style="display: inline-block;" class="set_index" method="POST" action="{{route("pergunta.set_index", $pergunta->id)}}">
                                     @csrf
-                                    <input type="hidden" value="{{$pergunta->id}}" name="pergunta_id">
-                                    <input type="hidden" value="0" name="is_enabled">
+                                    <input type="hidden" name="pergunta_id" value="{{$pergunta->id}}">
+                                    <input type="hidden" name="index_atual" value="{{$pergunta->index}}">
+                                    <input type="hidden" name="index" value="">
                                     <button
-                                       title="Desabilitar pergunta."
-                                       class="btn btn-danger btn-xs action botao_acao btn_excluir"
-                                    >
-                                       <i class="glyphicon glyphicon-remove"></i>
+                                          title="Atribuir index."
+                                          class="btn btn-primary btn-xs action botao_acao btn_excluir"
+                                       >
+                                       <i class="glyphicon glyphicon-edit"></i>
                                     </button>
                                  </form>
-                              @else
-                                 @if (Auth::user()->nivel === "Super-Admin")
-                                    <form class="habilitar" method="POST" class="excluir" action="{{route("pergunta.is_enabled")}}">
+                                 <a style="display: inline-block; margin-right: 0;" class="btn btn-xs btn-warning" title="Editar pergunta" href="{{route('pergunta.edit', $pergunta->id)}}">
+                                    <i class="glyphicon glyphicon-pencil "></i>
+                                 </a>
+                                 @if ($pergunta->is_enabled === 1)
+                                    <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("pergunta.is_enabled")}}">
                                        @csrf
                                        <input type="hidden" value="{{$pergunta->id}}" name="pergunta_id">
-                                       <input type="hidden" value="1" name="is_enabled">
+                                       <input type="hidden" value="0" name="is_enabled">
                                        <button
-                                          title="Habilitar pergunta."
-                                          class="btn btn-success btn-xs action botao_acao btn_excluir"
+                                          title="Desabilitar pergunta."
+                                          class="btn btn-danger btn-xs action botao_acao btn_excluir"
                                        >
-                                          <i class="glyphicon glyphicon-ok"></i>
+                                          <i class="glyphicon glyphicon-remove"></i>
                                        </button>
                                     </form>
+                                 @else
+                                    @if (Auth::user()->nivel === "Super-Admin")
+                                       <form class="habilitar" method="POST" class="excluir" action="{{route("pergunta.is_enabled")}}">
+                                          @csrf
+                                          <input type="hidden" value="{{$pergunta->id}}" name="pergunta_id">
+                                          <input type="hidden" value="1" name="is_enabled">
+                                          <button
+                                             title="Habilitar pergunta."
+                                             class="btn btn-success btn-xs action botao_acao btn_excluir"
+                                          >
+                                             <i class="glyphicon glyphicon-ok"></i>
+                                          </button>
+                                       </form>
+                                    @endif
                                  @endif
-                              @endif
+                              </div>
                            </td>
                         </tr>
                      @endif

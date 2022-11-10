@@ -70,7 +70,10 @@ class APIController extends Controller
                 $query->whereHas('unidades', function($q) use ($unidade_id) {
                     $q->where('unidades.id', $unidade_id);
                 })->where('is_enabled', '=', 1)->orderBy('index', 'DESC')->orderBy('created_at', 'ASC');
-            }, 'setor', 'perguntas.unidades', 'perguntas.label_options'])
+
+            }, 'setor', 'perguntas.unidades', 'perguntas.label_options' => function($qr) {
+                $qr->where('is_enabled', '=', 1);
+            }])
             ->whereHas('perguntas.unidades', function($query) use ($unidade_id) {
                 $query->where('unidades.id', $unidade_id);
             })->where('is_enabled', '=', 1)->get();

@@ -16,6 +16,7 @@ class CreateLabelOptionsTable extends Migration
         Schema::create('label_options', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
+            $table->tinyInteger('is_enabled')->default(1);
             
             $table->bigInteger('pergunta_id')   ->unsigned();
             $table->foreign('pergunta_id')->references('id')->on('perguntas')->onDelete('cascade');

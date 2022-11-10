@@ -5,8 +5,10 @@
 		 <h2>Novo Relatório</h2>
 		<div class="clearfix"></div>
 	</div>
-	<form action="{{route('resposta.store')}}" method="post">
-	{{ csrf_field() }}
+	@if(Auth::user()->nivel === "User")
+		<form action="{{route('resposta.store')}}" method="post">
+		{{ csrf_field() }}
+	@endif
 		<div class="x_panel">
 			<div class="x_content">
 					<div class="form-group row">
@@ -51,18 +53,20 @@
 		</div>
 		<div class="footer text-right">
 			<input type="submit" hidden>
-			<button id="btn_cancelar" class="botoes-acao btn btn-round btn-primary" >
+			<button @if(Auth::user()->nivel !== "User") disabled @endif id="btn_cancelar" class="botoes-acao btn btn-round btn-primary" >
 				<span class="icone-botoes-acao mdi mdi-backburger"></span>   
-				<span class="texto-botoes-acao"> CANCELAR </span>
+				<span class="texto-botoes-acao" > CANCELAR </span>
 				<div class="ripple-container"></div>
 			</button>
-			<button type="submit" id="btn_salvar" class="botoes-acao btn btn-round btn-success ">
+			<button @if(Auth::user()->nivel !== "User") disabled @endif type="submit" id="btn_salvar" class="botoes-acao btn btn-round btn-success ">
 				<span class="icone-botoes-acao mdi mdi-send"></span>
-				<span class="texto-botoes-acao"> SALVAR </span>
+				<span class="texto-botoes-acao" > SALVAR </span>
 				<div class="ripple-container"></div>
 			</button>
 		</div>
-	</form>
+	@if(Auth::user()->nivel === "User")
+		</form>
+	@endif
 </div>
 @endsection
 @push('scripts')

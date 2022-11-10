@@ -5,11 +5,11 @@
 <div class="x_panel modal-content">
     <div class="x_title">
       <h2>Relatórios</h2>
-      @if (Auth::user()->nivel === "User")
       <ul class="nav navbar-right panel_toolbox">
-        <a href="{{route('resposta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Funcionario"> Novo Relatório </a>
+        <a href="{{route('resposta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Funcionario">
+          @if (Auth::user()->nivel === "User") Novo Relatório @else Pré-visualizar Formulários @endif
+        </a>
       </ul>
-      @endif
       <div class="clearfix"></div>
     </div>
     <div class="x_panel">

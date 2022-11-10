@@ -141,4 +141,56 @@ class PerguntaController extends Controller
         DB::commit();
         return redirect()->back()->with('sucesso', 'Operação efetuada com sucesso.');
     }
+
+    public function edit($id) {
+        $pergunta = Pergunta::with(['label_options' => function($qr) {
+            $qr->where('is_enabled', '=', 1);
+        }, 'criador', 'topico', 'unidades'])->find($id);
+
+        return view('pergunta.edit', compact('pergunta'));
+    }
+
+    public function update(Request $request, $id) {
+        try {
+            DB::beginTransaction();
+            $pergunta = Pergunta::find($id);
+
+            // Obrigatoriedade da resposta
+            $pergunta->is_required = $request->is_required;
+
+            // Unidades
+            $unidades = explode(',', $request->unidades_id);
+            $pergunta->unidades()->sync($unidades);
+
+            // Opções
+            if ($pergunta->formato === 'checkbox' OR $pergunta->formato === 'dropdown' OR $pergunta->formato === 'radio') {
+                $conditions = [];
+                foreach($request->checkboxids as $checkbox_id) {
+                    array_push($conditions, ['id', '<>', $checkbox_id]);
+                }
+
+                $options = LabelOption::where('pergunta_id', $pergunta->id)->where($conditions)->get();
+                foreach($options as $option) {
+                    $option->is_enabled = 0;
+                    $option->save();
+                }
+
+                if(isset($request->checkboxvalue)) {
+                    foreach($request->checkboxvalue as $nome) {
+                        LabelOption::create([
+                            'pergunta_id' => $pergunta->id,
+                            'nome'        => $nome
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('pergunta.index')->with('sucesso', 'Pergunta editada com sucesso');
+
+        } catch (Throwable $th) {
+            DB::rollback();
+            return back()->withErrors('Houve um erro ao tentar editar a pergunta');
+        }
+    }
 }

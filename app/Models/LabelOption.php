@@ -10,7 +10,8 @@ class LabelOption extends Model
 
     protected $fillable = [
         "nome",
-        "pergunta_id"
+        "pergunta_id",
+        'is_enabled',
     ];
 
     public function pergunta()
