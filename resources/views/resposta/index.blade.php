@@ -191,7 +191,7 @@
           
           tBody.innerHTML = "";
           const dados = tabela.map(i => {
-            let actions = `<div class="flex">
+            let actions = `<div style="display: flex;">
                 ${(i.status === 1 || user.nivel === "User") ? `<a title="Visualizar relatório" href="/resposta/${i.unidade_id}?data=${i.data}" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-list-alt"></i></a>` : '<span style="color:grey;">Aguardando Envio</span>'}
                 ${(i.status === 1 && user.nivel !== "User") ? `<form style="display:inline;" method="POST" action="{{route('resposta.pdf')}}" target="_blank">
                   <input type="hidden" name="_token" value="{{csrf_token()}}">

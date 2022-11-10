@@ -12,7 +12,7 @@
     </div>
     <div class="x_panel">
        <div class="x_content">
-          <table id="tb_topicos" class="table table-hover table-striped compact">
+          <table id="tb_topicos" class="table table-hover table-striped compact" style="width:100%">
             <thead>
                <tr>
                   <th>Nome do Tópico</th>
@@ -30,33 +30,35 @@
                            <td>{{$topico->setor->nome}}</td>
                            <td>{{$topico->criador->name}}</td>
                            <td>
-                              @if ($topico->is_enabled === 1)
-                                 <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("topico.is_enabled")}}">
-                                    @csrf
-                                    <input type="hidden" value="{{$topico->id}}" name="topico_id">
-                                    <input type="hidden" value="0" name="is_enabled">
-                                    <button
-                                       title="Desabilitar tópico."
-                                       class="btn btn-danger btn-xs action botao_acao btn_excluir"
-                                    >
-                                       <i class="glyphicon glyphicon-remove"></i>
-                                    </button>
-                                 </form>
-                              @else
-                                 @if (Auth::user()->nivel === "Super-Admin")
-                                    <form class="habilitar" method="POST" class="excluir" action="{{route("topico.is_enabled")}}">
+                              <div style="display: flex;">
+                                 @if ($topico->is_enabled === 1)
+                                    <form style="display: inline-block;" class="desabilitar" method="POST" class="excluir" action="{{route("topico.is_enabled")}}">
                                        @csrf
                                        <input type="hidden" value="{{$topico->id}}" name="topico_id">
-                                       <input type="hidden" value="1" name="is_enabled">
+                                       <input type="hidden" value="0" name="is_enabled">
                                        <button
-                                          title="Habilitar tópico."
-                                          class="btn btn-success btn-xs action botao_acao btn_excluir"
+                                          title="Desabilitar tópico."
+                                          class="btn btn-danger btn-xs action botao_acao btn_excluir"
                                        >
-                                          <i class="glyphicon glyphicon-ok"></i>
+                                          <i class="glyphicon glyphicon-remove"></i>
                                        </button>
                                     </form>
+                                 @else
+                                    @if (Auth::user()->nivel === "Super-Admin")
+                                       <form class="habilitar" method="POST" class="excluir" action="{{route("topico.is_enabled")}}">
+                                          @csrf
+                                          <input type="hidden" value="{{$topico->id}}" name="topico_id">
+                                          <input type="hidden" value="1" name="is_enabled">
+                                          <button
+                                             title="Habilitar tópico."
+                                             class="btn btn-success btn-xs action botao_acao btn_excluir"
+                                          >
+                                             <i class="glyphicon glyphicon-ok"></i>
+                                          </button>
+                                       </form>
+                                    @endif
                                  @endif
-                              @endif
+                              </div>
                            </td>
                         </tr>
                      @endif

@@ -12,7 +12,7 @@
     </div>
     <div class="x_panel">
        <div class="x_content">
-          <table id="tb_perguntas" class="table table-hover table-striped compact">
+          <table id="tb_perguntas" class="table table-hover table-striped compact" style="width:100%">
             <thead>
                <tr>
                   <th class="text-center">Index</th>
