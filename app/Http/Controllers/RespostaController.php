@@ -306,16 +306,15 @@ class RespostaController extends Controller
                 }
                 if(isset($topico["checkboxes"])) {
                     foreach($topico["checkboxes"] as $chave => $checkboxList) {
-                        
-                        $resposta = Resposta::find($input["resposta_id"]);
+                        $resposta = Resposta::find($checkboxList[0]["resposta_id"]);
                         if(isset($request->marcador_id)) {
                             $resposta->marcador_id = $request->marcador_id;
                         } else {
                             $resposta->marcador_id = null;
                         }
-                        $resposta->save();
-
+                        
                         foreach($checkboxList as $chave => $input) {
+                            $resposta->save();
                             $label_valor = LabelValor::find($input["label_valor_id"]);
                             $label_valor->valor = $input["valor"];
                             $label_valor->save();
