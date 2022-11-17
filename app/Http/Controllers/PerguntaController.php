@@ -165,8 +165,10 @@ class PerguntaController extends Controller
             // Opções
             if ($pergunta->formato === 'checkbox' OR $pergunta->formato === 'dropdown' OR $pergunta->formato === 'radio') {
                 $conditions = [];
-                foreach($request->checkboxids as $checkbox_id) {
-                    array_push($conditions, ['id', '<>', $checkbox_id]);
+                if(isset($request->checkboxids)) {
+                    foreach($request->checkboxids as $checkbox_id) {
+                        array_push($conditions, ['id', '<>', $checkbox_id]);
+                    }
                 }
 
                 $options = LabelOption::where('pergunta_id', $pergunta->id)->where($conditions)->get();
