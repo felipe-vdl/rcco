@@ -38,7 +38,6 @@
                               3
                            @endif
                      >{{$usuario->nivel}}</td>
-                     {{-- <td>{{$usuario->pivot}}</td> --}}
                      <td>
                         @foreach ($usuario->setores as $setor)
                            {{$setor->nome}}<br>

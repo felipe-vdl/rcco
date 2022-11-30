@@ -29,6 +29,7 @@
                   @endif
                   <option @if($usuario->nivel === "Admin") selected @endif value="Admin">Administrador</option>
                   <option @if($usuario->nivel === "User") selected @endif value="User">Usuário</option>
+									<option @if($usuario->nivel === "Read-Only") selected @endif value="Read-Only">Visualização</option>
               </select>
             </div>
 					</div>

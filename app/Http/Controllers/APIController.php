@@ -17,7 +17,7 @@ class APIController extends Controller
         $DBunidades = Unidade::where('setor_id', (int)$request->query('setor_id'))->get();
 
         $unidades = [];
-        if (Auth::user()->nivel === "Admin" OR Auth::user()->nivel === "Super-Admin") {
+        if (Auth::user()->nivel === "Admin" OR Auth::user()->nivel === "Super-Admin" OR Auth::user()->nivel === "Read-Only") {
             foreach ($DBunidades as $unidade) {
                 array_push($unidades, $unidade);
             }

@@ -1,7 +1,7 @@
 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 	<div class="menu_section">
 		<ul class="nav side-menu">
-			@if (Auth::user()->nivel == 'Super-Admin' OR Auth::user()->nivel == 'Admin')
+			@if (Auth::user()->nivel == 'Super-Admin' OR Auth::user()->nivel == 'Admin' OR Auth::user()->nivel === "Read-Only")
 			{{-- <li><a href="{{ route('embreve')}}"><i class="fas fa-chart-pie"></i> Gráficos</a></li> --}}
 			<li><a><i class="fas fa-chart-pie"></i>Gráficos <span class="fa fa-chevron-down"></span></a>
 				<ul class="nav child_menu">

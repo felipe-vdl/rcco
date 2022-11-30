@@ -6,9 +6,11 @@
     <div class="x_title">
       <h2>Relatórios</h2>
       <ul class="nav navbar-right panel_toolbox">
-        <a href="{{route('resposta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Funcionario">
-          @if (Auth::user()->nivel === "User") Novo Relatório @else Pré-visualizar Formulários @endif
-        </a>
+        @if (Auth::user()->nivel !== 'Read-Only')
+          <a href="{{route('resposta.create')}}" class="btn-circulo btn  btn-success btn-md  pull-right " data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Novo Funcionario">
+            @if (Auth::user()->nivel === "User") Novo Relatório @else Pré-visualizar Formulários @endif
+          </a>
+        @endif
       </ul>
       <div class="clearfix"></div>
     </div>

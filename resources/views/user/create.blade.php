@@ -27,9 +27,11 @@
 										<option value="Super-Admin">Super Administrador</option>
 										<option value="Admin">Administrador</option>
 										<option value="User">Usuario</option>
+										<option value="Read-Only">Visualização</option>
 										@elseif (Auth::user()->nivel === "Admin")
 										<option value="Admin">Administrador</option>
                   	<option value="User">Usuario</option>
+										<option value="Read-Only">Visualização</option>
 									@endif
                 </select>
             </div>
