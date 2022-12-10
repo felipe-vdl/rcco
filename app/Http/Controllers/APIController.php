@@ -78,7 +78,7 @@ class APIController extends Controller
                 $query->where('unidades.id', $unidade_id);
             })->where('is_enabled', '=', 1)->get();
         
-        $marcadores = Marcador::where('setor_id', $setor_id)->get();
+        $marcadores = Marcador::where([['setor_id', $setor_id], ['is_enabled', 1]])->get();
 
         // dd($topicos[0]->perguntas);
         return json_encode(array($topicos, $marcadores));
