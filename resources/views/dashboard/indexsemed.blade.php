@@ -5,7 +5,7 @@
 src="{{$iframeUrl}}"
 frameborder="0"
 width="100%"
-height="1000"
+height="1500"
 allowtransparency
 >
 </iframe>
