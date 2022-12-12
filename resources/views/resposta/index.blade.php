@@ -50,6 +50,15 @@
             </thead>   
             <tbody id="tb_resposta_body">
             </tbody>
+            <tfoot>
+              <tr>
+                  <th><input class="filter-input" data-column="0" type="text" placeholder="Filtro por Data"></th>
+                  <th><input class="filter-input" data-column="1" type="text" placeholder="Filtro por Unidade"></th>
+                  <th><input class="filter-input" data-column="2" type="text" placeholder="Filtro por Marcador"></th>
+                  <th><input class="filter-input" data-column="3" type="text" placeholder="Filtro por Autor"></th>
+                  <th>{{-- <input class="filter-input" data-column="4" type="text" placeholder="Filtro por Ações"> --}}</th>
+              </tr>
+          </tfoot>
           </table>
        </div>
     </div>
@@ -116,6 +125,12 @@
         ],
         order: [[0, 'desc']],
         retrieve: true,
+      });
+
+      $('.filter-input').keyup(function() {
+         tb_resposta.column( $(this).data('column') )
+         .search( $(this).val() )
+         .draw();
       });
     });
 

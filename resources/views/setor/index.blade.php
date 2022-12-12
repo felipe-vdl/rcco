@@ -29,6 +29,13 @@
               </tr>
             @endforeach
           </tbody>
+          <tfoot>
+            <tr>
+                <th><input class="filter-input" data-column="0" type="text" placeholder="Filtro por Setor"></th>
+                <th><input class="filter-input" data-column="1" type="text" placeholder="Filtro por Criador"></th>
+                <th>{{-- <input class="filter-input" data-column="2" type="text" placeholder="Filtro por Ações"> --}}</th>
+            </tr>
+        </tfoot>
         </table>
       </div>
     </div>
@@ -37,7 +44,7 @@
 @push('scripts')
 	<script type="text/javascript">
     $(document).ready(function(){
-        var tb_user = $("#tb_setores").DataTable({
+        var tb_setores = $("#tb_setores").DataTable({
           language: {
                 'url' : '{{ asset('js/portugues.json') }}',
           "decimal": ",",
@@ -48,6 +55,11 @@
           stateDuration: -1,
           responsive: true,
         })
+        $('.filter-input').keyup(function() {
+            tb_setores.column( $(this).data('column') )
+            .search( $(this).val() )
+            .draw();
+         });
     });
 	</script>
 @endpush

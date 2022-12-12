@@ -112,14 +112,14 @@
             </tbody>
             <tfoot>
                <tr>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
+                   <th>{{-- <input class="filter-input" data-column="0" type="text" placeholder="Filtro por Index"> --}}</th>
+                   <th><input class="filter-input" data-column="1" type="text" placeholder="Filtro por Título"></th>
+                   <th><input class="filter-input" data-column="2" type="text" placeholder="Filtro por Formato"></th>
+                   <th><input class="filter-input" data-column="3" type="text" placeholder="Filtro por Setor"></th>
+                   <th><input class="filter-input" data-column="4" type="text" placeholder="Filtro por Tópico"></th>
+                   <th>{{-- <input class="filter-input" data-column="5" type="text" placeholder="Filtro por Unidades"> --}}</th>
+                   <th><input class="filter-input" data-column="6" type="text" placeholder="Filtro por Criador"></th>
+                   <th>{{-- <input class="filter-input" data-column="7" type="text" placeholder="Filtro por Ações"> --}}</th>
                </tr>
            </tfoot>
           </table>
@@ -242,45 +242,23 @@
   </script>
   <script>
     $(document).ready(function(){
-        var myTable = $("#tb_perguntas").DataTable({
-          language: {
-            'url' : '{{ asset('js/portugues.json') }}',
-            "decimal": ",",
-            "thousands": "."
-          },
-          "order": [[3, "asc"], [4, "asc"], [0, "desc"]],
-          stateSave: true,
-          stateDuration: -1,
-          responsive: true,
-          /* initComplete: function () {
-            this.api()
-                .columns()
-                .every(function () {
-                  var column = this;
-                  var select = $('<br><select><option value=""></option></select>')
-                     .appendTo($(column.header()))
-                     .on('change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                        column.search(val ? '^' + val + '$' : '', true, false).draw();
-                     });
-                  $( select ).click( function(e) {
-                        e.stopPropagation();
-                  });
- 
-                  column
-                     .data()
-                     .unique()
-                     .sort()
-                     .each(function (d) {
-                        if(column.search() === '^'+d+'$'){
-                           select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
-                        } else {
-                           select.append( '<option value="'+d+'">'+d+'</option>' )
-                        }
-                     });
-                });
-         } */
-        });
+      var myTable = $("#tb_perguntas").DataTable({
+         language: {
+         'url' : '{{ asset('js/portugues.json') }}',
+         "decimal": ",",
+         "thousands": "."
+         },
+         "order": [[3, "asc"], [4, "asc"], [0, "desc"]],
+         stateSave: true,
+         stateDuration: -1,
+         responsive: true
+      });
+         
+      $('.filter-input').keyup(function() {
+         myTable.column( $(this).data('column') )
+         .search( $(this).val() )
+         .draw();
+      });
     });
   </script>
   @if (session()->has('success'))

@@ -187,6 +187,16 @@
                   </tr>
                @endforeach
             </tbody>
+            <tfoot>
+               <tr>
+                   <th><input class="filter-input" data-column="0" type="text" placeholder="Filtro por Nome"></th>
+                   <th><input class="filter-input" data-column="1" type="text" placeholder="Filtro por E-mail"></th>
+                   <th><input class="filter-input" data-column="2" type="text" placeholder="Filtro por Permissão"></th>
+                   <th><input class="filter-input" data-column="3" type="text" placeholder="Filtro por Setor"></th>
+                   <th>{{-- <input class="filter-input" data-column="4" type="text" placeholder="Filtro por Unidades"> --}}</th>
+                   <th>{{-- <input class="filter-input" data-column="5" type="text" placeholder="Filtro por Ações"> --}}</th>
+               </tr>
+           </tfoot>
           </table>
        </div>
     </div>
@@ -211,6 +221,12 @@
             responsive: true,
             order: [[2, "asc"]],
          })
+
+         $('.filter-input').keyup(function() {
+            tb_user.column( $(this).data('column') )
+            .search( $(this).val() )
+            .draw();
+         });
       });
 
       // $("table#tb_user").on("click", ".btn_excluir", function() {

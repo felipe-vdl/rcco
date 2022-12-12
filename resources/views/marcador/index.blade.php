@@ -53,7 +53,7 @@
                                           <input type="hidden" value="{{$marcador->id}}" name="marcador_id">
                                           <input type="hidden" value="1" name="is_enabled">
                                           <button
-                                             title="Habilitar tópico."
+                                             title="Habilitar marcador."
                                              class="btn btn-success btn-xs action botao_acao btn_excluir"
                                           >
                                              <i class="glyphicon glyphicon-ok"></i>
@@ -68,6 +68,14 @@
                   @endif
                @endforeach
             </tbody>
+            <tfoot>
+               <tr>
+                   <th><input class="filter-input" data-column="0" type="text" placeholder="Filtro por Nome"></th>
+                   <th><input class="filter-input" data-column="1" type="text" placeholder="Filtro por Setor"></th>
+                   <th><input class="filter-input" data-column="2" type="text" placeholder="Filtro por Criador"></th>
+                   <th>{{-- <input class="filter-input" data-column="3" type="text" placeholder="Filtro por Ações"> --}}</th>
+               </tr>
+           </tfoot>
           </table>
        </div>
     </div>
@@ -145,7 +153,7 @@
 </script>
   <script>
     $(document).ready(function(){
-        var tb_user = $("#tb_marcadors").DataTable({
+        var tb_marcadors = $("#tb_marcadors").DataTable({
           language: {
                 'url' : '{{ asset('js/portugues.json') }}',
           "decimal": ",",
@@ -156,6 +164,11 @@
           stateDuration: -1,
           responsive: true,
         })
+        $('.filter-input').keyup(function() {
+            tb_marcadors.column( $(this).data('column') )
+            .search( $(this).val() )
+            .draw();
+         });
     });
   </script>
   @if (session()->has('success'))
