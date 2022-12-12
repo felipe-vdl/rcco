@@ -255,13 +255,18 @@ class RespostaController extends Controller
                 if(isset($topico["textos_simples"])) {
                     foreach($topico["textos_simples"] as $chave => $input) {
                         $resposta = Resposta::find($input["resposta_id"]);
-                        $resposta->valor = $input["valor"];
-                        if(isset($request->marcador_id)) {
-                            $resposta->marcador_id = $request->marcador_id;
+                        if ($resposta->status === 1) {
+                            DB::rollback();
+                            return back()->withErrors('Não é permitido editar formulários enviados.');
                         } else {
-                            $resposta->marcador_id = null;
+                            $resposta->valor = $input["valor"];
+                            if(isset($request->marcador_id)) {
+                                $resposta->marcador_id = $request->marcador_id;
+                            } else {
+                                $resposta->marcador_id = null;
+                            }
+                            $resposta->save();
                         }
-                        $resposta->save();
                     }
                 }
                 if(isset($topico["textos_grandes"])) {
@@ -337,9 +342,19 @@ class RespostaController extends Controller
         DB::beginTransaction();
         $respostas = Resposta::where('unidade_id', $request->unidade_id)->where('data', $request->data)->get();
         foreach($respostas as $resposta) {
-            $resposta->status = $request->envio_status;
-            $resposta->data_envio = Carbon::now('America/Sao_Paulo')->format('Y-m-d 12:00:00');
-            $resposta->update();
+            if($request->envio_status === 0 AND Auth::user()->nivel === 'Super-Admin') {
+                $resposta->status = $request->envio_status;
+                $resposta->data_envio = "";
+                $resposta->update();
+
+            } else if ($request->envio_status === 0 AND Auth::user()->nivel !== 'Super-Admin') {
+                return back()->withErrors('O usuário não pode devolver formulários.');
+
+            } else {
+                $resposta->status = $request->envio_status;
+                $resposta->data_envio = Carbon::now('America/Sao_Paulo')->format('Y-m-d 12:00:00');
+                $resposta->update();
+            }
         }
 
         DB::commit();
