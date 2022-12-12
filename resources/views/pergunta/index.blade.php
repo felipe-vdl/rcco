@@ -18,6 +18,7 @@
                   <th class="text-center">Index</th>
                   <th class="text-center">Título da Pergunta</th>
                   <th class="text-center">Formato</th>
+                  <th class="text-center">Setor</th>
                   <th class="text-center">Tópico</th>
                   <th class="text-center">Unidades</th>
                   <th class="text-center">Criado por</th>
@@ -50,6 +51,7 @@
                                     @break
                               @endswitch
                            </td>
+                           <td>{{$pergunta->topico->setor->nome}}</td>
                            <td>{{$pergunta->topico->nome}}</td>
                            @if ($pergunta->unidades->count() === 0)
                               <td></td>
@@ -110,6 +112,7 @@
             </tbody>
             <tfoot>
                <tr>
+                   <th></th>
                    <th></th>
                    <th></th>
                    <th></th>
@@ -245,11 +248,11 @@
             "decimal": ",",
             "thousands": "."
           },
-          "order": [[3, "asc"], [0, "desc"]],
+          "order": [[3, "asc"], [4, "asc"], [0, "desc"]],
           stateSave: true,
           stateDuration: -1,
           responsive: true,
-          initComplete: function () {
+          /* initComplete: function () {
             this.api()
                 .columns()
                 .every(function () {
@@ -276,7 +279,7 @@
                         }
                      });
                 });
-         }
+         } */
         });
     });
   </script>
