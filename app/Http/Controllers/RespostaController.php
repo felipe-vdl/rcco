@@ -363,17 +363,48 @@ class RespostaController extends Controller
         return redirect()->back()->with('sucesso', 'Operação concluída com sucesso.');
     }
 
+    public function export (Request $request, $id)
+    {
+        $data = $request->query('data');
+        $user_id = $request->query('user_id');
+        $unidade = Unidade::find($id);
+        
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id) {
+            $query->whereHas('unidade', function($q) use($id) {
+                $q->where('id', $id);
+            })->where([['data', $data], ['user_id', $user_id]]);
+        }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
+
+        foreach ($topicos as $topico) {
+            $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+        }
+
+        $marcadores = Marcador::where([['setor_id', $unidade->setor_id], ['is_enabled', 1]])->get();
+        $resposta = Resposta::with('marcador')->where([['data', $data], ['user_id', $user_id], ['unidade_id', $id]])->first();
+        $marcador_atual_id;
+        $criador = $resposta->criador;
+        
+        if(isset($resposta->marcador)) {
+            $marcador_atual_id = $resposta->marcador->id;
+        } else {
+            $marcador_atual_id = "";
+        }
+
+        return view('resposta.export', compact('data', 'unidade', 'topicos', 'marcadores', 'criador', 'marcador_atual_id'));
+    }
+
     public function GerarPDF (Request $request)
     {
         $data = $request->data;
         $id = $request->unidade_id;
         $user_id = $request->user_id;
+        $perguntas_ids = $request->perguntas_ids;
         $unidade = Unidade::find($id);
 
-        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id) {
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id, $perguntas_ids) {
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
-            })->where([['data', $data], ['user_id', $user_id]]);
+            })->where([['data', $data], ['user_id', $user_id]])->whereIn('pergunta_id', $perguntas_ids);
         }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {

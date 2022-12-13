@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('marcador/is_enabled',		'MarcadorController@is_enabled')->name('marcador.is_enabled');
 
 	Route::post('/resposta/enviar', 'RespostaController@enviar')->name('resposta.enviar');
+	Route::get('/resposta/export/{id}', 'RespostaController@export')->name('resposta.export');
 	Route::post('/resposta/pdf', 'RespostaController@GerarPDF')->name('resposta.pdf');
 
 	Route::get('dashboard/semus', 		'DashboardController@dashsemus');
