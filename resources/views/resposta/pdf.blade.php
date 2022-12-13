@@ -108,6 +108,7 @@ hr {
         <h3 style="text-align:center; color:rgb(66, 66, 66);">RELATÓRIO: {{$unidade->nome}}</h3>
         <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($data))}}</h3>
         @if($marcador) <h3 style="text-align:center; color:rgb(66, 66, 66);">MARCADOR: <span style="color:{{$marcador->color}}">{{$marcador->nome}}</span></h3> @endif
+        <h3 style="text-align:center; color:rgb(66, 66, 66);">PREENCHIDO POR: {{$criador->name}}</h3>
       </div>
     </header>
     <main>

@@ -209,17 +209,19 @@
           tBody.innerHTML = "";
           const dados = tabela.map(i => {
             let actions = `<div style="display: flex;">
-                ${(i.status === 1 || user.nivel === "User") ? `<a title="Visualizar relatório" href="/resposta/${i.unidade_id}?data=${i.data}" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-list-alt"></i></a>` : '<span style="color:grey;">Aguardando Envio</span>'}
+                ${(i.status === 1 || user.nivel === "User") ? `<a title="Visualizar relatório" href="/resposta/${i.unidade_id}?data=${i.data}&user_id=${i.criador.id}" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-list-alt"></i></a>` : '<span style="color:grey;">Aguardando Envio</span>'}
                 ${(i.status === 1 && user.nivel !== "User") ? `<form style="display:inline;" method="POST" action="{{route('resposta.pdf')}}" target="_blank">
                   <input type="hidden" name="_token" value="{{csrf_token()}}">
                   <input type="hidden" name="unidade_id" value="${i.unidade_id}">
                   <input type="hidden" name="data" value="${i.data}">
+                  <input type="hidden" name="user_id" value="${i.criador.id}">
                   <button class="btn btn-xs btn-primary" title="Exportar formulário em PDF"><i class="glyphicon glyphicon-file"></i></button>
                   </form>` : ''}
                   ${(i.status === 1 && user.nivel === "Super-Admin") ? `<form class="devolver-form" style="display: inline;" method="POST" action="{{route('resposta.enviar')}}">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                     <input type="hidden" name="unidade_id" value="${i.unidade_id}">
                     <input type="hidden" name="data" value="${i.data}">
+                    <input type="hidden" name="user_id" value="${i.criador.id}">
                     <input type="hidden" name="envio_status" value="0">
                     <button class="btn btn-xs btn-warning" title="Devolver formulário">
                       <i class="glyphicon glyphicon-send"></i>
@@ -233,6 +235,7 @@
                       <input type="hidden" name="_token" value="{{csrf_token()}}">
                       <input type="hidden" name="unidade_id" value="${i.unidade_id}">
                       <input type="hidden" name="data" value="${i.data}">
+                      <input type="hidden" name="user_id" value="${i.criador.id}">
                       <input type="hidden" name="envio_status" value="1">
                       <button class="btn btn-xs btn-success" title="Enviar formulário"><i class="glyphicon glyphicon-send"></i></button>
                     </form>
@@ -250,7 +253,6 @@
               actions: actions
             }
           });
-          console.log(dados);
 
           tb_resposta.clear();
           tb_resposta.rows.add(dados);

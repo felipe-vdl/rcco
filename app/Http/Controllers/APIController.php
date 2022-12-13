@@ -46,10 +46,20 @@ class APIController extends Controller
 
     public function gerarTabela (Request $request)
     {
-        $respostas = Resposta::with('criador', 'unidade', 'marcador', 'pergunta', 'label_valors')
-        ->where('unidade_id', $request->query('unidade_id'))
-        ->groupBy('data')
-        ->get();
+        $respostas;
+
+        if (Auth::user()->nivel === 'User') {
+            $respostas = Resposta::with('criador', 'unidade', 'marcador', 'pergunta', 'label_valors')
+            ->where([['unidade_id', $request->query('unidade_id')], ['user_id', Auth::user()->id]])
+            ->groupBy('data', 'user_id')
+            ->get();
+
+        } else {
+            $respostas = Resposta::with('criador', 'unidade', 'marcador', 'pergunta', 'label_valors')
+            ->where('unidade_id', $request->query('unidade_id'))
+            ->groupBy('data', 'user_id')
+            ->get();
+        }
 
         $user = User::find((int)$request->query('user_id'));
 

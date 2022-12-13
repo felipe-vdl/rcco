@@ -63,7 +63,7 @@ class RespostaController extends Controller
             foreach($request->topicos as $chave => $topico) {
                 if (isset($topico["textos_simples"])) {
                     foreach($topico["textos_simples"] as $chave => $texto) {
-                        if(!Resposta::where('data', $request->data)
+                        if(!Resposta::where([['data', $request->data], ['user_id', Auth::user()->id]])
                         ->where('unidade_id', $request->unidade_id)
                         ->where('pergunta_id', $texto["pergunta_id"])
                         ->exists()) {
@@ -84,7 +84,7 @@ class RespostaController extends Controller
                 }
                 if (isset($topico["textos_grandes"])) {
                     foreach($topico["textos_grandes"] as $chave => $texto) {
-                        if(!Resposta::where('data', $request->data)
+                        if(!Resposta::where([['data', $request->data], ['user_id', Auth::user()->id]])
                         ->where('unidade_id', $request->unidade_id)
                         ->where('pergunta_id', $texto["pergunta_id"])
                         ->exists()) {
@@ -105,7 +105,7 @@ class RespostaController extends Controller
                 }
                 if (isset($topico["dropdowns"])) {
                     foreach($topico["dropdowns"] as $chave => $dropdown) {
-                        if(!Resposta::where('data', $request->data)
+                        if(!Resposta::where([['data', $request->data], ['user_id', Auth::user()->id]])
                         ->where('unidade_id', $request->unidade_id)
                         ->where('pergunta_id', $dropdown["pergunta_id"])
                         ->exists()) {
@@ -126,7 +126,7 @@ class RespostaController extends Controller
                 }
                 if (isset($topico["radios"])) {
                     foreach($topico["radios"] as $chave => $radio) {
-                        if(!Resposta::where('data', $request->data)
+                        if(!Resposta::where([['data', $request->data], ['user_id', Auth::user()->id]])
                         ->where('unidade_id', $request->unidade_id)
                         ->where('pergunta_id', $radio["pergunta_id"])
                         ->exists()) {
@@ -151,7 +151,7 @@ class RespostaController extends Controller
                 }
                 if (isset($topico["checkboxes"])) {
                     foreach($topico["checkboxes"] as $chave => $checkbox) {
-                        if(!Resposta::where('data', $request->data)
+                        if(!Resposta::where([['data', $request->data], ['user_id', Auth::user()->id]])
                         ->where('unidade_id', $request->unidade_id)
                         ->where('pergunta_id', $checkbox[0]["pergunta_id"])
                         ->exists()) {
@@ -195,18 +195,19 @@ class RespostaController extends Controller
         $data = $request->query('data');
         $unidade = Unidade::find($id);
 
-        $topicos = Topico::with(['respostas' => function($query) use ($id, $data) {
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $request) {
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
-            })->where('data', $data);
+            })->where([['data', $data], ['user_id', $request->user_id]]);
         }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {
             $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
         }
 
-        $resposta = Resposta::with('marcador')->where('data', $data)->where('unidade_id', $id)->first();
+        $resposta = Resposta::with('marcador')->where([['data', $data], ['user_id', $request->user_id], ['unidade_id', $id]])->first();
         $marcador;
+        $criador = $resposta->criador;
 
         if(isset($resposta->marcador)) {
             $marcador = $resposta->marcador;
@@ -215,26 +216,27 @@ class RespostaController extends Controller
         }
 
         //dd($id, $data, $topicos);
-        return view('resposta.show', compact('data', 'unidade', 'topicos', 'marcador'));
+        return view('resposta.show', compact('data', 'unidade', 'topicos', 'marcador', 'criador'));
     }
 
     public function edit(Request $request, $id)
     {
         $data = $request->query('data');
         $unidade = Unidade::find($id);
+        $user_id = Auth::user()->id;
 
-        $topicos = Topico::with(['respostas' => function($query) use ($id, $data) {
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id) {
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
-            })->where('data', $data);
+            })->where([['data', $data], ['user_id', $user_id]]);
         }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {
             $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
         }
 
-        $marcadores = Marcador::where('setor_id', $unidade->setor_id)->get();
-        $resposta = Resposta::with('marcador')->where('data', $data)->where('unidade_id', $id)->first();
+        $marcadores = Marcador::where([['setor_id', $unidade->setor_id], ['is_enabled', 1]])->get();
+        $resposta = Resposta::with('marcador')->where([['data', $data], ['user_id', $user_id], ['unidade_id', $id]])->first();
         $marcador_atual_id;
 
         if(isset($resposta->marcador)) {
@@ -340,7 +342,7 @@ class RespostaController extends Controller
     public function enviar(Request $request)
     {
         DB::beginTransaction();
-        $respostas = Resposta::where('unidade_id', $request->unidade_id)->where('data', $request->data)->get();
+        $respostas = Resposta::where([['unidade_id', $request->unidade_id], ['user_id', $request->user_id], ['data', $request->data]])->get();
         foreach($respostas as $resposta) {
             if($request->envio_status === 0 AND Auth::user()->nivel === 'Super-Admin') {
                 $resposta->status = $request->envio_status;
@@ -365,20 +367,22 @@ class RespostaController extends Controller
     {
         $data = $request->data;
         $id = $request->unidade_id;
+        $user_id = $request->user_id;
         $unidade = Unidade::find($id);
 
-        $topicos = Topico::with(['respostas' => function($query) use ($id, $data) {
+        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id) {
             $query->whereHas('unidade', function($q) use($id) {
                 $q->where('id', $id);
-            })->where('data', $data);
+            })->where([['data', $data], ['user_id', $user_id]]);
         }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
         foreach ($topicos as $topico) {
             $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
         }
 
-        $resposta = Resposta::with('marcador')->where('data', $data)->where('unidade_id', $id)->first();
+        $resposta = Resposta::with('marcador')->where([['data', $data], ['user_id', $user_id], ['unidade_id', $id]])->first();
         $marcador;
+        $criador = $resposta->criador;
 
         if(isset($resposta->marcador)) {
             $marcador = $resposta->marcador;
@@ -386,7 +390,7 @@ class RespostaController extends Controller
             $marcador = "";
         }
 
-        $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'data', 'unidade', 'marcador'));
+        $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'data', 'unidade', 'marcador', 'criador'));
         return $pdf->stream('Relatório');
     }
 }

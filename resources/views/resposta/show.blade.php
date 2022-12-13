@@ -28,6 +28,10 @@
             <p><span style="color:{{$marcador->color}};">{{$marcador->nome}}</span></p>
           </div>
           @endif
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <h4>Preenchido por</h4>
+            <p>{{$criador->name}}</p>
+          </div>
         </div>
     </div>
   </div>
