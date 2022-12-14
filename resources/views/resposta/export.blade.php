@@ -65,21 +65,21 @@
                   <div class="row" style="margin: 2rem 0;">
                     @if($resposta->pergunta->formato === "text")
                       <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-md-6 col-xs-12">
-                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <input type="checkbox" checked value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
                         <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
                         {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
                       </div>
                     @endif
                     @if($resposta->pergunta->formato === "textarea")
                       <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
-                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <input type="checkbox" checked value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
                         <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
                         {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
                       </div>
                     @endif
                     @if($resposta->pergunta->formato === "checkbox")
                       <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
-                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <input type="checkbox" checked value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
                         <h4 style="display:inline-block; margin: 0;" class="col-12">{{$resposta->pergunta->nome}}</h4>
                         {{-- @foreach($resposta->label_valors as $label_valor)
                           <div style="padding: 0; padding-left: 1rem;" class="col-12 col-md-6 col-sm-6 col-xs-12">
@@ -93,7 +93,7 @@
                     @endif
                     @if($resposta->pergunta->formato === "radio")
                       <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
-                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <input type="checkbox" checked value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
                         <div style="padding: 0;" class="col-12">
                           <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
                           {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
@@ -102,7 +102,7 @@
                     @endif
                     @if($resposta->pergunta->formato === "dropdown")
                       <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
-                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <input type="checkbox" checked value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
                         <div style="padding: 0;" class="col-12">
                           <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
                           {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}

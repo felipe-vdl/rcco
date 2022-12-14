@@ -413,18 +413,11 @@ class RespostaController extends Controller
                 $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
             }
     
-            $resposta = Resposta::with('marcador')->where([['user_id', $user_id], ['unidade_id', $id]])->whereBetween('data', [$inicio, $fim])->first();
-            $marcador;
-            $criador = $resposta->criador;
-    
-            if(isset($resposta->marcador)) {
-                $marcador = $resposta->marcador;
-            } else {
-                $marcador = "";
-            }
+            $relatores = Resposta::with('marcador')->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
+            $usuario = Auth::user();
 
-            $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'inicio', 'fim', 'unidade', 'marcador', 'criador'));
-            return $pdf->stream('Relatório');
+            $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
+            return $pdf->stream('Relatório.pdf');
 
         } catch (Throwable $th) {
             dd($th);

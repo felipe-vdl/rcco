@@ -104,15 +104,23 @@ hr {
         </table>
       </div>
       <br>
-      <div style="border: 1px solid black; padding: 5px;">
-        <h3 style="text-align:center; color:rgb(66, 66, 66);">RELATÓRIO: {{$unidade->nome}}</h3>
+      <div style="border: 1px solid black;">
+        <br>
+        <h3 style="text-align:center; color:rgb(66, 66, 66); margin: 0;">RELATÓRIO: {{$topicos[0]->setor->nome}} — {{$unidade->nome}}</h3>
         @if(substr($inicio, 0, 10) === substr($fim, 0, 10))
-          <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($inicio))}}</h3>
+          <h3 style="text-align:center; color:rgb(66, 66, 66); margin: 0; margin-top: 12px;">RCCO — {{date('d/m/Y', strtotime($inicio))}}</h3>
         @else
-          <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($inicio))}} - {{date('d/m/Y', strtotime($fim))}}</h3>
+          <h3 style="text-align:center; color:rgb(66, 66, 66); margin: 0; margin-top: 12px;">RCCO — {{date('d/m/Y', strtotime($inicio))}} - {{date('d/m/Y', strtotime($fim))}}</h3>
         @endif
-        {{-- @if($marcador) <h3 style="text-align:center; color:rgb(66, 66, 66);">MARCADOR: <span style="color:{{$marcador->color}}">{{$marcador->nome}}</span></h3> @endif
-        <h3 style="text-align:center; color:rgb(66, 66, 66);">PREENCHIDO POR: {{$criador->name}}</h3> --}}
+        <br>
+        <div style="border-bottom: 1px solid black;"></div>
+        <br>
+        {{-- @if($marcador) <h3 style="text-align:center; color:rgb(66, 66, 66);">MARCADOR: <span style="color:{{$marcador->color}}">{{$marcador->nome}}</span></h3> @endif --}}
+        <h3 style="color:rgb(66, 66, 66); margin: 0; margin-left: 13px;">EMITIDO POR:</h3>
+        <span style="display:block; margin-left: 23px;">{{$usuario->name}}</span>
+        <h3 style="color:rgb(66, 66, 66); margin: 0; margin-left: 13px; margin-top: 12px;">RELATOR (ES): @foreach($relatores as $relator)</h3>
+        <span style="display:block; margin-left: 23px;">{{$relator->criador->name}}</span> @endforeach
+        <br>
       </div>
     </header>
     <main>
