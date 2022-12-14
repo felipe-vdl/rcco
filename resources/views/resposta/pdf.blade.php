@@ -135,9 +135,9 @@ hr {
               {{-- Text String --}}
               @if ($resposta->pergunta->formato === "text" AND $resposta->pergunta->tipo === "string")
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
-                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                   @foreach($topico->respostas as $respostaAdd)
-                  <p>
+                  <p style="margin: 0; margin-bottom: 10px;">
                     {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else <span style="color:red;">Não respondido</span> @endif
                   </p>
                   @endforeach
@@ -150,18 +150,16 @@ hr {
                   @foreach($topico->respostas as $respostaAdd)
                     @if($resposta->pergunta_id === $respostaAdd->pergunta_id) @php $i += (int) $resposta->valor @endphp @endif
                   @endforeach
-                  <p>
-                    <span style="margin: 100px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</span>
-                  </p>
+                  <p style="margin: 0; margin-bottom: 10px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</p>
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Textarea String --}}
               @elseif ($resposta->pergunta->formato === "textarea" AND $resposta->pergunta->tipo === "string")
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
-                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                   @foreach($topico->respostas as $respostaAdd)
                     @if($respostaAdd->pergunta_id === $resposta->pergunta_id)
-                      <p>
+                      <p style="margin: 0; margin-bottom: 10px;">
                         {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else <span style="color:red;">Não respondido</span> @endif
                       </p>
                     @endif
@@ -175,42 +173,40 @@ hr {
                   @foreach($topico->respostas as $respostaAdd)
                     @if($resposta->pergunta_id === $respostaAdd->pergunta_id) @php $i += (int) $resposta->valor @endphp @endif
                   @endforeach
-                  <p>
-                    <span style="margin: 100px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</span>
-                  </p>
+                  <p style="margin: 0; margin-bottom: 10px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</p>
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Dropdown --}}
               @elseif ($resposta->pergunta->formato === "dropdown")
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
-                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                   @foreach($resposta->pergunta->label_options as $option)
                     @php $i = 0 @endphp
                     @foreach($topico->respostas as $respostaAdd)
                       @if($resposta->pergunta_id === $respostaAdd->pergunta_id AND $respostaAdd->valor === $option->nome) @php $i += 1 @endphp @endif
                     @endforeach
-                    <span style="margin: 100px;"><b>{{$option->nome}}:</b> {{$i}}</span>
+                    <span style="margin-left: 13px; color:rgb(66, 66, 66); display: block;"><b>{{$option->nome}}:</b> {{$i}}</span>
                   @endforeach
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Radio --}}
               @elseif ($resposta->pergunta->formato === "radio")
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
-                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                   @foreach($resposta->pergunta->label_options as $option)
                     @php $i = 0 @endphp
                     @foreach($topico->respostas as $respostaAdd)
                       @if($resposta->pergunta_id === $respostaAdd->pergunta_id AND $respostaAdd->valor === $option->nome) @php $i += 1 @endphp @endif
                     @endforeach
-                    <span style="margin: 100px;"><b>{{$option->nome}}:</b> {{$i}}</span>
+                    <span style="margin-left: 13px; color:rgb(66, 66, 66); display: block;"><b>{{$option->nome}}:</b> {{$i}}</span>
                   @endforeach
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Checkboxes --}}
               @elseif ($resposta->pergunta->formato === "checkbox")
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
-                  <p>
-                    <h4>{{$resposta->pergunta->nome}}: </h4>
+                  <p style="margin: 0; margin-bottom: 10px;">
+                    <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                     @foreach($resposta->label_valors as $label)
                       @if (!in_array($label->label_option_id, $optionsArray))
                         @php $i = 0 @endphp
@@ -219,7 +215,7 @@ hr {
                             @if($labelAdd->label_option_id === $label->label_option_id) @php $i += $labelAdd->valor @endphp @endif
                           @endforeach
                         @endforeach
-                        <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$i}}</span>
+                        <span style="margin-left: 13px; color:rgb(66, 66, 66); display: block;"><b>{{$label->label_option->nome}}:</b> {{$i}}</span>
                         @php array_push($optionsArray, $label->label_option_id) @endphp
                       @endif
                     @endforeach
