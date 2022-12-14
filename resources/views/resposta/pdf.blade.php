@@ -11,10 +11,11 @@
 	margin-bottom: 110px;
 }
 body {
-    font-family: sans-serif;
-    font-size:15px;
-	 margin: 2.5cm 0;
-	 text-align: justify;
+  position: relative;
+  font-family: sans-serif;
+  font-size:15px;
+	margin: 2.5cm 0;
+	text-align: justify;
 }
 #header { 
 	position: fixed; 
@@ -106,7 +107,7 @@ hr {
       <br>
       <div style="border: 1px solid black;">
         <br>
-        <h3 style="text-align:center; color:rgb(66, 66, 66); margin: 0;">RELATÓRIO: {{$topicos[0]->setor->nome}} — {{$unidade->nome}}</h3>
+        <h3 style="text-align:center; color:rgb(66, 66, 66); margin: 0;">RELATÓRIO: {{$unidade->setor->nome}} — {{$unidade->nome}}</h3>
         @if(substr($inicio, 0, 10) === substr($fim, 0, 10))
           <h3 style="text-align:center; color:rgb(66, 66, 66); margin: 0; margin-top: 12px;">RCCO — {{date('d/m/Y', strtotime($inicio))}}</h3>
         @else

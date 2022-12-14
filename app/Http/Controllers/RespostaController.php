@@ -416,8 +416,14 @@ class RespostaController extends Controller
             $relatores = Resposta::with('marcador')->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
             $usuario = Auth::user();
 
+            $fileName;
+            if (substr($inicio, 0, 10)===substr($fim, 0, 10)) {
+                $fileName = $unidade->setor->nome.' - '.$unidade->nome.' - '.date('d-m-Y', strtotime($inicio)).'.pdf';
+            } else {
+                $fileName = $unidade->setor->nome.' - '.$unidade->nome.' - '.date('d-m-Y', strtotime($inicio)).'--'.date('d-m-Y', strtotime($fim)).'.pdf';
+            }
             $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
-            return $pdf->stream('Relatório.pdf');
+            return $pdf->stream($fileName);
 
         } catch (Throwable $th) {
             dd($th);
