@@ -106,41 +106,117 @@ hr {
       <br>
       <div style="border: 1px solid black; padding: 5px;">
         <h3 style="text-align:center; color:rgb(66, 66, 66);">RELATÓRIO: {{$unidade->nome}}</h3>
-        <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($data))}}</h3>
-        @if($marcador) <h3 style="text-align:center; color:rgb(66, 66, 66);">MARCADOR: <span style="color:{{$marcador->color}}">{{$marcador->nome}}</span></h3> @endif
-        <h3 style="text-align:center; color:rgb(66, 66, 66);">PREENCHIDO POR: {{$criador->name}}</h3>
+        @if(substr($inicio, 0, 10) === substr($fim, 0, 10))
+          <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($inicio))}}</h3>
+        @else
+          <h3 style="text-align:center; color:rgb(66, 66, 66);">RCCO — {{date('d/m/Y', strtotime($inicio))}} - {{date('d/m/Y', strtotime($fim))}}</h3>
+        @endif
+        {{-- @if($marcador) <h3 style="text-align:center; color:rgb(66, 66, 66);">MARCADOR: <span style="color:{{$marcador->color}}">{{$marcador->nome}}</span></h3> @endif
+        <h3 style="text-align:center; color:rgb(66, 66, 66);">PREENCHIDO POR: {{$criador->name}}</h3> --}}
       </div>
     </header>
     <main>
+      @php $optionsArray = array() @endphp
+      @php $perguntasArray = array() @endphp
       @foreach($topicos as $topico)
         @if(count($topico->respostas) > 0)
           <div>
             <h3 style="text-align:center; border: 1px solid black; padding: 5px;">{{$topico->nome}}</h3>
             @foreach($topico->respostas as $resposta)
-              @if ($resposta->pergunta->formato === "text")
-              <p>
-                <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
-              </p>
-              @elseif ($resposta->pergunta->formato === "textarea")
-                <p>
+              {{-- Text String --}}
+              @if ($resposta->pergunta->formato === "text" AND $resposta->pergunta->tipo === "string")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
                   <h4>{{$resposta->pergunta->nome}}: </h4>
-                  @if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
-                </p>
-              @elseif ($resposta->pergunta->formato === "dropdown")
-                <p>
-                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
-                </p>
-              @elseif ($resposta->pergunta->formato === "radio")
-                <p>
-                  <h4 style="display:inline;">{{$resposta->pergunta->nome}}: </h4>@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif
-                </p>
-              @elseif ($resposta->pergunta->formato === "checkbox")
-                <p>
-                  <h4>{{$resposta->pergunta->nome}}: </h4>
-                  @foreach($resposta->label_valors as $label)
-                  <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$label->valor ? 'Sim' : 'Não'}}</span>
+                  @foreach($topico->respostas as $respostaAdd)
+                  <p>
+                    {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else <span style="color:red;">Não respondido</span> @endif
+                  </p>
                   @endforeach
-                </p><br>
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
+              {{-- Text Number --}}
+              @elseif ($resposta->pergunta->formato === "text" AND $resposta->pergunta->tipo === "number")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
+                  @php $i = 0 @endphp
+                  @foreach($topico->respostas as $respostaAdd)
+                    @if($resposta->pergunta_id === $respostaAdd->pergunta_id) @php $i += (int) $resposta->valor @endphp @endif
+                  @endforeach
+                  <p>
+                    <span style="margin: 100px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</span>
+                  </p>
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
+              {{-- Textarea String --}}
+              @elseif ($resposta->pergunta->formato === "textarea" AND $resposta->pergunta->tipo === "string")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
+                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  @foreach($topico->respostas as $respostaAdd)
+                    @if($respostaAdd->pergunta_id === $resposta->pergunta_id)
+                      <p>
+                        {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else <span style="color:red;">Não respondido</span> @endif
+                      </p>
+                    @endif
+                  @endforeach
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
+              {{-- Textarea Number --}}
+              @elseif ($resposta->pergunta->formato === "textarea" AND $resposta->pergunta->tipo === "number")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
+                  @php $i = 0 @endphp
+                  @foreach($topico->respostas as $respostaAdd)
+                    @if($resposta->pergunta_id === $respostaAdd->pergunta_id) @php $i += (int) $resposta->valor @endphp @endif
+                  @endforeach
+                  <p>
+                    <span style="margin: 100px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</span>
+                  </p>
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
+              {{-- Dropdown --}}
+              @elseif ($resposta->pergunta->formato === "dropdown")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
+                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  @foreach($resposta->pergunta->label_options as $option)
+                    @php $i = 0 @endphp
+                    @foreach($topico->respostas as $respostaAdd)
+                      @if($resposta->pergunta_id === $respostaAdd->pergunta_id AND $respostaAdd->valor === $option->nome) @php $i += 1 @endphp @endif
+                    @endforeach
+                    <span style="margin: 100px;"><b>{{$option->nome}}:</b> {{$i}}</span>
+                  @endforeach
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
+              {{-- Radio --}}
+              @elseif ($resposta->pergunta->formato === "radio")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
+                  <h4>{{$resposta->pergunta->nome}}: </h4>
+                  @foreach($resposta->pergunta->label_options as $option)
+                    @php $i = 0 @endphp
+                    @foreach($topico->respostas as $respostaAdd)
+                      @if($resposta->pergunta_id === $respostaAdd->pergunta_id AND $respostaAdd->valor === $option->nome) @php $i += 1 @endphp @endif
+                    @endforeach
+                    <span style="margin: 100px;"><b>{{$option->nome}}:</b> {{$i}}</span>
+                  @endforeach
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
+              {{-- Checkboxes --}}
+              @elseif ($resposta->pergunta->formato === "checkbox")
+                @if (!in_array($resposta->pergunta->id, $perguntasArray))
+                  <p>
+                    <h4>{{$resposta->pergunta->nome}}: </h4>
+                    @foreach($resposta->label_valors as $label)
+                      @if (!in_array($label->label_option_id, $optionsArray))
+                        @php $i = 0 @endphp
+                        @foreach($topico->respostas as $respostaAdd)
+                          @foreach($respostaAdd->label_valors as $labelAdd)
+                            @if($labelAdd->label_option_id === $label->label_option_id) @php $i += $labelAdd->valor @endphp @endif
+                          @endforeach
+                        @endforeach
+                        <span style="margin: 100px;"><b>{{$label->label_option->nome}}:</b> {{$i}}</span>
+                        @php array_push($optionsArray, $label->label_option_id) @endphp
+                      @endif
+                    @endforeach
+                  </p><br>
+                  @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
+                @endif
               @endif
             @endforeach
           </div>

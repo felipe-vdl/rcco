@@ -27,12 +27,20 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<div class="form-group col-md-6 col-sm-6 col-xs-12">
-							<label class="control-label">Data Correspondente</label>
-							<input type="hidden" id="datecontainer" class="form-control" value="{{$data}}" name="data" required autocomplete="off">
-							<input type="text" value="{{date('d/m/Y', strtotime($data))}}" disabled id="data" class="form-control" required placeholder="dd/mm/aaaa" minlength="10" maxlength="10" required autocomplete="off">
-						</div>
-            @if (count($marcadores) > 0)
+            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+              <label class="control-label col-12">Data do Relatório (Início / Fim)</label>
+            <div class="row">
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="hidden" id="datecontainer_ini" class="form-control" value="{{substr($data, 0, 10)}} 00:00:01" name="data_ini" required autocomplete="off">
+                <input type="text" value="{{date('d/m/Y', strtotime($data))}}" id="data_ini" class="form-control" required placeholder="dd/mm/aaaa" minlength="10" maxlength="10" required autocomplete="off">
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="hidden" id="datecontainer_fim" class="form-control" value="{{substr($data, 0, 10)}} 23:59:59" name="data_fim" required autocomplete="off">
+                <input type="text" value="{{date('d/m/Y', strtotime($data))}}" id="data_fim" class="form-control" required placeholder="dd/mm/aaaa" minlength="10" maxlength="10" required autocomplete="off">
+              </div>
+            </div>
+            </div>
+            {{-- @if (count($marcadores) > 0)
               <div class="form-group col-md-6 col-sm-6 col-xs-12" id="marcador-div">
                 <label class="control-label">Marcador</label>
                 <select id="marcador-select" name="marcador_id" class="form-control" minlength="2" disabled>
@@ -42,7 +50,7 @@
                   @endforeach
                 </select>
               </div>
-            @endif
+            @endif --}}
 					</div>
 			</div>
 		</div>
@@ -56,43 +64,49 @@
                 @foreach($topico->respostas as $resposta)
                   <div class="row" style="margin: 2rem 0;">
                     @if($resposta->pergunta->formato === "text")
-                  <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
-                      <div style="padding: 0;" class="col-md-6 col-xs-12">
-                        <h4 style="margin: 0;">{{$resposta->pergunta->nome}}</h4>
-                        <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p>
+                      <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-md-6 col-xs-12">
+                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
+                        {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
                       </div>
                     @endif
                     @if($resposta->pergunta->formato === "textarea")
-                    <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
-                      <div style="padding: 0;" class="col-12">
-                        <h4 style="margin: 0;">{{$resposta->pergunta->nome}}</h4>
-                        <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p>
+                      <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
+                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
+                        {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
                       </div>
                     @endif
                     @if($resposta->pergunta->formato === "checkbox")
-                    <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
-                      <h4 style="margin: 0; margin-bottom: 0.5rem;" class="col-12">{{$resposta->pergunta->nome}}</h4>
-                      @foreach($resposta->label_valors as $label_valor)
-                        <div style="padding: 0; padding-left: 1rem;" class="col-12 col-md-6 col-sm-6 col-xs-12">
-                          <p style="margin: 0; margin-bottom: 0.5rem; font-weight: bold;">
-                            {{$label_valor->label_option->nome}}:
-                            <span style="font-weight: normal;">{{$label_valor->valor ? 'Sim' : 'Não'}}</span>
-                          </p>
-                        </div>
-                      @endforeach
+                      <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
+                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <h4 style="display:inline-block; margin: 0;" class="col-12">{{$resposta->pergunta->nome}}</h4>
+                        {{-- @foreach($resposta->label_valors as $label_valor)
+                          <div style="padding: 0; padding-left: 1rem;" class="col-12 col-md-6 col-sm-6 col-xs-12">
+                            <p style="margin: 0; margin-bottom: 0.5rem; font-weight: bold;">
+                              {{$label_valor->label_option->nome}}:
+                              <span style="font-weight: normal;">{{$label_valor->valor ? 'Sim' : 'Não'}}</span>
+                            </p>
+                          </div>
+                        @endforeach --}}
+                      </div>
                     @endif
                     @if($resposta->pergunta->formato === "radio")
-                      <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
-                      <div style="padding: 0;" class="col-12">
-                        <h4 style="margin: 0;">{{$resposta->pergunta->nome}}</h4>
-                        <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p>
+                      <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
+                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <div style="padding: 0;" class="col-12">
+                          <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
+                          {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
+                        </div>
                       </div>
                     @endif
                     @if($resposta->pergunta->formato === "dropdown")
-                    <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
-                      <div style="padding: 0;" class="col-12">
-                        <h4 style="margin: 0;">{{$resposta->pergunta->nome}}</h4>
-                        <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p>
+                      <div style="padding: 0.5rem; padding-left: 1rem; border: 1px solid grey; gap: 1rem; display:flex; align-items: center;" class="col-12">
+                        <input type="checkbox" value="{{$resposta->pergunta->id}}" name="perguntas_ids[]">
+                        <div style="padding: 0;" class="col-12">
+                          <h4 style="display:inline-block; margin: 0;">{{$resposta->pergunta->nome}}</h4>
+                          {{-- <p style="margin: 0; padding-left: 1rem;">@if($resposta->valor){{$resposta->valor}}@else <span style="color:red;">Não respondido</span> @endif</p> --}}
+                        </div>
                       </div>
                     @endif
                   </div>
@@ -120,6 +134,24 @@
 </div>
 @endsection
 @push('scripts')
+  <script>
+    $(function() {
+      $("#data_ini").datepicker({
+        maxDate: 0,
+        dateFormat: 'dd/mm/yy',
+        altFormat: 'yy-mm-dd 00:00:01',
+        altField: '#datecontainer_ini',
+      });
+    });
+    $(function() {
+      $("#data_fim").datepicker({
+        maxDate: 0,
+        dateFormat: 'dd/mm/yy',
+        altFormat: 'yy-mm-dd 23:59:59',
+        altField: '#datecontainer_fim',
+      });
+    });
+  </script>
 	<script type="text/javascript">
     $(document).ready(function(){
       //botão de voltar

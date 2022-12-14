@@ -395,33 +395,40 @@ class RespostaController extends Controller
 
     public function GerarPDF (Request $request)
     {
-        $data = $request->data;
-        $id = $request->unidade_id;
-        $user_id = $request->user_id;
-        $perguntas_ids = $request->perguntas_ids;
-        $unidade = Unidade::find($id);
+        try {
+            $inicio = $request->data_ini;
+            $fim = $request->data_fim;
+            $id = $request->unidade_id;
+            $user_id = $request->user_id;
+            $perguntas_ids = $request->perguntas_ids;
+            $unidade = Unidade::find($id);
+    
+            $topicos = Topico::with(['respostas' => function($query) use ($id, $inicio, $fim, $user_id, $perguntas_ids) {
+                $query->whereHas('unidade', function($q) use($id) {
+                    $q->where('id', $id);
+                })->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim]);
+            }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
+    
+            foreach ($topicos as $topico) {
+                $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+            }
+    
+            $resposta = Resposta::with('marcador')->where([['user_id', $user_id], ['unidade_id', $id]])->whereBetween('data', [$inicio, $fim])->first();
+            $marcador;
+            $criador = $resposta->criador;
+    
+            if(isset($resposta->marcador)) {
+                $marcador = $resposta->marcador;
+            } else {
+                $marcador = "";
+            }
 
-        $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id, $perguntas_ids) {
-            $query->whereHas('unidade', function($q) use($id) {
-                $q->where('id', $id);
-            })->where([['data', $data], ['user_id', $user_id]])->whereIn('pergunta_id', $perguntas_ids);
-        }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
+            $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'inicio', 'fim', 'unidade', 'marcador', 'criador'));
+            return $pdf->stream('Relatório');
 
-        foreach ($topicos as $topico) {
-            $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+        } catch (Throwable $th) {
+            dd($th);
+            return back()->withErrors('Ocorreu um erro ao tentar exportar o relatório.');
         }
-
-        $resposta = Resposta::with('marcador')->where([['data', $data], ['user_id', $user_id], ['unidade_id', $id]])->first();
-        $marcador;
-        $criador = $resposta->criador;
-
-        if(isset($resposta->marcador)) {
-            $marcador = $resposta->marcador;
-        } else {
-            $marcador = "";
-        }
-
-        $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'data', 'unidade', 'marcador', 'criador'));
-        return $pdf->stream('Relatório');
     }
 }
