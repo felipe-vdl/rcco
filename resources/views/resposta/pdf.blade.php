@@ -121,6 +121,10 @@ hr {
         <span style="display:block; margin-left: 23px;">{{$usuario->name}}</span>
         <h3 style="color:rgb(66, 66, 66); margin: 0; margin-left: 13px; margin-top: 12px;">RELATOR (ES): @foreach($relatores as $relator)</h3>
         <span style="display:block; margin-left: 23px;">{{$relator->criador->name}}</span> @endforeach
+        @if ($totalDeRelatorios > 1)
+          <h3 style="color:rgb(66, 66, 66); margin: 0; margin-left: 13px; margin-top: 12px">TOTAL DE RELATÓRIOS:</h3>
+          <span style="display:block; margin-left: 23px;">{{$totalDeRelatorios}}</span>
+        @endif
         <br>
       </div>
     </header>

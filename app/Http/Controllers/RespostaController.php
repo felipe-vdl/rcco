@@ -413,7 +413,7 @@ class RespostaController extends Controller
                 $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
             }
     
-            $relatores = Resposta::with('marcador')->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
+            $relatores = Resposta::with('marcador')->where('unidade_id', $id)->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
             $usuario = Auth::user();
 
             $fileName;
@@ -422,7 +422,15 @@ class RespostaController extends Controller
             } else {
                 $fileName = $unidade->setor->nome.' - '.$unidade->nome.' - '.date('d-m-Y', strtotime($inicio)).'--'.date('d-m-Y', strtotime($fim)).'.pdf';
             }
-            $pdf = PDF::loadView('resposta.pdf', compact('topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
+
+            $total = Resposta::where('unidade_id', $id)
+            ->whereBetween('data', [$inicio, $fim])
+            ->groupBy('data', 'user_id')
+            ->get();
+
+            $totalDeRelatorios = count($total);
+
+            $pdf = PDF::loadView('resposta.pdf', compact('totalDeRelatorios', 'topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
             return $pdf->stream($fileName);
 
         } catch (Throwable $th) {
