@@ -43,4 +43,8 @@ class Resposta extends Model
     public function label_valors() {
         return $this->hasMany('App\Models\LabelValor');
     }
+
+    public function arquivos() {
+        return $this->hasMany('App\Models\Arquivo');
+    }
 }

@@ -5,7 +5,7 @@
 		 <h2>Novo Relatório</h2>
 		<div class="clearfix"></div>
 	</div>
-	<form action="{{route('resposta.update', $unidade->id)}}" method="post">
+	<form action="{{route('resposta.update', $unidade->id)}}" method="post" enctype="multipart/form-data">
     @method("PATCH")
 	  {{ csrf_field() }}
 		<div class="x_panel">

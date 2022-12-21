@@ -6,7 +6,7 @@
 		<div class="clearfix"></div>
 	</div>
 	@if(Auth::user()->nivel === "User")
-		<form action="{{route('resposta.store')}}" method="post">
+		<form action="{{route('resposta.store')}}" method="post" enctype="multipart/form-data">
 		{{ csrf_field() }}
 	@endif
 		<div class="x_panel">
@@ -191,8 +191,6 @@
 			const topicosDiv = document.getElementById('topicos');
 			topicosDiv.innerHTML = "";
 
-			console.log(topicos);
-
 			let t = 0;
 			for(let topico of topicos) {
 				if(topico.perguntas.length == 0) {
@@ -204,6 +202,7 @@
 				let k = 0;
 				let l = 0;
 				let n = 0;
+				let o = 0;
 
 				/* x_panel */
 				const xPanel = document.createElement('div');
@@ -451,6 +450,528 @@
 						new TomSelect(`input[name='topicos[${t}][dropdowns][${n}][valor]']`, settings);
 
 						n++;
+					} else if (pergunta.tipo === 'image') {
+						const row = document.createElement('div');
+						row.classList.add('row');
+						row.style = "margin-top: 1rem";
+
+						const formGroup = document.createElement('div');
+						formGroup.classList.add('form-group', 'col-12');
+						formGroup.style = "padding: 0;"
+
+						formGroup.innerHTML = `<h2 class="col-12">${pergunta.nome}</h2>
+							<p class="mb-2">
+								<label for="topicos-${t}-imagens-${o}-arquivos">
+									<a class="btn btn-primary text-light" type="button" role="button" aria-disabled="false">Adicionar Arquivo</a>
+								</label>
+								<input
+									id="topicos-${t}-imagens-${o}-arquivos"
+									type="file"
+									class="form-control"
+									multiple="multiple"
+									name="topicos[${t}][imagens][${o}][arquivos][]"
+									style="visibility: hidden; position: absolute;"
+									accept="image/*"
+								>
+								<input type="hidden" name="topicos[${t}][imagens][${o}][pergunta_id]" value="${pergunta.id}">
+								<input type="hidden" name="topicos[${t}][imagens][${o}][topico_id]" value="${topico.id}">
+							</p>
+							<div id="erro-${t}-${o}" class="alert alert-danger mb-2" style="display: none;">
+									<p class="m-0">Tipo de arquivo inválido, insira apenas imagens: <span id="${t}-${o}-invalido"></span></p>
+							</div>
+							<div id="erro-${t}-${o}-grande" class="alert alert-danger mb-2" style="display: none;">
+									<p class="m-0">Arquivo ultrapassa o limite de tamanho permitido: <span id="${t}-${o}-grande"></span></p>
+							</div>
+							<p id="${t}-${o}-vermelho" style="font-size: 13px; color: red; display: none;" class="mb-2">* Atenção: Os arquivos destacados em vermelho não serão enviados.</p>
+							<p id="${t}-${o}-area">
+									<span id="${t}-${o}-list">
+											<span id="${t}-${o}-names"></span>
+									</span>
+							</p>`;
+
+						row.append(formGroup);
+						topicoContainer.append(row);
+
+						const fileTypes = ['image', 'png', 'jpg', 'jpeg'];
+						const tamanhoMaximo = 10000000; // 10 MB
+
+						const dtImage = new DataTransfer();
+						const imageInput = document.getElementById(`topicos-${t}-imagens-${o}-arquivos`);
+						const imagesArea = document.getElementById(`${t}-${o}-area`);
+						const imageInvalido = document.getElementById(`${t}-${o}-invalido`);
+						const erroImage = document.getElementById(`erro-${t}-${o}`);
+						const imageVermelho = document.getElementById(`${t}-${o}-vermelho`);
+						const erroImageGrande = document.getElementById(`erro-${t}-${o}-grande`);
+						const imageGrandeSpan = document.getElementById(`${t}-${o}-grande`);
+
+						imageInput.addEventListener('change', function(e) {
+							// Limpa os nomes de arquivo do último input feito pelo usuário.
+							let imagesInvalidos = [];
+							let verifyImages = null;
+							imageInvalido.innerHTML = '';
+							let imagesGrandes = [];
+							let imageGrande = null;
+							imageGrandeSpan.innerHTML = '';
+
+							// Nome do arquivo e botão de deletar.
+							for(let i = 0; i < this.files.length; i++) {
+									let fileBlock = document.createElement('span');
+									fileBlock.classList.add('file-block');
+									
+									let fileName = document.createElement('span');
+									fileName.classList.add('name');
+									fileName.innerHTML = `${this.files.item(i).name}`;
+									
+									let fileDelete = document.createElement('span');
+									fileDelete.classList.add('file-delete');
+									fileDelete.innerHTML = '<span>X</span>';
+									// Checa a validez do tipo do arquivo inserido.
+									if (!fileTypes.some(el => this.files[i].type.includes(el))) {
+											// Caso exista um arquivo inválido, insere nome dos arquivos inválidos na array e atribui true para a presença de images inválidos.
+											imagesInvalidos.push(this.files[i].name);
+											fileName.classList.add('text-danger');
+											fileDelete.classList.add('text-danger');
+											verifyImages = true;
+											imageVermelho.style.display = 'block';
+									} else if (this.files[i].size > tamanhoMaximo) {
+											imagesGrandes.push(this.files[i].name);
+											fileName.classList.add('text-danger');
+											fileDelete.classList.add('text-danger');
+											imageGrande = true;
+											imageVermelho.style.display = 'block';
+									}
+
+									fileBlock.append(fileDelete, fileName);
+									imagesArea.append(fileBlock);
+							}
+
+							// Checa a existência de images inválidos.
+							if (imagesInvalidos.length === 0) {
+									// Caso todos os arquivos sejam válidos, esconde a mensagem de erro e atribui false para presença de images inválidos.
+									erroImage.style.display = 'none';
+									verifyImages = false;
+							}
+
+							// Checa a existência de images com tamanho maior que o permitido.
+							if (imagesGrandes.length === 0) {
+									// Caso todos os arquivos sejam válidos, esconde a mensagem de erro e atribui false para presença de images inválidos.
+									erroImageGrande.style.display = 'none';
+									imageGrande = false;
+							}
+
+							// Guarda os arquivos no objeto de DataTransfer.
+							for (let file of this.files) {
+									// Checa validez do tipo de arquivo antes de inserir.
+									if (fileTypes.some(el => file.type.includes(el))) {
+											if (file.size < tamanhoMaximo) {
+													dtImage.items.add(file);
+											}
+									}
+							}
+
+							// Checa o status de presença de arquivos inválidos.
+							let i = 1; // Variável de controle da formatação.
+							if (verifyImages) {
+									// Caso existam arquivos inválidos, insere o nome de cada arquivo inválido no alerta de erro da view.
+									for (let image of imagesInvalidos) {
+											if (i < imagesInvalidos.length) {
+													imageInvalido.append(`${image}, `);
+											} else {
+													imageInvalido.append(`${image}.`)
+											}
+											i++;
+									}
+									erroImage.style.display = 'block';
+									this.value = '';
+							}
+
+							// Checa o status de presença de arquivos maiores que o tamanho máximo.
+							let j = 1; // Variável de controle da formatação.
+							if (imageGrande) {
+									// Caso existam arquivos inválidos, insere o nome de cada arquivo inválido no alerta de erro da view.
+									for (let image of imagesGrandes) {
+											if (j < imagesGrandes.length) {
+													imageGrandeSpan.append(`${image}, `);
+											} else {
+													imageGrandeSpan.append(`${image}.`)
+											}
+											j++;
+									}
+									erroImageGrande.style.display = 'block';
+									this.value = '';
+							}
+
+							// Atualiza os arquivos do input.
+							imageInput.files = dtImage.files;
+							// Atribui evento no botão de deletar arquivo.
+							let deleteButtons = document.querySelectorAll('.file-delete');
+							for (let button of deleteButtons) {
+									button.addEventListener('click', function (e) {
+											let name = this.nextElementSibling.innerHTML;
+											// Remove o nome do arquivo da página.
+											this.parentElement.remove();
+											
+											for(let i = 0; i < dtImage.items.length; i++) {
+													if (name === dtImage.items[i].getAsFile().name) {
+															// Delete file on DataTransfer Object.
+															dtImage.items.remove(i);
+															continue;
+													}
+											}
+											imageInput.files = dtImage.files;
+									});
+							}
+						});
+
+						o++
+					} else if (pergunta.tipo === 'document') {
+						const row = document.createElement('div');
+						row.classList.add('row');
+						row.style = "margin-top: 1rem";
+
+						const formGroup = document.createElement('div');
+						formGroup.classList.add('form-group', 'col-12');
+						formGroup.style = "padding: 0;"
+
+						formGroup.innerHTML = `<h2 class="col-12">${pergunta.nome}</h2>
+							<p class="mb-2">
+								<label for="topicos-${t}-documentos-${o}-arquivos">
+									<a class="btn btn-primary text-light" type="button" role="button" aria-disabled="false">Adicionar Arquivo</a>
+								</label>
+								<input
+									id="topicos-${t}-documentos-${o}-arquivos"
+									type="file"
+									class="form-control"
+									multiple="multiple"
+									name="topicos[${t}][documentos][${o}][arquivos][]"
+									style="visibility: hidden; position: absolute;"
+									accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
+								>
+								<input type="hidden" name="topicos[${t}][documentos][${o}][pergunta_id]" value="${pergunta.id}">
+								<input type="hidden" name="topicos[${t}][documentos][${o}][topico_id]" value="${topico.id}">
+							</p>
+							<div id="erro-${t}-${o}" class="alert alert-danger mb-2" style="display: none;">
+									<p class="m-0">Tipo de arquivo inválido, insira apenas documentos: <span id="${t}-${o}-invalido"></span></p>
+							</div>
+							<div id="erro-${t}-${o}-grande" class="alert alert-danger mb-2" style="display: none;">
+									<p class="m-0">Arquivo ultrapassa o limite de tamanho permitido: <span id="${t}-${o}-grande"></span></p>
+							</div>
+							<p id="${t}-${o}-vermelho" style="font-size: 13px; color: red; display: none;" class="mb-2">* Atenção: Os arquivos destacados em vermelho não serão enviados.</p>
+							<p id="${t}-${o}-area">
+									<span id="${t}-${o}-list">
+											<span id="${t}-${o}-names"></span>
+									</span>
+							</p>`;
+
+						row.append(formGroup);
+						topicoContainer.append(row);
+
+						const fileTypes = ['doc', 'docx', 'xml', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'pdf'];
+						const tamanhoMaximo = 10000000; // 10 MB
+
+						const dtDocument = new DataTransfer();
+						const documentInput = document.getElementById(`topicos-${t}-documentos-${o}-arquivos`);
+						const documentsArea = document.getElementById(`${t}-${o}-area`);
+						const documentInvalido = document.getElementById(`${t}-${o}-invalido`);
+						const erroDocument = document.getElementById(`erro-${t}-${o}`);
+						const documentVermelho = document.getElementById(`${t}-${o}-vermelho`);
+						const erroDocumentGrande = document.getElementById(`erro-${t}-${o}-grande`);
+						const documentGrandeSpan = document.getElementById(`${t}-${o}-grande`);
+
+						documentInput.addEventListener('change', function(e) {
+							// Limpa os nomes de arquivo do último input feito pelo usuário.
+							let documentsInvalidos = [];
+							let verifyDocuments = null;
+							documentInvalido.innerHTML = '';
+							let documentsGrandes = [];
+							let documentGrande = null;
+							documentGrandeSpan.innerHTML = '';
+
+							// Nome do arquivo e botão de deletar.
+							for(let i = 0; i < this.files.length; i++) {
+									let fileBlock = document.createElement('span');
+									fileBlock.classList.add('file-block');
+									
+									let fileName = document.createElement('span');
+									fileName.classList.add('name');
+									fileName.innerHTML = `${this.files.item(i).name}`;
+									
+									let fileDelete = document.createElement('span');
+									fileDelete.classList.add('file-delete');
+									fileDelete.innerHTML = '<span>X</span>';
+									// Checa a validez do tipo do arquivo inserido.
+									if (!fileTypes.some(el => this.files[i].type.includes(el))) {
+											// Caso exista um arquivo inválido, insere nome dos arquivos inválidos na array e atribui true para a presença de documents inválidos.
+											documentsInvalidos.push(this.files[i].name);
+											fileName.classList.add('text-danger');
+											fileDelete.classList.add('text-danger');
+											verifyDocuments = true;
+											documentVermelho.style.display = 'block';
+									} else if (this.files[i].size > tamanhoMaximo) {
+											documentsGrandes.push(this.files[i].name);
+											fileName.classList.add('text-danger');
+											fileDelete.classList.add('text-danger');
+											documentGrande = true;
+											documentVermelho.style.display = 'block';
+									}
+
+									fileBlock.append(fileDelete, fileName);
+									documentsArea.append(fileBlock);
+							}
+
+							// Checa a existência de documents inválidos.
+							if (documentsInvalidos.length === 0) {
+									// Caso todos os arquivos sejam válidos, esconde a mensagem de erro e atribui false para presença de documents inválidos.
+									erroDocument.style.display = 'none';
+									verifyDocuments = false;
+							}
+
+							// Checa a existência de documents com tamanho maior que o permitido.
+							if (documentsGrandes.length === 0) {
+									// Caso todos os arquivos sejam válidos, esconde a mensagem de erro e atribui false para presença de documents inválidos.
+									erroDocumentGrande.style.display = 'none';
+									documentGrande = false;
+							}
+
+							// Guarda os arquivos no objeto de DataTransfer.
+							for (let file of this.files) {
+									// Checa validez do tipo de arquivo antes de inserir.
+									if (fileTypes.some(el => file.type.includes(el))) {
+											if (file.size < tamanhoMaximo) {
+													dtDocument.items.add(file);
+											}
+									}
+							}
+
+							// Checa o status de presença de arquivos inválidos.
+							let i = 1; // Variável de controle da formatação.
+							if (verifyDocuments) {
+									// Caso existam arquivos inválidos, insere o nome de cada arquivo inválido no alerta de erro da view.
+									for (let document of documentsInvalidos) {
+											if (i < documentsInvalidos.length) {
+													documentInvalido.append(`${document}, `);
+											} else {
+													documentInvalido.append(`${document}.`)
+											}
+											i++;
+									}
+									erroDocument.style.display = 'block';
+									this.value = '';
+							}
+
+							// Checa o status de presença de arquivos maiores que o tamanho máximo.
+							let j = 1; // Variável de controle da formatação.
+							if (documentGrande) {
+									// Caso existam arquivos inválidos, insere o nome de cada arquivo inválido no alerta de erro da view.
+									for (let document of documentsGrandes) {
+											if (j < documentsGrandes.length) {
+													documentGrandeSpan.append(`${document}, `);
+											} else {
+													documentGrandeSpan.append(`${document}.`)
+											}
+											j++;
+									}
+									erroDocumentGrande.style.display = 'block';
+									this.value = '';
+							}
+
+							// Atualiza os arquivos do input.
+							documentInput.files = dtDocument.files;
+							// Atribui evento no botão de deletar arquivo.
+							let deleteButtons = document.querySelectorAll('.file-delete');
+							for (let button of deleteButtons) {
+									button.addEventListener('click', function (e) {
+											let name = this.nextElementSibling.innerHTML;
+											// Remove o nome do arquivo da página.
+											this.parentElement.remove();
+											
+											for(let i = 0; i < dtDocument.items.length; i++) {
+													if (name === dtDocument.items[i].getAsFile().name) {
+															// Delete file on DataTransfer Object.
+															dtDocument.items.remove(i);
+															continue;
+													}
+											}
+											documentInput.files = dtDocument.files;
+									});
+							}
+						});
+
+						o++
+					} else if (pergunta.tipo === 'video') {
+						const row = document.createElement('div');
+						row.classList.add('row');
+						row.style = "margin-top: 1rem";
+
+						const formGroup = document.createElement('div');
+						formGroup.classList.add('form-group', 'col-12');
+						formGroup.style = "padding: 0;"
+
+						formGroup.innerHTML = `<h2 class="col-12">${pergunta.nome}</h2>
+							<p class="mb-2">
+								<label for="topicos-${t}-videos-${o}-arquivos">
+									<a class="btn btn-primary text-light" type="button" role="button" aria-disabled="false">Adicionar Arquivo</a>
+								</label>
+								<input
+									id="topicos-${t}-videos-${o}-arquivos"
+									type="file"
+									class="form-control"
+									multiple="multiple"
+									name="topicos[${t}][videos][${o}][arquivos][]"
+									style="visibility: hidden; position: absolute;"
+									accept="video/mp4,video/x-m4v,video/*"
+								>
+								<input type="hidden" name="topicos[${t}][videos][${o}][pergunta_id]" value="${pergunta.id}">
+								<input type="hidden" name="topicos[${t}][videos][${o}][topico_id]" value="${topico.id}">
+							</p>
+							<div id="erro-${t}-${o}" class="alert alert-danger mb-2" style="display: none;">
+									<p class="m-0">Tipo de arquivo inválido, insira apenas vídeos: <span id="${t}-${o}-invalido"></span></p>
+							</div>
+							<div id="erro-${t}-${o}-grande" class="alert alert-danger mb-2" style="display: none;">
+									<p class="m-0">Arquivo ultrapassa o limite de tamanho permitido: <span id="${t}-${o}-grande"></span></p>
+							</div>
+							<p id="${t}-${o}-vermelho" style="font-size: 13px; color: red; display: none;" class="mb-2">* Atenção: Os arquivos destacados em vermelho não serão enviados.</p>
+							<p id="${t}-${o}-area">
+									<span id="${t}-${o}-list">
+											<span id="${t}-${o}-names"></span>
+									</span>
+							</p>`;
+
+						row.append(formGroup);
+						topicoContainer.append(row);
+
+						const fileTypes = ['video/mp4', 'video/x-m4v', 'video/*'];
+						const tamanhoMaximo = 10000000; // 10 MB
+
+						const dtImage = new DataTransfer();
+						const videoInput = document.getElementById(`topicos-${t}-videos-${o}-arquivos`);
+						const videosArea = document.getElementById(`${t}-${o}-area`);
+						const videoInvalido = document.getElementById(`${t}-${o}-invalido`);
+						const erroImage = document.getElementById(`erro-${t}-${o}`);
+						const videoVermelho = document.getElementById(`${t}-${o}-vermelho`);
+						const erroImageGrande = document.getElementById(`erro-${t}-${o}-grande`);
+						const videoGrandeSpan = document.getElementById(`${t}-${o}-grande`);
+
+						videoInput.addEventListener('change', function(e) {
+							// Limpa os nomes de arquivo do último input feito pelo usuário.
+							let videosInvalidos = [];
+							let verifyVideos = null;
+							videoInvalido.innerHTML = '';
+							let videosGrandes = [];
+							let videoGrande = null;
+							videoGrandeSpan.innerHTML = '';
+
+							// Nome do arquivo e botão de deletar.
+							for(let i = 0; i < this.files.length; i++) {
+									let fileBlock = document.createElement('span');
+									fileBlock.classList.add('file-block');
+									
+									let fileName = document.createElement('span');
+									fileName.classList.add('name');
+									fileName.innerHTML = `${this.files.item(i).name}`;
+									
+									let fileDelete = document.createElement('span');
+									fileDelete.classList.add('file-delete');
+									fileDelete.innerHTML = '<span>X</span>';
+									// Checa a validez do tipo do arquivo inserido.
+									if (!fileTypes.some(el => this.files[i].type.includes(el))) {
+											// Caso exista um arquivo inválido, insere nome dos arquivos inválidos na array e atribui true para a presença de videos inválidos.
+											videosInvalidos.push(this.files[i].name);
+											fileName.classList.add('text-danger');
+											fileDelete.classList.add('text-danger');
+											verifyVideos = true;
+											videoVermelho.style.display = 'block';
+									} else if (this.files[i].size > tamanhoMaximo) {
+											videosGrandes.push(this.files[i].name);
+											fileName.classList.add('text-danger');
+											fileDelete.classList.add('text-danger');
+											videoGrande = true;
+											videoVermelho.style.display = 'block';
+									}
+
+									fileBlock.append(fileDelete, fileName);
+									videosArea.append(fileBlock);
+							}
+
+							// Checa a existência de videos inválidos.
+							if (videosInvalidos.length === 0) {
+									// Caso todos os arquivos sejam válidos, esconde a mensagem de erro e atribui false para presença de videos inválidos.
+									erroImage.style.display = 'none';
+									verifyVideos = false;
+							}
+
+							// Checa a existência de videos com tamanho maior que o permitido.
+							if (videosGrandes.length === 0) {
+									// Caso todos os arquivos sejam válidos, esconde a mensagem de erro e atribui false para presença de videos inválidos.
+									erroImageGrande.style.display = 'none';
+									videoGrande = false;
+							}
+
+							// Guarda os arquivos no objeto de DataTransfer.
+							for (let file of this.files) {
+									// Checa validez do tipo de arquivo antes de inserir.
+									if (fileTypes.some(el => file.type.includes(el))) {
+											if (file.size < tamanhoMaximo) {
+													dtImage.items.add(file);
+											}
+									}
+							}
+
+							// Checa o status de presença de arquivos inválidos.
+							let i = 1; // Variável de controle da formatação.
+							if (verifyVideos) {
+									// Caso existam arquivos inválidos, insere o nome de cada arquivo inválido no alerta de erro da view.
+									for (let video of videosInvalidos) {
+											if (i < videosInvalidos.length) {
+													videoInvalido.append(`${video}, `);
+											} else {
+													videoInvalido.append(`${video}.`)
+											}
+											i++;
+									}
+									erroImage.style.display = 'block';
+									this.value = '';
+							}
+
+							// Checa o status de presença de arquivos maiores que o tamanho máximo.
+							let j = 1; // Variável de controle da formatação.
+							if (videoGrande) {
+									// Caso existam arquivos inválidos, insere o nome de cada arquivo inválido no alerta de erro da view.
+									for (let video of videosGrandes) {
+											if (j < videosGrandes.length) {
+													videoGrandeSpan.append(`${video}, `);
+											} else {
+													videoGrandeSpan.append(`${video}.`)
+											}
+											j++;
+									}
+									erroImageGrande.style.display = 'block';
+									this.value = '';
+							}
+
+							// Atualiza os arquivos do input.
+							videoInput.files = dtImage.files;
+							// Atribui evento no botão de deletar arquivo.
+							let deleteButtons = document.querySelectorAll('.file-delete');
+							for (let button of deleteButtons) {
+									button.addEventListener('click', function (e) {
+											let name = this.nextElementSibling.innerHTML;
+											// Remove o nome do arquivo da página.
+											this.parentElement.remove();
+											
+											for(let i = 0; i < dtImage.items.length; i++) {
+													if (name === dtImage.items[i].getAsFile().name) {
+															// Delete file on DataTransfer Object.
+															dtImage.items.remove(i);
+															continue;
+													}
+											}
+											videoInput.files = dtImage.files;
+									});
+							}
+						});
+
+						o++
 					}
 				}
 				t++;

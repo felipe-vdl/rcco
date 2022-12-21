@@ -49,6 +49,9 @@
                                  @case('dropdown')
                                     Dropdown
                                     @break
+                                 @case('file')
+                                    Arquivo
+                                    @break
                               @endswitch
                            </td>
                            <td>{{$pergunta->topico->setor->nome}}</td>

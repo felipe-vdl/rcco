@@ -35,13 +35,14 @@
               <div class="form-group row">
                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                   <label class="control-label">Formato da Pergunta</label>
-                  <select id="formato" name="formato" class="form-control" required>
+                  <select id="formato" name="formato" class="form-control" onchange="checkFormato()" required>
                     <option value="" disabled selected>Selecione o formato da pergunta</option>
                     <option value="text">Texto Simples</option>
                     <option value="textarea">Texto Grande</option>
                     <option value="checkbox">CheckBox</option>
                     <option value="radio">Radio</option>
                     <option value="dropdown">Dropdown</option>
+                    <option value="file">Arquivo</option>
                   </select>
 						    </div>
                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
@@ -196,7 +197,6 @@
          }
       });
 
-     
       $(function(){
         $('body').submit(function(event){
           if ($(this).hasClass('btn_salvar')) {
@@ -212,6 +212,22 @@
           window.location.href="{{ URL::route('pergunta.index') }}";
         });
       });
+
+      const checkFormato = evt => {
+        const formato = document.querySelector('#formato');
+        const tipo = document.querySelector('#tipo');
+
+        if (formato.value === 'file') {
+          tipo.innerHTML = `<option value="" disabled selected>Selecione o tipo de dado</option>
+            <option value="document">Documento</option>
+            <option value="image">Imagem</option>
+            <option value="video">Vídeo</option>`;
+        } else {
+          tipo.innerHTML = `<option value="" disabled selected>Selecione o tipo de dado</option>
+            <option value="string">Texto</option>
+            <option value="number">Número</option>`;
+        };
+      }
    </script>
    <script defer>
       const setorSelect = document.getElementById('setor_id');

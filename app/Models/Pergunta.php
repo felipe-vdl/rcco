@@ -34,4 +34,8 @@ class Pergunta extends Model
     public function label_options() {
         return $this->hasMany('App\Models\LabelOption');
     }
+
+    public function arquivos() {
+        return $this->hasMany('App\Models\Arquivo');
+    }
 }

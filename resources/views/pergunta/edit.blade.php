@@ -50,6 +50,9 @@
                         @case('dropdown')
                           Dropdown
                           @break
+                        @case('file')
+                          Arquivo
+                          @break
                         @default
                       @endswitch
                     </option>
@@ -65,6 +68,15 @@
                               @break
                           @case('number')
                               Número
+                              @break
+                          @case('image')
+                              Imagem
+                              @break
+                          @case('document')
+                              Documento
+                              @break
+                          @case('video')
+                              Vídeo
                               @break
                           @default
                       @endswitch
