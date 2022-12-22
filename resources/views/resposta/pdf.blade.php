@@ -141,7 +141,7 @@ hr {
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
                   <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                   @foreach($topico->respostas as $respostaAdd)
-                  <p style="margin: 0; margin-bottom: 10px;">
+                  <p style="margin: 0; margin-left: 13px; margin-bottom: 10px;">
                     {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else <span style="color:red;">Não respondido</span> @endif
                   </p>
                   @endforeach
@@ -155,6 +155,13 @@ hr {
                     @if($resposta->pergunta_id === $respostaAdd->pergunta_id) @php $i += (int) $resposta->valor @endphp @endif
                   @endforeach
                   <p style="margin: 0; margin-bottom: 10px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</p>
+                  @foreach($topico->respostas as $respostaAdd)
+                    @if($resposta->pergunta_id === $respostaAdd->pergunta_id)
+                      <p style="margin: 0; margin-left: 13px; margin-bottom: 10px;">
+                        {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else 0 @endif
+                      </p>
+                    @endif
+                  @endforeach
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Textarea String --}}
@@ -163,7 +170,7 @@ hr {
                   <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
                   @foreach($topico->respostas as $respostaAdd)
                     @if($respostaAdd->pergunta_id === $resposta->pergunta_id)
-                      <p style="margin: 0; margin-bottom: 10px;">
+                      <p style="margin: 0; margin-left: 13px; margin-bottom: 10px;">
                         {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else <span style="color:red;">Não respondido</span> @endif
                       </p>
                     @endif
@@ -178,6 +185,11 @@ hr {
                     @if($resposta->pergunta_id === $respostaAdd->pergunta_id) @php $i += (int) $resposta->valor @endphp @endif
                   @endforeach
                   <p style="margin: 0; margin-bottom: 10px;"><b>{{$resposta->pergunta->nome}}:</b> {{$i}}</p>
+                  @foreach($topico->respostas as $respostaAdd)
+                  <p style="margin: 0; margin-left: 13px; margin-bottom: 10px;">
+                    {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}}@else 0 @endif
+                  </p>
+                  @endforeach
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Dropdown --}}
@@ -190,6 +202,13 @@ hr {
                       @if($resposta->pergunta_id === $respostaAdd->pergunta_id AND $respostaAdd->valor === $option->nome) @php $i += 1 @endphp @endif
                     @endforeach
                     <span style="margin-left: 13px; color:rgb(66, 66, 66); display: block;"><b>{{$option->nome}}:</b> {{$i}}</span>
+                    @foreach($topico->respostas as $respostaAdd)
+                      @if($resposta->pergunta_id === $respostaAdd->pergunta_id)
+                        <p style="margin: 0; margin-left: 26px; margin-bottom: 10px;">
+                          {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}} @else <span style="color:red;">Não respondido</span> @endif
+                        </p>
+                      @endif
+                    @endforeach
                   @endforeach
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
@@ -203,14 +222,21 @@ hr {
                       @if($resposta->pergunta_id === $respostaAdd->pergunta_id AND $respostaAdd->valor === $option->nome) @php $i += 1 @endphp @endif
                     @endforeach
                     <span style="margin-left: 13px; color:rgb(66, 66, 66); display: block;"><b>{{$option->nome}}:</b> {{$i}}</span>
-                  @endforeach
+                    @endforeach
+                    @foreach($topico->respostas as $respostaAdd)
+                      @if($resposta->pergunta_id === $respostaAdd->pergunta_id)
+                        <p style="margin: 0; margin-left: 26px; margin-bottom: 10px;">
+                          {{date('d/m/Y', strtotime($respostaAdd->data))}} — @if($respostaAdd->valor){{$respostaAdd->valor}} @else <span style="color:red;">Não respondido</span> @endif
+                        </p>
+                      @endif
+                    @endforeach
                   @php array_push($perguntasArray, $resposta->pergunta_id) @endphp
                 @endif
               {{-- Checkboxes --}}
               @elseif ($resposta->pergunta->formato === "checkbox")
                 @if (!in_array($resposta->pergunta->id, $perguntasArray))
                   <p style="margin: 0; margin-bottom: 10px;">
-                    <h4 style="margin-bottom: 5px;">{{$resposta->pergunta->nome}}: </h4>
+                    <h4 style="margin: 0;">{{$resposta->pergunta->nome}}: </h4>
                     @foreach($resposta->label_valors as $label)
                       @if (!in_array($label->label_option_id, $optionsArray))
                         @php $i = 0 @endphp
@@ -219,7 +245,16 @@ hr {
                             @if($labelAdd->label_option_id === $label->label_option_id) @php $i += $labelAdd->valor @endphp @endif
                           @endforeach
                         @endforeach
-                        <span style="margin-left: 13px; color:rgb(66, 66, 66); display: block;"><b>{{$label->label_option->nome}}:</b> {{$i}}</span>
+                        <span style="margin-left: 13px; color:rgb(44, 44, 44); display: block; margin-top: 8px;"><b>{{$label->label_option->nome}}:</b> {{$i}}</span>
+                        @foreach($topico->respostas as $respostaAdd)
+                          @foreach($respostaAdd->label_valors as $labelAdd)
+                            @if($labelAdd->label_option_id === $label->label_option_id AND $labelAdd->valor)
+                              <p style="margin: 0; margin-left: 26px; color: rgb(66,66,66);">
+                                {{date('d/m/Y', strtotime($respostaAdd->data))}}
+                              </p>
+                            @endif
+                          @endforeach
+                        @endforeach
                         @php array_push($optionsArray, $label->label_option_id) @endphp
                       @endif
                     @endforeach
