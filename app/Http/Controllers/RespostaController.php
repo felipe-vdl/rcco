@@ -406,11 +406,11 @@ class RespostaController extends Controller
             $topicos = Topico::with(['respostas' => function($query) use ($id, $inicio, $fim, $user_id, $perguntas_ids) {
                 $query->whereHas('unidade', function($q) use($id) {
                     $q->where('id', $id);
-                })->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim]);
+                })->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->orderBy('data', 'ASC');
             }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
     
             foreach ($topicos as $topico) {
-                $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+                $topico->respostas = $topico->respostas->sortBy('data')->values();
             }
     
             $relatores = Resposta::with('marcador')->where('unidade_id', $id)->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
