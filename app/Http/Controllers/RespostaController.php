@@ -296,11 +296,11 @@ class RespostaController extends Controller
       foreach($storedImages as $image) {
         unlink(storage_path('app/public/images/'.$image));
       }
-      foreach($storedVideos as $video) {
-        unlink(storage_path('app/public/images/'.$video));
-      }
       foreach($storedDocuments as $document) {
-        unlink(storage_path('app/public/images/'.$document));
+        unlink(storage_path('app/public/documents/'.$document));
+      }
+      foreach($storedVideos as $video) {
+        unlink(storage_path('app/public/videos/'.$video));
       }
 
       dd($th);
@@ -371,6 +371,10 @@ class RespostaController extends Controller
     // dd($request->all());
     DB::beginTransaction();
     try {
+      $storedDocuments = [];
+      $storedVideos = [];
+      $storedImages = [];
+
       foreach($request->topicos as $chave => $topico) {
         if(isset($topico["textos_simples"])) {
           foreach($topico["textos_simples"] as $chave => $input) {
@@ -446,6 +450,78 @@ class RespostaController extends Controller
             }
           }
         }
+        if(isset($topico["imagens"])) {
+          foreach($topico["imagens"] as $chave => $imagem) {
+            if(isset($imagem["arquivos"])) {
+              foreach($imagem["arquivos"] as $arquivo) {
+                $filename = $arquivo->store('public/images');
+                array_push($storedImages, substr($filename, 14));
+                Arquivo::create([
+                  'nome_origem' => $arquivo->getClientOriginalName(),
+                  'filename' => substr($filename, 14),
+                  'extension' => $arquivo->extension(),
+                  'pergunta_id' => $imagem["pergunta_id"],
+                  'resposta_id' => $imagem["resposta_id"]
+                ]);
+              }
+            }
+            if(isset($imagem["remove_arquivo"])) {
+              foreach($imagem["remove_arquivo"] as $arquivo_id) {
+                $arquivo = Arquivo::find($arquivo_id);
+                unlink(storage_path('app/public/images/'.$arquivo->filename));
+                $arquivo->delete();
+              }
+            }
+          }
+        }
+        if(isset($topico["documentos"])) {
+          foreach($topico["documentos"] as $chave => $documento) {
+            if(isset($documento["arquivos"])) {
+              foreach($documento["arquivos"] as $arquivo) {
+                $filename = $arquivo->store('public/documents');
+                array_push($storedDocuments, substr($filename, 17));
+                Arquivo::create([
+                  'nome_origem' => $arquivo->getClientOriginalName(),
+                  'filename' => substr($filename, 17),
+                  'extension' => $arquivo->extension(),
+                  'pergunta_id' => $documento["pergunta_id"],
+                  'resposta_id' => $documento["resposta_id"]
+                ]);
+              }
+            }
+            if(isset($documento["remove_arquivo"])) {
+              foreach($documento["remove_arquivo"] as $arquivo_id) {
+                $arquivo = Arquivo::find($arquivo_id);
+                unlink(storage_path('app/public/documents/'.$arquivo->filename));
+                $arquivo->delete();
+              }
+            }
+          }
+        }
+        if(isset($topico["videos"])) {
+          foreach($topico["videos"] as $chave => $video) {
+            if(isset($video["arquivos"])) {
+              foreach($video["arquivos"] as $arquivo) {
+                $filename = $arquivo->store('public/videos');
+                array_push($storedVideos, substr($filename, 14));
+                Arquivo::create([
+                  'nome_origem' => $arquivo->getClientOriginalName(),
+                  'filename' => substr($filename, 14),
+                  'extension' => $arquivo->extension(),
+                  'pergunta_id' => $video["pergunta_id"],
+                  'resposta_id' => $video["resposta_id"]
+                ]);
+              }
+            }
+            if(isset($video["remove_arquivo"])) {
+              foreach($video["remove_arquivo"] as $arquivo_id) {
+                $arquivo = Arquivo::find($arquivo_id);
+                unlink(storage_path('app/public/videos/'.$arquivo->filename));
+                $arquivo->delete();
+              }
+            }
+          }
+        }
       }
       DB::commit();
       return redirect()->route('resposta.index')->with('sucesso', 'Formulário editado com sucesso.');
@@ -453,6 +529,17 @@ class RespostaController extends Controller
     } catch (Throwable $th) {
       dd($th);
       DB::rollback();
+      
+      foreach($storedImages as $image) {
+        unlink(storage_path('app/public/images/'.$image));
+      }
+      foreach($storedDocuments as $document) {
+        unlink(storage_path('app/public/documents/'.$document));
+      }
+      foreach($storedVideos as $video) {
+        unlink(storage_path('app/public/videos/'.$video));
+      }
+
       return back()->withErrors('Ocorreu um erro ao tentar atualizar as respostas.');
     }
   }
