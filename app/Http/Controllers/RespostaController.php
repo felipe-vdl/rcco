@@ -371,16 +371,16 @@ class RespostaController extends Controller
     // dd($request->all());
     DB::beginTransaction();
     try {
-      foreach ($request->topicos as $chave => $topico) {
-        if (isset($topico["textos_simples"])) {
-          foreach ($topico["textos_simples"] as $chave => $input) {
+      foreach($request->topicos as $chave => $topico) {
+        if(isset($topico["textos_simples"])) {
+          foreach($topico["textos_simples"] as $chave => $input) {
             $resposta = Resposta::find($input["resposta_id"]);
             if ($resposta->status === 1) {
               DB::rollback();
               return back()->withErrors('Não é permitido editar formulários enviados.');
             } else {
               $resposta->valor = $input["valor"];
-              if (isset($request->marcador_id)) {
+              if(isset($request->marcador_id)) {
                 $resposta->marcador_id = $request->marcador_id;
               } else {
                 $resposta->marcador_id = null;
@@ -389,11 +389,11 @@ class RespostaController extends Controller
             }
           }
         }
-        if (isset($topico["textos_grandes"])) {
-          foreach ($topico["textos_grandes"] as $chave => $input) {
+        if(isset($topico["textos_grandes"])) {
+          foreach($topico["textos_grandes"] as $chave => $input) {
             $resposta = Resposta::find($input["resposta_id"]);
             $resposta->valor = $input["valor"];
-            if (isset($request->marcador_id)) {
+            if(isset($request->marcador_id)) {
               $resposta->marcador_id = $request->marcador_id;
             } else {
               $resposta->marcador_id = null;
@@ -401,15 +401,15 @@ class RespostaController extends Controller
             $resposta->save();
           }
         }
-        if (isset($topico["radios"])) {
-          foreach ($topico["radios"] as $chave => $input) {
+        if(isset($topico["radios"])) {
+          foreach($topico["radios"] as $chave => $input) {
             $resposta = Resposta::find($input["resposta_id"]);
             if (isset($input["valor"])) {
               $resposta->valor = $input["valor"];
             } else {
               $resposta->valor = '';
             }
-            if (isset($request->marcador_id)) {
+            if(isset($request->marcador_id)) {
               $resposta->marcador_id = $request->marcador_id;
             } else {
               $resposta->marcador_id = null;
@@ -417,11 +417,11 @@ class RespostaController extends Controller
             $resposta->save();
           }
         }
-        if (isset($topico["dropdowns"])) {
-          foreach ($topico["dropdowns"] as $chave => $input) {
+        if(isset($topico["dropdowns"])) {
+          foreach($topico["dropdowns"] as $chave => $input) {
             $resposta = Resposta::find($input["resposta_id"]);
             $resposta->valor = $input["valor"];
-            if (isset($request->marcador_id)) {
+            if(isset($request->marcador_id)) {
               $resposta->marcador_id = $request->marcador_id;
             } else {
               $resposta->marcador_id = null;
@@ -429,16 +429,16 @@ class RespostaController extends Controller
             $resposta->save();
           }
         }
-        if (isset($topico["checkboxes"])) {
-          foreach ($topico["checkboxes"] as $chave => $checkboxList) {
+        if(isset($topico["checkboxes"])) {
+          foreach($topico["checkboxes"] as $chave => $checkboxList) {
             $resposta = Resposta::find($checkboxList[0]["resposta_id"]);
-            if (isset($request->marcador_id)) {
+            if(isset($request->marcador_id)) {
               $resposta->marcador_id = $request->marcador_id;
             } else {
               $resposta->marcador_id = null;
             }
-
-            foreach ($checkboxList as $chave => $input) {
+            
+            foreach($checkboxList as $chave => $input) {
               $resposta->save();
               $label_valor = LabelValor::find($input["label_valor_id"]);
               $label_valor->valor = $input["valor"];
@@ -449,6 +449,7 @@ class RespostaController extends Controller
       }
       DB::commit();
       return redirect()->route('resposta.index')->with('sucesso', 'Formulário editado com sucesso.');
+
     } catch (Throwable $th) {
       dd($th);
       DB::rollback();
@@ -460,13 +461,15 @@ class RespostaController extends Controller
   {
     DB::beginTransaction();
     $respostas = Resposta::where([['unidade_id', $request->unidade_id], ['user_id', $request->user_id], ['data', $request->data]])->get();
-    foreach ($respostas as $resposta) {
-      if ($request->envio_status === 0 and Auth::user()->nivel === 'Super-Admin') {
+    foreach($respostas as $resposta) {
+      if($request->envio_status === 0 AND Auth::user()->nivel === 'Super-Admin') {
         $resposta->status = $request->envio_status;
         $resposta->data_envio = "";
         $resposta->update();
-      } else if ($request->envio_status === 0 and Auth::user()->nivel !== 'Super-Admin') {
+
+      } else if ($request->envio_status === 0 AND Auth::user()->nivel !== 'Super-Admin') {
         return back()->withErrors('O usuário não pode devolver formulários.');
+
       } else {
         $resposta->status = $request->envio_status;
         $resposta->data_envio = Carbon::now('America/Sao_Paulo')->format('Y-m-d 12:00:00');
@@ -478,15 +481,15 @@ class RespostaController extends Controller
     return redirect()->back()->with('sucesso', 'Operação concluída com sucesso.');
   }
 
-  public function export(Request $request, $id)
+  public function export (Request $request, $id)
   {
     $data = $request->query('data');
     $user_id = $request->query('user_id');
     $unidade = Unidade::find($id);
-
-    $topicos = Topico::with(['respostas' => function ($query) use ($id, $data, $user_id) {
-      $query->whereHas('unidade', function ($q) use ($id) {
-        $q->where('id', $id);
+    
+    $topicos = Topico::with(['respostas' => function($query) use ($id, $data, $user_id) {
+      $query->whereHas('unidade', function($q) use($id) {
+          $q->where('id', $id);
       })->where([['data', $data], ['user_id', $user_id]]);
     }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
@@ -498,8 +501,8 @@ class RespostaController extends Controller
     $resposta = Resposta::with('marcador')->where([['data', $data], ['user_id', $user_id], ['unidade_id', $id]])->first();
     $marcador_atual_id;
     $criador = $resposta->criador;
-
-    if (isset($resposta->marcador)) {
+    
+    if(isset($resposta->marcador)) {
       $marcador_atual_id = $resposta->marcador->id;
     } else {
       $marcador_atual_id = "";
@@ -508,7 +511,7 @@ class RespostaController extends Controller
     return view('resposta.export', compact('data', 'unidade', 'topicos', 'marcadores', 'criador', 'marcador_atual_id'));
   }
 
-  public function GerarPDF(Request $request)
+  public function GerarPDF (Request $request)
   {
     try {
       $inicio = $request->data_ini;
@@ -518,38 +521,39 @@ class RespostaController extends Controller
       $perguntas_ids = $request->perguntas_ids;
       $unidade = Unidade::find($id);
 
-      $topicos = Topico::with(['respostas' => function ($query) use ($id, $inicio, $fim, $user_id, $perguntas_ids) {
-        $query->whereHas('unidade', function ($q) use ($id) {
-          $q->where('id', $id);
-        })->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim]);
+      $topicos = Topico::with(['respostas' => function($query) use ($id, $inicio, $fim, $user_id, $perguntas_ids) {
+          $query->whereHas('unidade', function($q) use($id) {
+              $q->where('id', $id);
+          })->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->orderBy('data', 'ASC');
       }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
 
       foreach ($topicos as $topico) {
-        $topico->respostas = $topico->respostas->sortBy('pergunta.created_at')->sortByDesc('pergunta.index')->values();
+          $topico->respostas = $topico->respostas->sortBy('data')->values();
       }
 
       $relatores = Resposta::with('marcador')->where('unidade_id', $id)->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
       $usuario = Auth::user();
 
       $fileName;
-      if (substr($inicio, 0, 10) === substr($fim, 0, 10)) {
-        $fileName = $unidade->setor->nome . ' - ' . $unidade->nome . ' - ' . date('d-m-Y', strtotime($inicio)) . '.pdf';
+      if (substr($inicio, 0, 10)===substr($fim, 0, 10)) {
+          $fileName = $unidade->setor->nome.' - '.$unidade->nome.' - '.date('d-m-Y', strtotime($inicio)).'.pdf';
       } else {
-        $fileName = $unidade->setor->nome . ' - ' . $unidade->nome . ' - ' . date('d-m-Y', strtotime($inicio)) . '--' . date('d-m-Y', strtotime($fim)) . '.pdf';
+          $fileName = $unidade->setor->nome.' - '.$unidade->nome.' - '.date('d-m-Y', strtotime($inicio)).'--'.date('d-m-Y', strtotime($fim)).'.pdf';
       }
 
       $total = Resposta::where('unidade_id', $id)
-        ->whereBetween('data', [$inicio, $fim])
-        ->groupBy('data', 'user_id')
-        ->get();
+      ->whereBetween('data', [$inicio, $fim])
+      ->groupBy('data', 'user_id')
+      ->get();
 
       $totalDeRelatorios = count($total);
 
       $pdf = PDF::loadView('resposta.pdf', compact('totalDeRelatorios', 'topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
       return $pdf->stream($fileName);
+
     } catch (Throwable $th) {
-      dd($th);
-      return back()->withErrors('Ocorreu um erro ao tentar exportar o relatório.');
+        dd($th);
+        return back()->withErrors('Ocorreu um erro ao tentar exportar o relatório.');
     }
   }
 }
