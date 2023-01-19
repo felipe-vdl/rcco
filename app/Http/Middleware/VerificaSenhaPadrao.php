@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 use Illuminate\Support\Facades\Auth;
-use Closure;
 use Hash;
+use Closure;
 
 class VerificaSenhaPadrao
 {

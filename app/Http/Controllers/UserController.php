@@ -47,7 +47,7 @@ class UserController extends Controller
 			$user->name = $request->name;
 			$user->email = $request->email;
 			$user->nivel = $request->nivel;
-			$senha_padrao = 'pmm123456';
+			$senha_padrao = env('DEFAULT_PASSWORD', '');
 			$user->password = bcrypt($senha_padrao);
 			$user->save();
 	

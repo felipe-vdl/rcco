@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'VerificaSenhaPadrao' => \App\Http\Middleware\VerificaSenhaPadrao::class,
+        'PreventDefaultPassword' => \App\Http\Middleware\EnsurePasswordIsChanged::class,
         'cors' => \App\Http\Middleware\CORS::class,
     ];
 }
