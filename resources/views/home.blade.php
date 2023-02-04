@@ -2,13 +2,9 @@
 
 
 @section('content')
-
+  <div id="home-container"></div>
 @endsection
 
 @push('scripts')
-
-	<script type="text/javascript">
-
-
-	</script>
+  <script src="{{ asset('react/main.js') }}"></script>
 @endpush

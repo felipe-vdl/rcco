@@ -93,4 +93,14 @@ class APIController extends Controller
         // dd($topicos[0]->perguntas);
         return json_encode(array($topicos, $marcadores));
     }
+
+    public function dados()
+    {
+      $data = array(
+        "message" => "teste",
+        "user" => Auth::user(),
+      );
+
+      return $data;
+    }
 }

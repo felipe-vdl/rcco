@@ -1,5 +1,7 @@
 <?php
 
+Route::get ('/api/dados', 					"APIController@dados");
+
 Route::get ('/', 					"AuthController@login");
 Route::get ("/login", 		"AuthController@login")->name('login');
 Route::post('/login', 		"AuthController@entrar");
