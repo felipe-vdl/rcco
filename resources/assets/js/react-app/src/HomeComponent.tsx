@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function HomeComponent() {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     const getMessage = async () => {
@@ -40,7 +40,7 @@ export default function HomeComponent() {
 
   return (
     <div>
-      Componente de Teste
+      Componente de Teste (TypeScript + React)
       <p>{message}</p>
     </div>
   );
