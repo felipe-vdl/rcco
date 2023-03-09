@@ -181,7 +181,7 @@ class RespostaController extends Controller
                 }
             }
             DB::commit();
-            return redirect()->route('resposta.index')->with('sucesso', 'Formulário criado com sucesso.');
+            return redirect()->route('resposta.index', ['unidade_id' => $request->unidade_id])->with('sucesso', 'Formulário criado com sucesso.');
 
         } catch (Throwable $th) {
             DB::rollback();
@@ -360,7 +360,7 @@ class RespostaController extends Controller
         }
 
         DB::commit();
-        return redirect()->back()->with('sucesso', 'Operação concluída com sucesso.');
+        return redirect()->route('resposta.index', ['unidade_id' => $request->unidade_id])->with('sucesso', 'Operação concluída com sucesso.');
     }
 
     public function export (Request $request, $id)

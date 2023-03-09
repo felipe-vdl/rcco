@@ -183,8 +183,8 @@
       }
     }
 
-    const getTabela = async () => {
-      if(unidadeSelect.value) {
+    const getTabela = async (unidade_id) => {
+      if(unidadeSelect.value || unidade_id) {
         setorSelect.setAttribute('disabled', 'disabled');
         unidadeSelect.setAttribute('disabled', 'disabled');
 
@@ -198,7 +198,7 @@
         try {
           const response = await axios.get('/api/tabela', {
             params: {
-              unidade_id: unidadeSelect.value,
+              unidade_id: unidadeSelect.value.length > 0 ? unidadeSelect.value : unidade_id,
               user_id: userID,
             }
           });
@@ -327,7 +327,13 @@
         }
       }
     }
-  </script>
+
+    </script>
+  @if(request()->get("unidade_id"))
+    <script>
+      getTabela("{{request()->get('unidade_id')}}");
+    </script>
+  @endif
   @if (session()->has('success'))
     <script>
       funcoes.notificationRight("top", "right", "success", "{{ session()->get("success") }}");
