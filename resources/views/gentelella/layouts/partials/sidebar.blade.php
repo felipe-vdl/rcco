@@ -13,6 +13,9 @@
 			<li>
 				<a href="{{ route('resposta.index')}}"><i class="fas fa-list"></i> Formulários</a>
 			</li>
+			<li>
+				<a href="{{ route('relatorio_externo.index')}}"><i class="fas fa-folder"></i> Relatórios Externos</a>
+			</li>
 			@if (Auth::user()->nivel == 'Super-Admin')
 				<li><a href="{{ url("/user") }}">	<i class="fas fa-user-shield"></i>Funcionários</a></li>
 				<li><a><i class="fas fa-cogs"></i>Configurações <span class="fa fa-chevron-down"></span></a>

@@ -7,6 +7,7 @@ use Auth;
 use App\Models\Unidade;
 use App\Models\Topico;
 use App\Models\Resposta;
+use App\Models\RelatorioExterno;
 use App\Models\Pergunta;
 use App\Models\Marcador;
 use App\Models\User;
@@ -92,5 +93,18 @@ class APIController extends Controller
 
         // dd($topicos[0]->perguntas);
         return json_encode(array($topicos, $marcadores));
+    }
+
+    public function relatorioExterno (Request $request)
+    {
+        $relatorios = RelatorioExterno::with('criador', 'unidade')->where(['unidade_id' => $request->unidade_id])->get();
+        $user = User::find($request->user_id);
+
+        $data = (object) array(
+            'tabela' => $relatorios,
+            'usuario' => $user
+        );
+        
+        return json_encode($data);
     }
 }

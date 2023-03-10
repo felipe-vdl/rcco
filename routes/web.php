@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/api/topicos',			'APIController@topicos');
 		Route::get('/api/tabela',			  'APIController@gerarTabela');
 		Route::get('/api/formulario',   'APIController@formulario');
+		Route::get('/api/relatorio_externo',   'APIController@relatorioExterno');
 		
 		Route::post('topico/is_enabled',		'TopicoController@is_enabled')->name('topico.is_enabled');
 	
@@ -51,6 +52,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::resource('pergunta', 'PerguntaController');
 		Route::resource('marcador', 'MarcadorController');
 		Route::resource('resposta', 'RespostaController');
+		Route::resource('relatorio_externo', 'RelatorioExternoController');
 		Route::resource('user', 'UserController');
 	});
 });
