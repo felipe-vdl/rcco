@@ -60,16 +60,17 @@ class RelatorioExternoController extends Controller
             DB::beginTransaction();
             $arquivosEnviados = [];
             foreach($request->arquivo as $key => $arquivo) {
-                $filename = $arquivo->store('public/relatorio_externo');
-                array_push($arquivosEnviados, substr($filename, 25));
-                RelatorioExterno::create([
-                    'user_id' => Auth::user()->id,
-                    'unidade_id' => $request->unidade_id,
-                    'nome' => $request->nome.' ('.$key.')',
-                    'data' => $request->data,
-                    'filename' => substr($filename, 25),
-                    'extensao' => $arquivo->extension(),
-                ]);
+              $num = (int) $key + 1;
+              $filename = $arquivo->store('public/relatorio_externo');
+              array_push($arquivosEnviados, substr($filename, 25));
+              RelatorioExterno::create([
+                  'user_id' => Auth::user()->id,
+                  'unidade_id' => $request->unidade_id,
+                  'nome' => $request->nome.' ('.$num.')',
+                  'data' => $request->data,
+                  'filename' => substr($filename, 25),
+                  'extensao' => $arquivo->extension(),
+              ]);
             }
 
             DB::commit();

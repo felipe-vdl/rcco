@@ -185,7 +185,6 @@ class RespostaController extends Controller
 
         } catch (Throwable $th) {
             DB::rollback();
-            dd($th);
             return back()->withErrors('Ocorreu um erro ao tentar enviar o formulário.');
         }
     }
@@ -215,7 +214,6 @@ class RespostaController extends Controller
             $marcador = "";
         }
 
-        //dd($id, $data, $topicos);
         return view('resposta.show', compact('data', 'unidade', 'topicos', 'marcador', 'criador'));
     }
 
@@ -250,7 +248,6 @@ class RespostaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         DB::beginTransaction();
         try {
             foreach($request->topicos as $chave => $topico) {
@@ -330,10 +327,9 @@ class RespostaController extends Controller
                 }
             }
             DB::commit();
-            return redirect()->route('resposta.index')->with('sucesso', 'Formulário editado com sucesso.');
+            return redirect()->route('resposta.index', ['unidade_id' => $request->unidade_id])->with('sucesso', 'Formulário alterado com sucesso.');
 
         } catch (Throwable $th) {
-            dd($th);
             DB::rollback();
             return back()->withErrors('Ocorreu um erro ao tentar atualizar as respostas.');
         }
@@ -434,7 +430,6 @@ class RespostaController extends Controller
             return $pdf->stream($fileName);
 
         } catch (Throwable $th) {
-            dd($th);
             return back()->withErrors('Ocorreu um erro ao tentar exportar o relatório.');
         }
     }

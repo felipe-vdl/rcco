@@ -11,6 +11,9 @@ use App\Models\RelatorioExterno;
 use App\Models\Pergunta;
 use App\Models\Marcador;
 use App\Models\User;
+use App\Models\UnidadeUser;
+use App\Models\Setor;
+use App\Models\SetorUser;
 
 class APIController extends Controller
 {
@@ -48,6 +51,34 @@ class APIController extends Controller
     public function gerarTabela (Request $request)
     {
         $respostas;
+        $authUser = Auth::user();
+      
+        if ($authUser->nivel === "User") {
+          if (!UnidadeUser::where([
+            'unidade_id' => $request->unidade_id,
+            'user_id' => $authUser->id
+          ])->exists()) {
+            $err = (object) array(
+              'error' => "O usuário não tem acesso à unidade."
+            );
+            return json_encode($err);
+          }
+        }
+
+        if ($authUser->nivel === "Read-Only") {
+          $unidade = Unidade::with("setor")->find($request->unidade_id);
+          $setor = $unidade->setor;
+
+          if (!SetorUser::where([
+            'setor_id' => $setor->id,
+            'user_id' => $authUser->id
+          ])->exists()) {
+            $err = (object) array(
+              'error' => "O usuário não tem acesso à unidade."
+            );
+            return json_encode($err);
+          }
+        }
 
         if (Auth::user()->nivel === 'User') {
             $respostas = Resposta::with('criador', 'unidade', 'marcador', 'pergunta', 'label_valors')
@@ -97,14 +128,43 @@ class APIController extends Controller
 
     public function relatorioExterno (Request $request)
     {
-        $relatorios = RelatorioExterno::with('criador', 'unidade')->where(['unidade_id' => $request->unidade_id])->get();
-        $user = User::find($request->user_id);
+      $authUser = Auth::user();
+      
+      if ($authUser->nivel === "User") {
+        if (!UnidadeUser::where([
+          'unidade_id' => $request->unidade_id,
+          'user_id' => $authUser->id
+        ])->exists()) {
+          $err = (object) array(
+            'error' => "O usuário não tem acesso à unidade."
+          );
+          return json_encode($err);
+        }
+      }
 
-        $data = (object) array(
-            'tabela' => $relatorios,
-            'usuario' => $user
-        );
-        
-        return json_encode($data);
+      if ($authUser->nivel === "Read-Only") {
+        $unidade = Unidade::with("setor")->find($request->unidade_id);
+        $setor = $unidade->setor;
+
+        if (!SetorUser::where([
+          'setor_id' => $setor->id,
+          'user_id' => $authUser->id
+        ])->exists()) {
+          $err = (object) array(
+            'error' => "O usuário não tem acesso à unidade."
+          );
+          return json_encode($err);
+        }
+      }
+
+      $relatorios = RelatorioExterno::with('criador', 'unidade')->where(['unidade_id' => $request->unidade_id])->get();
+      $user = User::find($request->user_id);
+
+      $data = (object) array(
+          'tabela' => $relatorios,
+          'usuario' => $user
+      );
+      
+      return json_encode($data);
     }
 }

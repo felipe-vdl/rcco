@@ -203,6 +203,10 @@
             }
           });
 
+          if (response.data.error) {
+            throw new Error(response.data.error);
+          }
+
           const tabela = response.data.tabela;
           const user = response.data.usuario;
           
@@ -270,7 +274,7 @@
 
         } catch (error) {
           console.log(error);
-          funcoes.notificationRight("top", "right", "danger", "Ocorreu um erro.");
+          funcoes.notificationRight("top", "right", "danger", error.message ? error.message : error);
           unidadeSelect.removeAttribute('disabled');
           setorSelect.removeAttribute('disabled');
         }
