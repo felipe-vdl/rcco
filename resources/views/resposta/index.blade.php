@@ -338,6 +338,11 @@
       getTabela("{{request()->get('unidade_id')}}");
     </script>
   @endif
+  @if (Auth::user()->unidades->count() === 1)
+    <script>
+      getTabela("{{Auth::user()->unidades[0]->id}}");
+    </script>
+  @endif
   @if (session()->has('success'))
     <script>
       funcoes.notificationRight("top", "right", "success", "{{ session()->get("success") }}");

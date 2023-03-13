@@ -287,6 +287,11 @@
       getRelatoriosExternos("{{request()->get('unidade_id')}}");
     </script>
   @endif
+  @if (Auth::user()->unidades->count() === 1)
+    <script>
+      getRelatoriosExternos("{{Auth::user()->unidades[0]->id}}");
+    </script>
+  @endif
   @if (session()->has('success'))
     <script>
       funcoes.notificationRight("top", "right", "success", "{{ session()->get("success") }}");
