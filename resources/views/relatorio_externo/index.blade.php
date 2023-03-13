@@ -287,9 +287,18 @@
       getRelatoriosExternos("{{request()->get('unidade_id')}}");
     </script>
   @endif
-  @if (Auth::user()->unidades->count() === 1)
-    <script>
-      getRelatoriosExternos("{{Auth::user()->unidades[0]->id}}");
+  @if (Auth::user()->setores->count() === 1 AND Auth::user()->unidades->count() === 1)
+  <script defer>
+  setorSelect.value = "{{Auth::user()->setores[0]->id}}";
+  getUnidades().then(() => {
+    unidadeSelect.value = "{{Auth::user()->unidades[0]->id}}";
+    getRelatoriosExternos("{{Auth::user()->unidades[0]->id}}");
+  });
+  </script>
+  @elseif (Auth::user()->setores->count() === 1)
+    <script defer>
+      setorSelect.value = "{{Auth::user()->setores[0]->id}}";
+      getUnidades();
     </script>
   @endif
   @if (session()->has('success'))

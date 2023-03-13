@@ -467,4 +467,18 @@
 			});
   	});
 	</script>
+	@if (Auth::user()->setores->count() === 1 AND Auth::user()->unidades->count() === 1)
+		<script defer>
+		setorSelect.value = "{{Auth::user()->setores[0]->id}}";
+		getUnidades().then(() => {
+			unidadeSelect.value = "{{Auth::user()->unidades[0]->id}}";
+			getFormulario();
+		});
+		</script>
+  @elseif (Auth::user()->setores->count() === 1)
+    <script defer>
+      setorSelect.value = "{{Auth::user()->setores[0]->id}}";
+      getUnidades();
+    </script>
+  @endif
 @endpush

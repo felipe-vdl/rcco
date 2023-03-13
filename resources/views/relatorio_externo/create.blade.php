@@ -140,6 +140,12 @@
 			}
     }
 	</script>
+  @if (Auth::user()->setores->count() === 1)
+    <script defer>
+      setorSelect.value = "{{Auth::user()->setores[0]->id}}";
+      getUnidades();
+    </script>
+  @endif
 	<script>
 		$(function() {
     	$("#data").datepicker({
