@@ -214,7 +214,13 @@ class RespostaController extends Controller
             $marcador = "";
         }
 
-        return view('resposta.show', compact('data', 'unidade', 'topicos', 'marcador', 'criador'));
+        foreach ($topicos as $topico) {
+            if ($topico->respostas->count() > 0) {
+                $respostaSample = $topico->respostas[0];
+            }
+        }
+
+        return view('resposta.show', compact('respostaSample', 'unidade', 'topicos', 'marcador', 'criador'));
     }
 
     public function edit(Request $request, $id)
@@ -350,7 +356,7 @@ class RespostaController extends Controller
 
             } else {
                 $resposta->status = $request->envio_status;
-                $resposta->data_envio = Carbon::now('America/Sao_Paulo')->format('Y-m-d 12:00:00');
+                $resposta->data_envio = Carbon::now('America/Sao_Paulo')->format('Y-m-d H:i:s');
                 $resposta->update();
             }
         }

@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col-md-6 col-sm-6 col-xs-12">
             <h4>Data Correspondente</h4>
-            <p>{{date('d/m/Y', strtotime($data))}}</p>
+            <p>{{date('d/m/Y', strtotime($respostaSample->data))}}</p>
           </div>
           @if($marcador)
           <div class="col-md-6 col-sm-6 col-xs-12">
@@ -32,6 +32,19 @@
             <h4>Preenchido por</h4>
             <p>{{$criador->name}}</p>
           </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <h4>Data de Criação</h4>
+            <p>{{date('d/m/Y', strtotime($respostaSample->created_at))}}</p>
+          </div>
+          @if ($respostaSample->data_envio)
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <h4>Data de Envio</h4>
+            <p>{{date('d/m/Y', strtotime($respostaSample->data_envio))}}</p>
+          </div>
+          @endif
         </div>
     </div>
   </div>
