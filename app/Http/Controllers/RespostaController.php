@@ -259,17 +259,18 @@ class RespostaController extends Controller
             foreach($request->topicos as $chave => $topico) {
                 if(isset($topico["textos_simples"])) {
                     foreach($topico["textos_simples"] as $chave => $input) {
-                        $resposta = Resposta::find($input["resposta_id"]);
                         if ($resposta->status === 1) {
                             DB::rollback();
                             return back()->withErrors('Não é permitido editar formulários enviados.');
                         } else {
                             $resposta->valor = $input["valor"];
+                            $resposta->modified_at = Carbon::now('America/Sao_Paulo')->format('Y-m-d H:i:s');
                             if(isset($request->marcador_id)) {
                                 $resposta->marcador_id = $request->marcador_id;
                             } else {
                                 $resposta->marcador_id = null;
                             }
+                            $resposta = Resposta::find($input["resposta_id"]);
                             $resposta->save();
                         }
                     }
@@ -283,6 +284,7 @@ class RespostaController extends Controller
                         } else {
                             $resposta->marcador_id = null;
                         }
+                        $resposta->modified_at = Carbon::now('America/Sao_Paulo')->format('Y-m-d H:i:s');
                         $resposta->save();
                     }
                 }
@@ -299,6 +301,7 @@ class RespostaController extends Controller
                         } else {
                             $resposta->marcador_id = null;
                         }
+                        $resposta->modified_at = Carbon::now('America/Sao_Paulo')->format('Y-m-d H:i:s');
                         $resposta->save();
                     }
                 }
@@ -311,6 +314,7 @@ class RespostaController extends Controller
                         } else {
                             $resposta->marcador_id = null;
                         }
+                        $resposta->modified_at = Carbon::now('America/Sao_Paulo')->format('Y-m-d H:i:s');
                         $resposta->save();
                     }
                 }
@@ -324,6 +328,7 @@ class RespostaController extends Controller
                         }
                         
                         foreach($checkboxList as $chave => $input) {
+                            $resposta->modified_at = Carbon::now('America/Sao_Paulo')->format('Y-m-d H:i:s');
                             $resposta->save();
                             $label_valor = LabelValor::find($input["label_valor_id"]);
                             $label_valor->valor = $input["valor"];

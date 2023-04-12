@@ -18,6 +18,7 @@ class Resposta extends Model
         'user_id',
         'status',
         'data_envio',
+        'modified_at',
     ];
 
     public function criador() {

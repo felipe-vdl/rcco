@@ -37,12 +37,18 @@
         <div class="row">
           <div class="col-md-6 col-sm-6 col-xs-12">
             <h4>Data de Criação</h4>
-            <p>{{date('d/m/Y', strtotime($respostaSample->created_at))}}</p>
+            <p>{{date('d/m/Y H:i:s', strtotime($respostaSample->created_at))}}</p>
           </div>
+          @if ($respostaSample->modified_at)
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <h4>Última Modificação:</h4>
+            <p>{{date('d/m/Y H:i:s', strtotime($respostaSample->modified_at))}}</p>
+          </div>
+          @endif
           @if ($respostaSample->data_envio)
           <div class="col-md-6 col-sm-6 col-xs-12">
             <h4>Data de Envio</h4>
-            <p>{{date('d/m/Y', strtotime($respostaSample->data_envio))}}</p>
+            <p>{{date('d/m/Y H:i:s', strtotime($respostaSample->data_envio))}}</p>
           </div>
           @endif
         </div>
