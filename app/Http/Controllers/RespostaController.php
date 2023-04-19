@@ -15,6 +15,7 @@ use App\Models\Marcador;
 use App\Models\Topico;
 use App\Models\LabelOption;
 use App\Models\LabelValor;
+use App\Models\Comentario;
 
 class RespostaController extends Controller
 {
@@ -220,7 +221,9 @@ class RespostaController extends Controller
             }
         }
 
-        return view('resposta.show', compact('respostaSample', 'unidade', 'topicos', 'marcador', 'criador'));
+        $comentarios = Comentario::with('criador')->where(['data' => $data, 'relator_id' => $request->user_id, 'unidade_id' => $id])->get();
+
+        return view('resposta.show', compact('respostaSample', 'unidade', 'topicos', 'marcador', 'criador', 'comentarios'));
     }
 
     public function edit(Request $request, $id)
@@ -397,7 +400,9 @@ class RespostaController extends Controller
             $marcador_atual_id = "";
         }
 
-        return view('resposta.export', compact('data', 'unidade', 'topicos', 'marcadores', 'criador', 'marcador_atual_id'));
+        $comentarios = Comentario::with('criador')->where(['data' => $data, 'relator_id' => $request->user_id, 'unidade_id' => $id])->get();
+
+        return view('resposta.export', compact('data', 'unidade', 'topicos', 'marcadores', 'criador', 'comentarios', 'marcador_atual_id'));
     }
 
     public function GerarPDF (Request $request)
@@ -413,14 +418,14 @@ class RespostaController extends Controller
             $topicos = Topico::with(['respostas' => function($query) use ($id, $inicio, $fim, $user_id, $perguntas_ids) {
                 $query->whereHas('unidade', function($q) use($id) {
                     $q->where('id', $id);
-                })->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->orderBy('data', 'ASC');
+                })->where('status', 1)->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->orderBy('data', 'ASC');
             }, 'respostas.pergunta', 'respostas.label_valors', 'respostas.marcador'])->get();
     
             foreach ($topicos as $topico) {
                 $topico->respostas = $topico->respostas->sortBy('data')->values();
             }
     
-            $relatores = Resposta::with('marcador')->where('unidade_id', $id)->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
+            $relatores = Resposta::with('marcador')->where(['unidade_id' => $id, 'status' => 1])->whereIn('pergunta_id', $perguntas_ids)->whereBetween('data', [$inicio, $fim])->groupBy('user_id')->get();
             $usuario = Auth::user();
 
             $fileName;
@@ -436,8 +441,13 @@ class RespostaController extends Controller
             ->get();
 
             $totalDeRelatorios = count($total);
+            
+            $comentarios = [];
+            if ($request->incluir_comentarios) {
+                $comentarios = Comentario::with('criador')->where('unidade_id', $id)->whereBetween('data', [$inicio, $fim])->get();
+            }
 
-            $pdf = PDF::loadView('resposta.pdf', compact('totalDeRelatorios', 'topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
+            $pdf = PDF::loadView('resposta.pdf', compact('comentarios', 'totalDeRelatorios', 'topicos', 'inicio', 'fim', 'unidade', 'relatores', 'usuario'));
             return $pdf->stream($fileName);
 
         } catch (Throwable $th) {

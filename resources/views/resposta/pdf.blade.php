@@ -131,6 +131,17 @@ hr {
     <main>
       @php $optionsArray = array() @endphp
       @php $perguntasArray = array() @endphp
+      @if($comentarios->count() > 0)
+        <div>
+          <h3 style="text-align:center; border: 1px solid black; padding: 5px;">COMENTÁRIOS</h3>
+          @foreach($comentarios as $comentario)
+            <p style="margin-bottom: 5px;">
+              <b>{{ $comentario->criador->name }}</b> — {{ date('d/m/Y à\s H:i', strtotime($comentario->created_at)) }}
+            </p>
+            <p style="padding-left: 13px; margin: 0;">{{$comentario->content}}</p>
+          @endforeach
+        </div>
+      @endif
       @foreach($topicos as $topico)
         @if(count($topico->respostas) > 0)
           <div>

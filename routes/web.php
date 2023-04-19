@@ -41,6 +41,10 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::post('/resposta/enviar', 'RespostaController@enviar')->name('resposta.enviar');
 		Route::get('/resposta/export/{id}', 'RespostaController@export')->name('resposta.export');
 		Route::post('/resposta/pdf', 'RespostaController@GerarPDF')->name('resposta.pdf');
+
+		Route::get('/comentario/{id}', 		'ComentarioController@create')->name('comentario.create');
+		Route::post('/comentario', 		'ComentarioController@store')->name('comentario.store');
+		Route::post('/comentario/{id}/deletar', 		'ComentarioController@destroy')->name('comentario.delete');
 	
 		Route::get('dashboard/semus', 		'DashboardController@dashsemus');
 		Route::get('dashboard/semed', 		'DashboardController@dashsemed');

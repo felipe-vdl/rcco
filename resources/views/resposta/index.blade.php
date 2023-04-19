@@ -111,6 +111,7 @@
         "thousands": "."
         },
         "columnDefs": [
+          { "width": "15%", "targets": 4 },
           { "type": 'date-euro', "targets": 0}
         ],
         stateSave: true,
@@ -212,35 +213,39 @@
           
           tBody.innerHTML = "";
           const dados = tabela.map(i => {
-            let actions = `<div style="display: flex;">
-                ${(i.status === 1 || user.nivel === "User") ? `<a title="Visualizar relatório" href="/resposta/${i.unidade_id}?data=${i.data}&user_id=${i.criador.id}" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-list-alt"></i></a>` : '<span style="color:grey;">Aguardando Envio</span>'}
-                ${(i.status === 1 && user.nivel !== "User") ? `<a title="Exportar formulário em PDF" href="/resposta/export/${i.unidade.id}?data=${i.data}&user_id=${i.criador.id}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-file"></i></a>` : ''}
+            let actions = `<div style="display: flex; flex-direction: column; align-items: flex-end;">
+                <div style="display: flex;">
+                  ${(["Super-Admin", "Admin"].includes(user.nivel)) ? `<a title="Comentar relatório." href="/comentario/${i.unidade_id}?data=${i.data}&user_id=${i.criador.id}" class="btn btn-warning btn-xs" ><i class="glyphicon glyphicon-comment"></i></a>` : ''}
+                  <a title="Visualizar relatório" href="/resposta/${i.unidade_id}?data=${i.data}&user_id=${i.criador.id}" class="btn btn-info btn-xs" ><i class="glyphicon glyphicon-list-alt"></i></a>
+                  ${(i.status === 1 && user.nivel !== "User") ? `<a title="Exportar formulário em PDF" href="/resposta/export/${i.unidade.id}?data=${i.data}&user_id=${i.criador.id}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-file"></i></a>` : ''}
                   ${(i.status === 1 && user.nivel === "Super-Admin") ? `<form class="devolver-form" style="display: inline;" method="POST" action="{{route('resposta.enviar')}}">
-                    <input type="hidden" name="_token" value="{{csrf_token()}}">
-                    <input type="hidden" name="unidade_id" value="${i.unidade_id}">
-                    <input type="hidden" name="data" value="${i.data}">
-                    <input type="hidden" name="user_id" value="${i.criador.id}">
-                    <input type="hidden" name="envio_status" value="0">
-                    <button class="btn btn-xs btn-warning" title="Devolver formulário">
-                      <i class="glyphicon glyphicon-send"></i>
-                    </button>
-                  </form>` : ''}
-                  ${(i.status === 0 && user.nivel === "User") ? `
-                    <a title="Editar formulário" class="btn btn-warning btn-xs" href="/resposta/${i.unidade_id}/edit?data=${i.data}">
-                      <i class="glyphicon glyphicon-pencil"></i>
-                    </a>
-                    <form class="envio-form" style="display:inline;" method="POST" action="{{route('resposta.enviar')}}">
                       <input type="hidden" name="_token" value="{{csrf_token()}}">
                       <input type="hidden" name="unidade_id" value="${i.unidade_id}">
                       <input type="hidden" name="data" value="${i.data}">
                       <input type="hidden" name="user_id" value="${i.criador.id}">
-                      <input type="hidden" name="envio_status" value="1">
-                      <button class="btn btn-xs btn-success" title="Enviar formulário"><i class="glyphicon glyphicon-send"></i></button>
-                    </form>
-                  ` : ''}
-                  ${(i.status === 1 && user.nivel === "User") ? `
-                    <span style="color:green;">Enviado</span>
-                  ` : ''}
+                      <input type="hidden" name="envio_status" value="0">
+                      <button class="btn btn-xs btn-warning" title="Devolver formulário">
+                        <i class="glyphicon glyphicon-send"></i>
+                      </button>
+                      </form>` : ''}
+                      ${(i.status === 0 && user.nivel === "User") ? `
+                      <a title="Editar formulário" class="btn btn-warning btn-xs" href="/resposta/${i.unidade_id}/edit?data=${i.data}">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                        </a>
+                        <form class="envio-form" style="display:inline;" method="POST" action="{{route('resposta.enviar')}}">
+                          <input type="hidden" name="_token" value="{{csrf_token()}}">
+                        <input type="hidden" name="unidade_id" value="${i.unidade_id}">
+                        <input type="hidden" name="data" value="${i.data}">
+                        <input type="hidden" name="user_id" value="${i.criador.id}">
+                        <input type="hidden" name="envio_status" value="1">
+                        <button class="btn btn-xs btn-success" title="Enviar formulário"><i class="glyphicon glyphicon-send"></i></button>
+                        </form>
+                        ` : ''}
+                        ${(i.status === 1 && user.nivel === "User") ? `
+                        <span style="color:green;">Enviado</span>
+                        ` : ''}
+                </div>
+                ${(i.status === 0) ? '<p style="color:grey;">Aguardando Envio</p>' : ''}
               </div>`;
 
             return {

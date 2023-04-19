@@ -2,7 +2,7 @@
 @section('content')
 <div class="x_panel modal-content">
 	<div class="x_title">
-		 <h2>Relatório</h2>
+		 <h2>Comentar Relatório</h2>
 		<div class="clearfix"></div>
 	</div>
   <div class="x_panel">
@@ -54,19 +54,39 @@
         </div>
     </div>
   </div>
+  <div class="x_panel" style="padding: 0;">
+    <div class="x_content">
+      <form style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;" method="POST" action="{{ route('comentario.store') }}">
+        @csrf
+        <input type="hidden" name="data" value="{{ $data }}">
+        <input type="hidden" name="unidade_id" value="{{ $unidade->id }}">
+        <input type="hidden" name="relator_id" value="{{ $criador->id }}">
+        <textarea required rows="3" style="padding: 6px; outline: none; resize: vertical; width: 100%;" name="content" placeholder="Adicione um comentário..."></textarea>
+        <button title="Enviar comentário" style="margin: 0;" class="btn btn-success">Comentar</button>
+      </form>
+    </div>
+  </div>
   @if($comentarios->count() > 0)
     <div class="x_panel">
       <div class="x_content">
         <h1 class="text-center">COMENTÁRIOS</h1>
         <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
           @foreach ($comentarios as $comentario)
-            <div style="display: flex; flex-direction: column;">
-              <span>
-                <b>{{ $comentario->criador->name }}</b> — {{ date('d/m/Y à\s H:i', strtotime($comentario->created_at)) }}
-              </span>
-              <p style="padding: 0; margin: 0; padding-left: 6px;">
-                {{ $comentario->content }}
-              </p>
+            <div style="border: 1px solid rgb(220, 220, 220); padding: 0.5rem 1rem; width: 100%; display: flex; justify-content: space-between; align-items:center;">
+              <div style="flex: 1; display: flex; flex-direction: column;">
+                <span>
+                  <b>{{ $comentario->criador->name }}</b> — {{ date('d/m/Y à\s H:i', strtotime($comentario->created_at)) }}
+                </span>
+                <p style="padding: 0; margin: 0; padding-left: 6px;">
+                  {{ $comentario->content }}
+                </p>
+              </div>
+              @if (Auth::user()->id === $comentario->user_id)
+                <form class="deletar_comentario" action="{{ route('comentario.delete', $comentario->id) }}" method="post">
+                  @csrf
+                  <button title="Remover comentário." class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></button>
+                </form>
+              @endif
             </div>
           @endforeach
         </div>
@@ -126,5 +146,37 @@
 </div>
 @endsection
 @push('scripts')
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script defer>
+    const deleteForms = document.querySelectorAll('.deletar_comentario');
 
+    for (let deleteForm of deleteForms) {
+      deleteForm.addEventListener('submit', evt => {
+        evt.preventDefault();
+        swal({
+					title: "Atenção!",
+					text: "Deseja excluir o comentário?",
+					icon: "warning",
+					buttons: {
+							cancel: {
+								text: "Cancelar",
+								value: "cancelar",
+								visible: true,
+								closeModal: true,
+							},
+							ok: {
+								text: "Sim, Confirmar!",
+								value: 'excluir',
+								visible: true,
+								closeModal: true,
+							}
+					}
+				}).then(function(resultado) {
+					if (resultado === 'excluir') {
+            deleteForm.submit();
+					}
+				});
+      });
+    }
+  </script>
 @endpush
