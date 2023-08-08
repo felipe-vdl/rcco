@@ -262,7 +262,7 @@ class RespostaController extends Controller
             foreach($request->topicos as $chave => $topico) {
                 if(isset($topico["textos_simples"])) {
                     foreach($topico["textos_simples"] as $chave => $input) {
-                        $resposta = Resposta::find($input["resposta_id"]);
+			$resposta = Resposta::find($input["resposta_id"]);
                         if ($resposta->status === 1) {
                             DB::rollback();
                             return back()->withErrors('Não é permitido editar formulários enviados.');
