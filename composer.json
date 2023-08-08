@@ -9,7 +9,7 @@
   "type": "project",
   "require": {
     "php": ">=7.2",
-    "barryvdh/laravel-dompdf": "^0.9.0",
+    "barryvdh/laravel-dompdf": "^2.0",
     "creativeorange/gravatar": "^1.0",
     "diglactic/laravel-breadcrumbs": "^6.0",
     "facade/ignition": "^2.0",
@@ -17,7 +17,7 @@
     "fruitcake/laravel-cors": "^2.0",
     "fzaninotto/faker": "^1.8",
     "geekcom/validator-docs": "2.*",
-    "guzzlehttp/guzzle": "7.2",
+    "guzzlehttp/guzzle": "^7.7",
     "jarouche/viacep": "^1.0",
     "labs64/netlicensingclient-php": "^2.3",
     "laravel-notification-channels/telegram": "^0.5.1",
